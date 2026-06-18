@@ -1,0 +1,35 @@
+import type { Metadata } from "next";
+import { Container } from "@/components/layout/container";
+import { ContactForm } from "@/components/contact-form";
+import { copy, site } from "@/content/site";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: copy.contact.title,
+  description: copy.contact.intro,
+  path: "/contact",
+});
+
+export default function ContactPage() {
+  return (
+    <Container className="py-16">
+      <h1 className="font-serif text-4xl text-ink">{copy.contact.title}</h1>
+      <p className="mt-4 max-w-xl text-muted">{copy.contact.intro}</p>
+
+      <ContactForm />
+
+      <p className="mt-10 text-sm text-muted">
+        Ou retrouvez-moi sur{" "}
+        <a
+          href={site.social.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-ink underline decoration-clay underline-offset-4 hover:text-clay"
+        >
+          Instagram
+        </a>
+        .
+      </p>
+    </Container>
+  );
+}
