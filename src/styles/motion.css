@@ -1,0 +1,34 @@
+/* Run-once entrances — a whisper of motion, all decelerating to rest. The site's
+   only animation is the gentle arrival of images and the quiet rise of a heading;
+   everything else is hover-only (the interaction clock in globals.css). All of
+   this is collapsed to near-instant under prefers-reduced-motion. */
+
+@keyframes image-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* A photograph settles in rather than snapping on. */
+.motion-image-fade {
+  animation: image-fade 600ms var(--ease-arrive) both;
+}
+
+/* A heading or intro line arriving on first paint. */
+.motion-rise {
+  animation: rise 700ms var(--ease-arrive) both;
+}

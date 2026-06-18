@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "./motion.css";
+
+/* Token layer — the warm, near-neutral palette of Adamenko Photography (vault
+   design-language, D006). The chrome is a soft warm paper that flatters skin
+   tones; the photographs carry all the saturation. Never pure black (cold),
+   never pure white (clinical). `clay` is the single, disciplined accent —
+   small elements only (links, underlines, marks), never buttons or gradients. */
+@theme {
+  --color-ink: #2a2420; /* warm charcoal — text / strong */
+  --color-paper: #faf6f0; /* warm cream — the signature surface */
+  --color-muted: #8c8178; /* warm gray — secondary text */
+  --color-line: #e7ddd0; /* hairline */
+  --color-clay: #b07159; /* the single warm accent */
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* Two easings (one motion system). `settle` carries hover/focus; `arrive`
+     carries run-once entrances in motion.css. Both decelerate — motion here
+     comes to rest, it never springs. */
+  --ease-settle: cubic-bezier(0.33, 0, 0.2, 1);
+  --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* One restrained focus treatment across every interactive element. */
+  a:focus-visible,
+  summary:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* The interaction clock — one timing system, defined once. Components must
+     NOT set their own transition utilities (vault D009 / sibling rule). Enter a
+     hover quickly (200ms), release more slowly (300ms): state → transition →
+     state, never a blunt on/off. */
+  a,
+  button,
+  summary {
+    transition-property: color, background-color, border-color,
+      text-decoration-color, opacity;
+    transition-timing-function: var(--ease-settle);
+    transition-duration: 300ms;
+  }
+
+  :is(a, button, summary):is(:hover, :focus-visible) {
+    transition-duration: 200ms;
+  }
+
+  /* Click acknowledgment: a quiet, immediate dim — felt, not watched. */
+  :is(a, button, summary):active {
+    opacity: 0.7;
+    transition: none;
+  }
+
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  /* Dark surfaces (e.g. a full-bleed image band) invert the small details. */
+  .dark-surface :is(a, summary, button):focus-visible {
+    outline-color: var(--color-paper);
+  }
+
+  .dark-surface ::selection {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+
+/* Honor a reduced-motion request: drop smooth scroll and collapse transitions.
+   Motion here is subtle by policy, so this changes almost nothing visual. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
