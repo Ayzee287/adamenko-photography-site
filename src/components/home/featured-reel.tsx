@@ -25,8 +25,8 @@ export function FeaturedReel() {
               intro={gallery.intro}
               className="max-w-xl"
             />
-            <ButtonLink href={gallery.cta.href} variant="ghost">
-              {gallery.cta.label} →
+            <ButtonLink href={gallery.cta.href} variant="secondary">
+              {gallery.cta.label}
             </ButtonLink>
           </div>
         </Reveal>

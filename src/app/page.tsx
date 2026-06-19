@@ -7,6 +7,7 @@ import { FeaturedReel } from "@/components/home/featured-reel";
 import { ServicesShowcase } from "@/components/home/services-showcase";
 import { PricingInvestment } from "@/components/home/pricing-investment";
 import { AddOns } from "@/components/home/add-ons";
+import { DiscoverCards } from "@/components/home/discover-cards";
 import { Testimonials } from "@/components/home/testimonials";
 import { FinalCta } from "@/components/home/final-cta";
 
@@ -30,6 +31,7 @@ export default function HomePage() {
       <ServicesShowcase />
       <PricingInvestment />
       <AddOns />
+      <DiscoverCards />
       <Testimonials />
       <FinalCta />
     </>

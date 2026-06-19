@@ -21,7 +21,7 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
         <Parallax speed={0.05} className="lg:order-1">
           <ImageFigure image={image} sizes="(min-width:1024px) 45vw, 100vw" />
         </Parallax>
-        <Reveal className="lg:order-2">
+        <Reveal variant="rise-left" className="lg:order-2">
           <p className="text-xs uppercase tracking-[0.22em] text-muted">
             {about.eyebrow}
           </p>
@@ -44,8 +44,8 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
             ))}
           </ul>
           <div className="mt-8">
-            <ButtonLink href={about.cta.href} variant="ghost">
-              {about.cta.label} →
+            <ButtonLink href={about.cta.href} variant="secondary">
+              {about.cta.label}
             </ButtonLink>
           </div>
         </Reveal>

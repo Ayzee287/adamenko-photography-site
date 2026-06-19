@@ -15,7 +15,7 @@ export function FinalCta() {
   return (
     <section className="dark-surface bg-ink text-paper">
       <Container className="py-24 text-center sm:py-32">
-        <Reveal>
+        <Reveal variant="rise-slow">
           <p className="text-xs uppercase tracking-[0.28em] text-paper/60">
             {f.eyebrow}
           </p>
@@ -25,18 +25,17 @@ export function FinalCta() {
           <p className="mx-auto mt-5 max-w-xl text-pretty text-paper/80">
             {f.body}
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-5">
-            <ButtonLink href={f.cta.href} variant="light">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
+            <ButtonLink href={f.cta.href} variant="primary" onDark>
               {f.cta.label}
             </ButtonLink>
-            <a
+            <ButtonLink
               href={site.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border-b border-paper/40 pb-1 text-sm text-paper hover:border-paper"
+              variant="secondary"
+              onDark
             >
               {f.instagramLabel}
-            </a>
+            </ButtonLink>
           </div>
           <p className="mt-12 text-sm text-paper/60">
             {f.location} — {f.availability}

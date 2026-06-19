@@ -46,14 +46,6 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-paper font-sans text-ink antialiased">
-        {/* Marks JS as ready before paint so the cinematic motion layer (motion.css)
-            engages without a flash; without JS the selectors never match and all
-            content renders fully visible. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: "document.documentElement.dataset.js='1'",
-          }}
-        />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

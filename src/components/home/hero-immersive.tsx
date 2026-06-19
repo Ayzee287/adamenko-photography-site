@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { HeroMedia } from "./hero-media";
@@ -48,18 +47,15 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
           {hero.subtitle}
         </p>
         <div
-          className="motion-rise mt-10 flex flex-wrap items-center gap-5"
+          className="motion-rise mt-10 flex flex-wrap items-center gap-6"
           style={{ animationDelay: "270ms" }}
         >
-          <ButtonLink href={hero.primary.href} variant="light">
+          <ButtonLink href={hero.primary.href} variant="primary" onDark>
             {hero.primary.label}
           </ButtonLink>
-          <Link
-            href={hero.secondary.href}
-            className="border-b border-paper/40 pb-1 text-sm text-paper hover:border-paper"
-          >
+          <ButtonLink href={hero.secondary.href} variant="secondary" onDark>
             {hero.secondary.label}
-          </Link>
+          </ButtonLink>
         </div>
       </Container>
 

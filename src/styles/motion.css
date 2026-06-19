@@ -33,33 +33,47 @@
   animation: rise 700ms var(--ease-arrive) both;
 }
 
-/* ── Cinematic homepage layer (D011) ───────────────────────────────────────────
+/* ── Cinematic homepage layer ──────────────────────────────────────────────────
    Scroll-driven motion, engineered so drama never costs performance or a11y:
-   only `opacity`/`transform` animate (GPU, no reflow → CLS ≈ 0), and the whole
-   layer is GATED on `html[data-js]` (set by a tiny inline script before paint).
-   Without JS, none of these selectors match → content renders fully visible. */
+   only `opacity`/`transform` animate (GPU, no reflow → CLS ≈ 0).
 
-/* Reveal: content rises + fades as it scrolls into view. Hidden state applies
-   only once JS is ready (no flash for JS users; always visible for no-JS). The
-   `is-inview` class is added by the IntersectionObserver in <Reveal>. */
-html[data-js] .reveal {
+   No client-only markup (D015): <Reveal> renders VISIBLE on the server AND at
+   hydration — identical DOM, zero mismatch. After mount it arms only elements
+   still BELOW the fold (off-screen, so no flash) and reveals them on scroll;
+   without JS, nothing is ever armed, so all content stays visible. */
+
+/* Armed = the pre-reveal hidden state (applied by JS to off-screen elements). */
+.reveal.is-armed {
   opacity: 0;
+}
+.reveal.is-armed[data-variant="rise"],
+.reveal.is-armed[data-variant="rise-slow"] {
   transform: translateY(1.25rem);
+}
+.reveal.is-armed[data-variant="rise-left"] {
+  transform: translate3d(-1.5rem, 0.75rem, 0);
+}
+
+/* Revealed = the transition target. The transition lives here, so armed→revealed
+   animates while idle(visible)→armed (off-screen) snaps. Variants vary the feel. */
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
   transition:
     opacity 800ms var(--ease-arrive),
     transform 800ms var(--ease-arrive);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
 }
-html[data-js] .reveal.is-inview {
-  opacity: 1;
-  transform: none;
+.reveal.is-revealed[data-variant="rise-slow"] {
+  transition-duration: 1100ms;
+}
+.reveal.is-revealed[data-variant="fade"] {
+  transition-property: opacity;
 }
 
-/* Parallax / hero-scale targets: JS writes the transform via a CSS var so the
-   compositor does the work. `will-change` is scoped to these elements only. */
-html[data-js] .parallax,
-html[data-js] .hero-media {
+/* Parallax / hero-scale / autoplay reel targets — compositor work only. */
+.parallax,
+.hero-media {
   will-change: transform;
 }
 
@@ -75,22 +89,25 @@ html[data-js] .hero-media {
     opacity: 1;
   }
 }
-html[data-js] .hero-cue {
+.hero-cue {
   animation: cue-bob 2.4s var(--ease-settle) infinite;
 }
 
-/* Reduced motion: the cinematic layer collapses to "present, instant". The story
-   still reads; nothing moves. (The base rule in globals.css already tames the
-   keyframe entrances.) */
+/* Reduced motion: the cinematic layer collapses to "present, instant". JS also
+   skips arming/autoplay; this is the CSS backstop. */
 @media (prefers-reduced-motion: reduce) {
-  html[data-js] .reveal {
+  .reveal.is-armed,
+  .reveal.is-revealed {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-  html[data-js] .parallax,
-  html[data-js] .hero-media {
+  .parallax,
+  .hero-media {
     transform: none !important;
     will-change: auto;
+  }
+  .hero-cue {
+    animation: none;
   }
 }

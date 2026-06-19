@@ -70,18 +70,42 @@ export const home = {
     cta: { label: "Voir toutes les galeries", href: "/galeries" },
   },
 
+  // Editorial "scenes", not a menu (D018). Each answers: what story can I trust her
+  // to tell? Focus genres family/grossesse/couples/mariages; portraits kept as a
+  // quiet link (route preserved, D007). `emotive` = the desire line, `line` = the
+  // quiet factual one. Copy is DRAFT — confirm with the photographer.
   services: {
-    eyebrow: "Prestations",
+    eyebrow: "Les séances",
     title: "Ce que je photographie.",
-    intro:
-      "Cinq univers, une même façon de faire : douce, présente, fidèle à vous.",
-    items: [
-      { slug: "familles", title: "Famille", valueProp: "Le quotidien et les liens — à la maison, dehors, ensemble." },
-      { slug: "grossesse", title: "Grossesse", valueProp: "L'attente et la douceur des semaines qui précèdent." },
-      { slug: "couples", title: "Couple", valueProp: "Deux personnes, un lien — sans poses figées." },
-      { slug: "portraits", title: "Portrait", valueProp: "Un visage, une présence — simple et juste." },
-      { slug: "mariages", title: "Mariage", valueProp: "Le récit d'une journée — l'émotion plutôt que la mise en scène." },
+    intro: "Quatre histoires que vous pouvez me confier.",
+    scenes: [
+      {
+        slug: "familles",
+        title: "Famille",
+        emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
+        line: "Le quotidien et les liens — à la maison, dehors, ensemble.",
+      },
+      {
+        slug: "grossesse",
+        title: "Grossesse",
+        emotive: "Ces semaines suspendues, juste avant que tout change.",
+        line: "L'attente, la douceur, l'intimité des derniers instants à deux.",
+      },
+      {
+        slug: "couples",
+        title: "Couple",
+        emotive: "La façon dont vous vous regardez quand personne ne regarde.",
+        line: "Deux personnes, un lien — sans poses figées.",
+      },
+      {
+        slug: "mariages",
+        title: "Mariage",
+        emotive: "Toute une journée, racontée comme vous l'avez vécue.",
+        line: "L'émotion d'abord, jamais la mise en scène.",
+      },
     ],
+    also: { label: "Aussi : les portraits", href: "/galeries/portraits" },
+    cta: { label: "Voir les galeries", href: "/galeries" },
   },
 
   pricing: {
@@ -105,6 +129,18 @@ export const home = {
       { title: "Livraison express", body: "Vos images en priorité, sous quelques jours." },
       { title: "Tirages d'art", body: "Des impressions soignées, prêtes à accrocher." },
       { title: "Sur mesure", body: "Une idée particulière ? Parlons-en, on s'adapte." },
+    ],
+  },
+
+  // Cinematic destination hub (D018) — replaces the inline FAQ; sits after add-ons
+  // so pricing stays uninterrupted. FAQ content now lives on /prestations.
+  discover: {
+    eyebrow: "Pour aller plus loin",
+    title: "Avant de me confier votre histoire.",
+    cards: [
+      { label: "L'expérience", title: "À quoi s'attendre", href: "/prestations" },
+      { label: "Infos pratiques", title: "Questions fréquentes", href: "/prestations#faq" },
+      { label: "À propos", title: "Rencontrer la photographe", href: "/a-propos" },
     ],
   },
 

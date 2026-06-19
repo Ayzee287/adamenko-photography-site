@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
@@ -44,7 +45,7 @@ export function PricingInvestment() {
                   ))}
                 </ul>
                 <div className="mt-8">
-                  <ButtonLink href={p.cta.href} variant="solid">
+                  <ButtonLink href={p.cta.href} variant="primary">
                     {p.cta.label}
                   </ButtonLink>
                 </div>
@@ -53,22 +54,13 @@ export function PricingInvestment() {
           ))}
         </div>
 
-        <div className="mt-16">
-          <h3 className="font-serif text-xl text-ink">{p.faqTitle}</h3>
-          <div className="mt-6 max-w-3xl divide-y divide-line border-y border-line">
-            {pricing.faq.map((item) => (
-              <details key={item.q} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-ink [&::-webkit-details-marker]:hidden">
-                  <span>{item.q}</span>
-                  <span aria-hidden className="text-xl leading-none text-clay group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <p className="mt-3 max-w-2xl text-sm text-muted">{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
+        <p className="mt-8 text-sm text-muted">
+          Des questions ?{" "}
+          <Link href="/prestations#faq" className="text-clay hover:text-ink">
+            Voir les questions fréquentes
+          </Link>
+          .
+        </p>
       </Container>
     </section>
   );
