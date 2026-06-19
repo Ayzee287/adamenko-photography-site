@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
@@ -15,13 +16,15 @@ import { home } from "@/content/home";
  * De-carded (D022): borderless, taller, and vertically offset so the three read as
  * an asymmetric trio of windows, not a tidy row of cards.
  */
-const OFFSETS = ["", "sm:mt-14", "sm:mt-7"];
+// Varied proportions + vertical offsets → a curated trio, not a tidy grid (D023).
+const OFFSETS = ["", "sm:mt-16", "sm:mt-6"];
+const ASPECTS = ["aspect-[3/4]", "aspect-[2/3]", "aspect-[5/6]"];
 
 export function DiscoverCards() {
   const d = home.discover;
 
   return (
-    <section className="py-28 sm:py-36">
+    <section className="py-24 sm:py-32">
       <Container>
         <Reveal variant="rise-left">
           <SectionHeading eyebrow={d.eyebrow} title={d.title} />
@@ -32,12 +35,18 @@ export function DiscoverCards() {
               <Reveal delay={i * 110}>
                 <Link
                   href={card.href}
-                  className="group relative block aspect-[3/4] overflow-hidden"
+                  className={cn(
+                    "group relative block overflow-hidden",
+                    ASPECTS[i % ASPECTS.length],
+                  )}
                 >
-                  {/* Image layer (warm placeholder; swap for a real photo later) */}
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 bg-gradient-to-b from-[#efe7db] to-[#ddd0bf]"
+                  {/* Image (temp demo, D023; swap for a real photo — no layout change) */}
+                  <Image
+                    src={card.img}
+                    alt=""
+                    fill
+                    sizes="(min-width:640px) 30vw, 100vw"
+                    className="object-cover"
                   />
                   {/* Scrim — on at rest on mobile, on hover on desktop */}
                   <span

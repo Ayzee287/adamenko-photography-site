@@ -12,10 +12,11 @@ import type { GalleryImage } from "@/types/gallery";
  */
 export function HeroImmersive({ image }: { image?: GalleryImage }) {
   const { hero } = home;
+  const heroImage = image ?? hero.image;
 
   return (
     <section className="dark-surface relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-paper">
-      <HeroMedia image={image} hint={hero.imageHint} />
+      <HeroMedia image={heroImage} hint={hero.imageHint} />
 
       {/* Cinematic scrim — weighted at the bottom-left where the caption lives. */}
       <div

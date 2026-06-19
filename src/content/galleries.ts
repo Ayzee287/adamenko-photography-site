@@ -84,15 +84,18 @@ export const galleries: Gallery[] = [
  * the genre galleries. Replace with the chosen signature frames from real shoots;
  * varied ratios are intentional (the reel reads as a hand-picked edit, not a grid).
  */
+// TEMP demo imagery (D023, /public/demo — Unsplash, swap for real work). Mixed
+// orientations on purpose: fixed-height reel items → portraits stay narrow,
+// landscapes wide → a real exhibition wall.
 export const featured: GalleryImage[] = [
-  { alt: "Photographie de famille", ratio: "aspect-[3/2]", hint: "Famille — un éclat de rire partagé." },
-  { alt: "Photographie de grossesse", ratio: "aspect-[2/3]", hint: "Grossesse — contre-jour, ventre rond." },
-  { alt: "Photographie de couple", ratio: "aspect-[16/10]", hint: "Couple — au grand large, main dans la main." },
-  { alt: "Portrait", ratio: "aspect-[4/5]", hint: "Portrait — un visage, une présence." },
-  { alt: "Photographie de mariage", ratio: "aspect-[3/2]", hint: "Mariage — l'échange des regards." },
-  { alt: "Photographie de famille", ratio: "aspect-[4/5]", hint: "Famille — un enfant porté, tout contre." },
-  { alt: "Photographie de couple", ratio: "aspect-[2/3]", hint: "Couple — front contre front." },
-  { alt: "Photographie de mariage", ratio: "aspect-[16/10]", hint: "Mariage — la première danse, lumière basse." },
+  { src: "/demo/famille.jpg", alt: "Une famille réunie à la maison", ratio: "aspect-[4/5]" },
+  { src: "/demo/hero.jpg", alt: "Une famille au coucher du soleil", ratio: "aspect-[16/10]" },
+  { src: "/demo/attente.jpg", alt: "L'attente d'un enfant", ratio: "aspect-[3/2]" },
+  { src: "/demo/intimite.jpg", alt: "Un couple, tout contre", ratio: "aspect-[2/3]" },
+  { src: "/demo/fete.jpg", alt: "Un mariage au bord de l'eau", ratio: "aspect-[3/2]" },
+  { src: "/demo/famille.jpg", alt: "La douceur d'un nouveau-né", ratio: "aspect-[1/1]" },
+  { src: "/demo/intimite.jpg", alt: "Deux mains, une alliance", ratio: "aspect-[4/5]" },
+  { src: "/demo/fete.jpg", alt: "La lumière basse d'une fête", ratio: "aspect-[16/10]" },
 ];
 
 /** Ordered slugs for nav / static params. */

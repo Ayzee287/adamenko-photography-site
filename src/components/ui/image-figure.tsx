@@ -35,7 +35,7 @@ export function ImageFigure({
   interactive,
 }: ImageFigureProps) {
   const ratio = image.ratio ?? "aspect-[4/5]";
-  const hasImage = Boolean(image.src && image.width && image.height);
+  const hasImage = Boolean(image.src);
 
   return (
     <figure
@@ -49,14 +49,13 @@ export function ImageFigure({
         <Image
           src={image.src as string}
           alt={image.alt}
-          width={image.width as number}
-          height={image.height as number}
+          fill
           sizes={
             sizes ?? "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
           }
           priority={priority}
           className={cn(
-            "motion-image-fade absolute inset-0 h-full w-full object-cover",
+            "motion-image-fade object-cover",
             interactive &&
               "transition-transform duration-[650ms] ease-[var(--ease-settle)] group-hover:scale-[1.04]",
           )}

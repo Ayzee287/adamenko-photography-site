@@ -14,7 +14,7 @@ export function FinalCta() {
 
   return (
     <section className="dark-surface bg-ink text-paper">
-      <Container className="py-32 text-center sm:py-44">
+      <Container className="py-24 text-center sm:py-36">
         <Reveal variant="rise-slow">
           <p className="text-xs uppercase tracking-[0.28em] text-paper/60">
             {f.eyebrow}

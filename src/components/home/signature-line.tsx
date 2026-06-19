@@ -9,7 +9,7 @@ import { home } from "@/content/home";
  */
 export function SignatureLine() {
   return (
-    <section className="py-40 sm:py-56">
+    <section className="py-28 sm:py-40">
       <Container>
         <Reveal variant="fade">
           <span aria-hidden className="mb-10 block h-px w-14 bg-clay" />

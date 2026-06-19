@@ -23,7 +23,7 @@ export function Testimonials() {
     "flex h-11 w-11 items-center justify-center rounded-full border border-line text-xl text-ink hover:border-clay";
 
   return (
-    <section className="py-28 sm:py-36">
+    <section className="py-24 sm:py-32">
       <Container>
         <SectionHeading eyebrow={t.eyebrow} title={t.title} align="center" />
         <div className="mx-auto mt-12 max-w-3xl text-center">

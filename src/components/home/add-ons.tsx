@@ -12,7 +12,7 @@ export function AddOns() {
   const a = home.addons;
 
   return (
-    <section className="bg-[#f3ece1] py-24 sm:py-32">
+    <section className="bg-[#f3ece1] py-20 sm:py-28">
       <Container>
         <Reveal variant="fade">
           <SectionHeading eyebrow={a.eyebrow} title={a.title} />

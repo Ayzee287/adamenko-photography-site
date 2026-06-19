@@ -13,6 +13,11 @@ export const home = {
     kicker: "Photographe · Lyon",
     title: "Les moments qui restent.",
     scrollCue: "Faites défiler",
+    // TEMP demo image (D023) — replace with the photographer's opening frame.
+    image: {
+      src: "/demo/hero.jpg",
+      alt: "Une famille réunie au coucher du soleil, main dans la main",
+    },
     imageHint:
       "Image d'ouverture — une étreinte, lumière chaude. La toute première chose que le visiteur ressent.",
   },
@@ -87,6 +92,7 @@ export const home = {
         emotion: "Le lien",
         tag: "Famille",
         emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
+        src: "/demo/famille.jpg",
         hint: "Une famille enlacée à la maison — désordre tendre, lumière du matin.",
       },
       {
@@ -94,6 +100,7 @@ export const home = {
         emotion: "L'attente",
         tag: "Grossesse",
         emotive: "Ces semaines suspendues, juste avant que tout change.",
+        src: "/demo/attente.jpg",
         hint: "Silhouette d'une future maman à contre-jour, mains sur le ventre.",
       },
       {
@@ -101,6 +108,7 @@ export const home = {
         emotion: "L'intimité",
         tag: "Couple",
         emotive: "La façon dont vous vous regardez quand personne ne regarde.",
+        src: "/demo/intimite.jpg",
         hint: "Un couple front contre front, dehors, fin de journée.",
       },
       {
@@ -108,6 +116,7 @@ export const home = {
         emotion: "La fête",
         tag: "Mariage",
         emotive: "Toute une journée, racontée comme vous l'avez vécue.",
+        src: "/demo/fete.jpg",
         hint: "L'instant du oui — larmes et rires, regards qui se croisent.",
       },
     ],
@@ -145,9 +154,9 @@ export const home = {
     eyebrow: "Pour aller plus loin",
     title: "Avant de me confier votre histoire.",
     cards: [
-      { label: "L'expérience", title: "À quoi s'attendre", href: "/prestations" },
-      { label: "Infos pratiques", title: "Questions fréquentes", href: "/prestations#faq" },
-      { label: "À propos", title: "Rencontrer la photographe", href: "/a-propos" },
+      { label: "L'expérience", title: "À quoi s'attendre", href: "/prestations", img: "/demo/attente.jpg" },
+      { label: "Infos pratiques", title: "Questions fréquentes", href: "/prestations#faq", img: "/demo/fete.jpg" },
+      { label: "À propos", title: "Rencontrer la photographe", href: "/a-propos", img: "/demo/famille.jpg" },
     ],
   },
 
