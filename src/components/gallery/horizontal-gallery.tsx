@@ -127,7 +127,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         aria-label="Aperçu des galeries — faites défiler ou glissez pour explorer"
-        className="flex cursor-grab gap-4 overflow-x-auto overscroll-x-contain pb-2 select-none active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab items-stretch gap-3 overflow-x-auto overscroll-x-contain px-4 pb-2 select-none active:cursor-grabbing sm:gap-4 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {loop.map((img, n) => {
           const realIndex = n % len;
@@ -140,13 +140,16 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
               aria-hidden={isClone || undefined}
               onClick={() => handleClick(realIndex)}
               aria-label={`Agrandir : ${img.alt}`}
-              className="group w-[78%] shrink-0 sm:w-[46%] lg:w-[30%]"
+              // Fixed height; width derives from each photo's natural aspect ratio
+              // → an exhibition wall where portraits stay narrow and landscapes wide.
+              className="group h-[46vh] shrink-0 sm:h-[58vh] lg:h-[66vh]"
             >
               <ImageFigure
                 image={img}
                 index={String(realIndex + 1).padStart(2, "0")}
                 interactive
-                sizes="(min-width:1024px) 30vw, (min-width:640px) 46vw, 78vw"
+                className="h-full"
+                sizes="(min-width:1024px) 60vw, (min-width:640px) 70vw, 85vw"
               />
             </button>
           );

@@ -14,7 +14,13 @@ import type { GalleryImage } from "@/types/gallery";
  * under reduced motion. Until a real hero frame exists, a warm dark panel stands
  * in (legible chrome over it, no fabricated photo).
  */
-export function HeroMedia({ image }: { image?: GalleryImage }) {
+export function HeroMedia({
+  image,
+  hint,
+}: {
+  image?: GalleryImage;
+  hint?: string;
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const reduced = usePrefersReducedMotion();
 
@@ -45,10 +51,17 @@ export function HeroMedia({ image }: { image?: GalleryImage }) {
           className="object-cover"
         />
       ) : (
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-[#3a312c] via-[#2a2420] to-[#191512]"
-        />
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-br from-[#43392f] via-[#2a2420] to-[#17120f]"
+          />
+          {hint ? (
+            <span className="pointer-events-none absolute right-5 top-20 max-w-[26ch] text-right font-serif text-xs italic leading-snug text-paper/35">
+              {hint}
+            </span>
+          ) : null}
+        </>
       )}
     </div>
   );

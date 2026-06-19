@@ -17,7 +17,7 @@ export function FeaturedReel() {
   return (
     <section className="py-24 sm:py-32">
       <Container>
-        <Reveal>
+        <Reveal variant="rise-left">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
               eyebrow={gallery.eyebrow}
@@ -30,10 +30,11 @@ export function FeaturedReel() {
             </ButtonLink>
           </div>
         </Reveal>
-        <div className="mt-12">
-          <HorizontalGallery images={featured} />
-        </div>
       </Container>
+      {/* The reel breaks out of the container — an edge-to-edge exhibition wall. */}
+      <div className="mt-12 sm:mt-16">
+        <HorizontalGallery images={featured} />
+      </div>
     </section>
   );
 }

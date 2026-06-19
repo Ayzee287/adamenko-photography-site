@@ -85,14 +85,14 @@ export const galleries: Gallery[] = [
  * varied ratios are intentional (the reel reads as a hand-picked edit, not a grid).
  */
 export const featured: GalleryImage[] = [
-  { alt: "Photographie de famille", ratio: "aspect-[4/5]" },
-  { alt: "Photographie de grossesse", ratio: "aspect-[3/2]" },
-  { alt: "Photographie de couple", ratio: "aspect-[4/5]" },
-  { alt: "Portrait", ratio: "aspect-[1/1]" },
-  { alt: "Photographie de mariage", ratio: "aspect-[3/2]" },
-  { alt: "Photographie de famille", ratio: "aspect-[5/4]" },
-  { alt: "Photographie de couple", ratio: "aspect-[2/3]" },
-  { alt: "Photographie de mariage", ratio: "aspect-[4/5]" },
+  { alt: "Photographie de famille", ratio: "aspect-[3/2]", hint: "Famille — un éclat de rire partagé." },
+  { alt: "Photographie de grossesse", ratio: "aspect-[2/3]", hint: "Grossesse — contre-jour, ventre rond." },
+  { alt: "Photographie de couple", ratio: "aspect-[16/10]", hint: "Couple — au grand large, main dans la main." },
+  { alt: "Portrait", ratio: "aspect-[4/5]", hint: "Portrait — un visage, une présence." },
+  { alt: "Photographie de mariage", ratio: "aspect-[3/2]", hint: "Mariage — l'échange des regards." },
+  { alt: "Photographie de famille", ratio: "aspect-[4/5]", hint: "Famille — un enfant porté, tout contre." },
+  { alt: "Photographie de couple", ratio: "aspect-[2/3]", hint: "Couple — front contre front." },
+  { alt: "Photographie de mariage", ratio: "aspect-[16/10]", hint: "Mariage — la première danse, lumière basse." },
 ];
 
 /** Ordered slugs for nav / static params. */

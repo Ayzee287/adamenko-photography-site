@@ -17,18 +17,18 @@ export function DiscoverCards() {
   const d = home.discover;
 
   return (
-    <section className="border-t border-line py-24 sm:py-32">
+    <section className="py-28 sm:py-36">
       <Container>
-        <Reveal variant="fade">
+        <Reveal variant="rise-left">
           <SectionHeading eyebrow={d.eyebrow} title={d.title} />
         </Reveal>
-        <ul className="mt-12 grid gap-4 sm:grid-cols-3">
+        <ul className="mt-12 grid gap-5 sm:grid-cols-3 sm:gap-6">
           {d.cards.map((card, i) => (
             <li key={card.title}>
               <Reveal delay={i * 110}>
                 <Link
                   href={card.href}
-                  className="group relative block aspect-[4/5] overflow-hidden ring-1 ring-line"
+                  className="group relative block aspect-[4/5] overflow-hidden"
                 >
                   {/* Image layer (warm placeholder; swap for a real photo later) */}
                   <span

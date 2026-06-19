@@ -13,7 +13,11 @@ import type { GalleryImage } from "@/types/gallery";
  */
 export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
   const { about } = home;
-  const image = portrait ?? { alt: about.portraitAlt, ratio: "aspect-[4/5]" };
+  const image = portrait ?? {
+    alt: about.portraitAlt,
+    ratio: "aspect-[4/5]",
+    hint: about.portraitHint,
+  };
 
   return (
     <section className="py-24 sm:py-32">

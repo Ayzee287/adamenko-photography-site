@@ -2,14 +2,23 @@ import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
 import { home } from "@/content/home";
 
-/** Section 2 — one warm line that names the promise and bridges hero to story. */
+/**
+ * Section 2 — the manifesto (D021). A print pull-quote: large editorial serif,
+ * broken across lines, left-anchored, with generous air above and below. No band,
+ * no border — whitespace frames it.
+ */
 export function SignatureLine() {
   return (
-    <section className="border-b border-line">
-      <Container className="py-20 sm:py-28">
+    <section className="py-32 sm:py-44">
+      <Container>
         <Reveal variant="fade">
-          <p className="mx-auto max-w-3xl text-balance text-center font-serif text-2xl leading-snug text-ink sm:text-3xl">
-            {home.signature}
+          <span aria-hidden className="mb-8 block h-px w-12 bg-clay" />
+          <p className="max-w-4xl text-pretty font-serif text-3xl leading-[1.18] text-ink sm:text-4xl lg:text-5xl">
+            {home.signature.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
           </p>
         </Reveal>
       </Container>

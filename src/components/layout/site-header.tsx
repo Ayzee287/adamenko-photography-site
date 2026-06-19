@@ -42,8 +42,8 @@ export function SiteHeader() {
         <Link
           href="/"
           className={cn(
-            "font-serif text-lg tracking-tight",
-            overHero ? "text-paper" : "text-ink",
+            "font-serif text-base tracking-tight",
+            overHero ? "text-paper/90" : "text-ink",
           )}
         >
           {site.brand}
@@ -51,15 +51,15 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navigation principale"
-          className="hidden items-center gap-8 sm:flex"
+          className="hidden items-center gap-9 sm:flex"
         >
           {site.nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "text-sm hover:text-clay",
-                overHero ? "text-paper/90" : "text-ink",
+                "text-[0.82rem] hover:text-clay",
+                overHero ? "text-paper/70" : "text-ink/80",
               )}
             >
               {item.label}
@@ -70,8 +70,8 @@ export function SiteHeader() {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-sm hover:text-clay",
-              overHero ? "text-paper/70" : "text-muted",
+              "text-[0.82rem] hover:text-clay",
+              overHero ? "text-paper/50" : "text-muted",
             )}
           >
             Instagram

@@ -24,6 +24,12 @@ export type GalleryImage = {
   alt: string;
   /** Aspect-ratio token for the frame, e.g. "aspect-[4/5]". Drives the layout rhythm. */
   ratio?: string;
+  /**
+   * Art-direction note shown only on a reserved (photo-less) frame: a quiet line
+   * naming the photograph that belongs here and how it should feel — so the
+   * placeholder directs rather than apologises (D021). Ignored once `src` is set.
+   */
+  hint?: string;
 };
 
 export type Gallery = {

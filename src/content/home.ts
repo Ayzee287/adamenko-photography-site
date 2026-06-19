@@ -7,18 +7,24 @@
 // until supplied — never invented.
 
 export const home = {
+  // Hero is image-first (D021): no CTAs — curiosity, not conversion. A short
+  // emotional headline + one supporting line, anchored low-left.
   hero: {
-    kicker: "Photographe à Lyon",
-    title: "Des images chaleureuses, fidèles à ceux qu'elles montrent.",
+    kicker: "Adamenko · Photographe à Lyon",
+    title: "Les moments qui restent.",
     subtitle:
-      "Famille, grossesse, couple, portrait et mariage — à Lyon et partout où l'on m'emmène.",
-    primary: { label: "Voir les galeries", href: "/galeries" },
-    secondary: { label: "Me contacter", href: "/contact" },
-    scrollCue: "Découvrir",
+      "Famille, grossesse, couple et mariage — photographiés tout en douceur, à Lyon et au-delà.",
+    scrollCue: "Faites défiler",
+    imageHint:
+      "Image d'ouverture — une étreinte, lumière chaude. La toute première chose que le visiteur ressent.",
   },
 
-  signature:
-    "Je photographie les liens : une famille qui se serre, l'attente d'un enfant, deux personnes qui s'aiment.",
+  // The manifesto (D021) — a print pull-quote, broken across lines.
+  signature: [
+    "Je photographie les liens.",
+    "Une famille qui se serre, l'attente d'un enfant,",
+    "deux personnes qui s'aiment.",
+  ],
 
   about: {
     eyebrow: "La photographe",
@@ -31,6 +37,7 @@ export const home = {
     values: ["Chaleur", "Sincérité", "Présence", "Patience"],
     cta: { label: "En savoir plus", href: "/a-propos" },
     portraitAlt: "Portrait de la photographe",
+    portraitHint: "Un portrait franc de la photographe — regard direct, lumière douce.",
   },
 
   experience: {
@@ -70,38 +77,40 @@ export const home = {
     cta: { label: "Voir toutes les galeries", href: "/galeries" },
   },
 
-  // Editorial "scenes", not a menu (D018). Each answers: what story can I trust her
-  // to tell? Focus genres family/grossesse/couples/mariages; portraits kept as a
-  // quiet link (route preserved, D007). `emotive` = the desire line, `line` = the
-  // quiet factual one. Copy is DRAFT — confirm with the photographer.
-  services: {
+  // A magazine feature organised by EMOTION, not category (D021). The genre is a
+  // quiet tag + link; the emotion leads. Editorial spreads, not a grid. `hint`
+  // directs the reserved frame. Copy is DRAFT — confirm with the photographer.
+  seances: {
     eyebrow: "Les séances",
-    title: "Ce que je photographie.",
-    intro: "Quatre histoires que vous pouvez me confier.",
+    title: "Quatre émotions, une même tendresse.",
     scenes: [
       {
         slug: "familles",
-        title: "Famille",
+        emotion: "Le lien",
+        tag: "Famille",
         emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
-        line: "Le quotidien et les liens — à la maison, dehors, ensemble.",
+        hint: "Une famille enlacée à la maison — désordre tendre, lumière du matin.",
       },
       {
         slug: "grossesse",
-        title: "Grossesse",
+        emotion: "L'attente",
+        tag: "Grossesse",
         emotive: "Ces semaines suspendues, juste avant que tout change.",
-        line: "L'attente, la douceur, l'intimité des derniers instants à deux.",
+        hint: "Silhouette d'une future maman à contre-jour, mains sur le ventre.",
       },
       {
         slug: "couples",
-        title: "Couple",
+        emotion: "L'intimité",
+        tag: "Couple",
         emotive: "La façon dont vous vous regardez quand personne ne regarde.",
-        line: "Deux personnes, un lien — sans poses figées.",
+        hint: "Un couple front contre front, dehors, fin de journée.",
       },
       {
         slug: "mariages",
-        title: "Mariage",
+        emotion: "La fête",
+        tag: "Mariage",
         emotive: "Toute une journée, racontée comme vous l'avez vécue.",
-        line: "L'émotion d'abord, jamais la mise en scène.",
+        hint: "L'instant du oui — larmes et rires, regards qui se croisent.",
       },
     ],
     also: { label: "Aussi : les portraits", href: "/galeries/portraits" },
