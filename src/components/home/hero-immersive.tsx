@@ -19,10 +19,16 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
     <section className="dark-surface relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink text-paper">
       <HeroMedia image={image} />
 
-      {/* Legibility scrim — subtle, only enough to hold text on any photo. */}
+      {/* Cinematic scrim — anchored to the text (left) and weighted at top/bottom
+          so the headline stays legible over any real photo, and the header + scroll
+          cue read against it. Two soft layers, not a flat veil. */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-ink/40"
+        className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/40 to-ink/5"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-t from-ink/65 via-transparent to-ink/35"
       />
 
       <Container className="relative py-28">
@@ -30,7 +36,7 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
           {hero.kicker}
         </p>
         <h1
-          className="motion-rise mt-5 max-w-3xl font-serif text-4xl leading-[1.08] text-paper sm:text-5xl lg:text-6xl"
+          className="motion-rise mt-5 max-w-3xl text-balance font-serif text-4xl leading-[1.08] text-paper sm:text-5xl lg:text-6xl"
           style={{ animationDelay: "90ms" }}
         >
           {hero.title}

@@ -8,7 +8,7 @@ export function SignatureLine() {
     <section className="border-b border-line">
       <Container className="py-20 sm:py-28">
         <Reveal>
-          <p className="mx-auto max-w-3xl text-center font-serif text-2xl leading-snug text-ink sm:text-3xl">
+          <p className="mx-auto max-w-3xl text-balance text-center font-serif text-2xl leading-snug text-ink sm:text-3xl">
             {home.signature}
           </p>
         </Reveal>

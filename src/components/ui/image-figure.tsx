@@ -9,6 +9,13 @@ type ImageFigureProps = {
   sizes?: string;
   priority?: boolean;
   className?: string;
+  /**
+   * For cards inside a `group`: a quiet hover affordance — a clay frame, and a
+   * slow scale within the frame once a real photo is present. The one sanctioned
+   * transform-transition (vault motion-concept); everything else uses the global
+   * interaction clock.
+   */
+  interactive?: boolean;
 };
 
 /**
@@ -24,6 +31,7 @@ export function ImageFigure({
   sizes,
   priority,
   className,
+  interactive,
 }: ImageFigureProps) {
   const ratio = image.ratio ?? "aspect-[4/5]";
   const hasImage = Boolean(image.src && image.width && image.height);
@@ -32,6 +40,7 @@ export function ImageFigure({
     <figure
       className={cn(
         "relative overflow-hidden bg-ink/[0.04] ring-1 ring-line",
+        interactive && "group-hover:ring-clay/50",
         ratio,
         className,
       )}
@@ -46,7 +55,11 @@ export function ImageFigure({
             sizes ?? "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
           }
           priority={priority}
-          className="motion-image-fade absolute inset-0 h-full w-full object-cover"
+          className={cn(
+            "motion-image-fade absolute inset-0 h-full w-full object-cover",
+            interactive &&
+              "transition-transform duration-[650ms] ease-[var(--ease-settle)] group-hover:scale-[1.035]",
+          )}
         />
       ) : (
         <span aria-hidden className="pointer-events-none absolute inset-0">

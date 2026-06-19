@@ -19,10 +19,12 @@ export function FinalCta() {
           <p className="text-xs uppercase tracking-[0.28em] text-paper/60">
             {f.eyebrow}
           </p>
-          <h2 className="mx-auto mt-5 max-w-2xl font-serif text-4xl leading-tight text-paper sm:text-5xl">
+          <h2 className="mx-auto mt-5 max-w-2xl text-balance font-serif text-4xl leading-tight text-paper sm:text-5xl">
             {f.title}
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-paper/80">{f.body}</p>
+          <p className="mx-auto mt-5 max-w-xl text-pretty text-paper/80">
+            {f.body}
+          </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-5">
             <ButtonLink href={f.cta.href} variant="light">
               {f.cta.label}

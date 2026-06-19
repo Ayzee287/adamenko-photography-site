@@ -24,11 +24,16 @@ export function SectionHeading({
       {eyebrow ? (
         <p className="text-xs uppercase tracking-[0.22em] text-muted">{eyebrow}</p>
       ) : null}
-      <h2 className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
+      <h2 className="mt-3 text-balance font-serif text-3xl leading-tight text-ink sm:text-4xl">
         {title}
       </h2>
       {intro ? (
-        <p className={cn("mt-4 max-w-2xl text-muted", centered && "mx-auto")}>
+        <p
+          className={cn(
+            "mt-4 max-w-2xl text-pretty text-muted",
+            centered && "mx-auto",
+          )}
+        >
           {intro}
         </p>
       ) : null}

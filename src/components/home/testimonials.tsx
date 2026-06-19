@@ -61,11 +61,16 @@ export function Testimonials() {
               ) : null}
             </>
           ) : (
-            <div className="border border-dashed border-line px-6 py-16">
-              <span aria-hidden className="font-serif text-5xl text-muted/40">
-                »
+            <div className="px-6 py-10">
+              <span
+                aria-hidden
+                className="block font-serif text-7xl leading-none text-clay/25"
+              >
+                &ldquo;
               </span>
-              <p className="mt-4 text-muted">{t.empty}</p>
+              <p className="mt-2 text-balance font-serif text-xl text-muted sm:text-2xl">
+                {t.empty}
+              </p>
             </div>
           )}
         </div>

@@ -34,6 +34,7 @@ export function ServicesShowcase() {
                   <Link href={`/galeries/${item.slug}`} className="group block">
                     <ImageFigure
                       image={preview}
+                      interactive
                       sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 100vw"
                     />
                     <h3 className="mt-4 font-serif text-xl text-ink group-hover:text-clay">

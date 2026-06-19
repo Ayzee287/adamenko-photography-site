@@ -36,11 +36,12 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
             type="button"
             onClick={() => open(n)}
             aria-label={`Agrandir : ${img.alt}`}
-            className="w-[80%] shrink-0 snap-center sm:w-[52%] lg:w-[36%]"
+            className="group w-[80%] shrink-0 snap-center sm:w-[52%] lg:w-[36%]"
           >
             <ImageFigure
               image={img}
               index={String(n + 1).padStart(2, "0")}
+              interactive
               sizes="(min-width:1024px) 36vw, (min-width:640px) 52vw, 80vw"
             />
           </button>

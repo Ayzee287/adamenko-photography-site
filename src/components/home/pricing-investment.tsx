@@ -32,13 +32,13 @@ export function PricingInvestment() {
                       : `${p.fromLabel} ${pkg.priceFrom} €`}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-muted">{pkg.summary}</p>
-                <ul className="mt-6 flex-1 space-y-2 text-sm text-ink">
+                <p className="mt-2 text-pretty text-sm text-muted">
+                  {pkg.summary}
+                </p>
+                <ul className="mt-6 flex-1 space-y-2.5 text-sm text-ink">
                   {pkg.includes.map((inc) => (
-                    <li key={inc} className="flex gap-2">
-                      <span aria-hidden className="text-clay">
-                        ·
-                      </span>
+                    <li key={inc} className="flex gap-3">
+                      <span aria-hidden className="mt-2 h-px w-3 shrink-0 bg-clay" />
                       {inc}
                     </li>
                   ))}

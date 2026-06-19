@@ -29,7 +29,7 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
             {about.title}
           </h2>
           {about.body.map((p) => (
-            <p key={p} className="mt-5 max-w-md text-muted">
+            <p key={p} className="mt-5 max-w-md text-pretty text-muted">
               {p}
             </p>
           ))}
