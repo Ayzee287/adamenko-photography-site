@@ -9,11 +9,11 @@ import { home } from "@/content/home";
  */
 export function SignatureLine() {
   return (
-    <section className="py-32 sm:py-44">
+    <section className="py-40 sm:py-56">
       <Container>
         <Reveal variant="fade">
-          <span aria-hidden className="mb-8 block h-px w-12 bg-clay" />
-          <p className="max-w-4xl text-pretty font-serif text-3xl leading-[1.18] text-ink sm:text-4xl lg:text-5xl">
+          <span aria-hidden className="mb-10 block h-px w-14 bg-clay" />
+          <p className="max-w-5xl text-pretty font-serif text-[1.9rem] leading-[1.16] text-ink sm:text-5xl sm:leading-[1.12] lg:text-6xl">
             {home.signature.map((line) => (
               <span key={line} className="block">
                 {line}

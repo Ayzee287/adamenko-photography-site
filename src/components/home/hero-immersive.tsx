@@ -27,24 +27,19 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
         className="absolute inset-0 bg-gradient-to-r from-ink/55 via-transparent to-transparent"
       />
 
-      {/* Caption anchored low-left — asymmetric, with room to breathe above. */}
-      <Container className="relative mt-auto pb-20 sm:pb-24">
-        <div className="max-w-xl">
-          <p className="motion-rise text-[0.7rem] uppercase tracking-[0.32em] text-paper/55">
+      {/* Caption anchored low-left — one emotional line, nothing explained.
+          The photograph carries the screen; the words just name the feeling. */}
+      <Container className="relative mt-auto pb-16 sm:pb-20">
+        <div className="max-w-2xl">
+          <p className="motion-rise text-[0.65rem] uppercase tracking-[0.36em] text-paper/45">
             {hero.kicker}
           </p>
           <h1
-            className="motion-rise mt-5 text-balance font-serif text-5xl leading-[1.02] text-paper sm:text-6xl lg:text-7xl"
-            style={{ animationDelay: "100ms" }}
+            className="motion-rise mt-4 text-balance font-serif text-[2.65rem] leading-[1.03] text-paper sm:text-6xl lg:text-7xl"
+            style={{ animationDelay: "120ms" }}
           >
             {hero.title}
           </h1>
-          <p
-            className="motion-rise mt-6 max-w-md text-pretty text-base text-paper/75 sm:text-lg"
-            style={{ animationDelay: "200ms" }}
-          >
-            {hero.subtitle}
-          </p>
         </div>
       </Container>
 

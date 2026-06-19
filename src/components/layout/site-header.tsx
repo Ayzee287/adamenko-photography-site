@@ -43,7 +43,7 @@ export function SiteHeader() {
           href="/"
           className={cn(
             "font-serif text-base tracking-tight",
-            overHero ? "text-paper/90" : "text-ink",
+            overHero ? "text-paper/80" : "text-ink",
           )}
         >
           {site.brand}
@@ -58,8 +58,8 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={cn(
-                "text-[0.82rem] hover:text-clay",
-                overHero ? "text-paper/70" : "text-ink/80",
+                "text-[0.8rem] hover:text-clay",
+                overHero ? "text-paper/60" : "text-ink/80",
               )}
             >
               {item.label}

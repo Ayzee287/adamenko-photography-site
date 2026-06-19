@@ -12,7 +12,11 @@ import { home } from "@/content/home";
  * becomes one interactive destination. Transform/opacity only, ~500ms. Mobile
  * renders the end-state statically (no hover dependency), tap to navigate.
  * Image layers are warm placeholders that accept a real photo with no layout change.
+ * De-carded (D022): borderless, taller, and vertically offset so the three read as
+ * an asymmetric trio of windows, not a tidy row of cards.
  */
+const OFFSETS = ["", "sm:mt-14", "sm:mt-7"];
+
 export function DiscoverCards() {
   const d = home.discover;
 
@@ -22,13 +26,13 @@ export function DiscoverCards() {
         <Reveal variant="rise-left">
           <SectionHeading eyebrow={d.eyebrow} title={d.title} />
         </Reveal>
-        <ul className="mt-12 grid gap-5 sm:grid-cols-3 sm:gap-6">
+        <ul className="mt-14 grid gap-6 sm:grid-cols-3 sm:items-start sm:gap-8">
           {d.cards.map((card, i) => (
-            <li key={card.title}>
+            <li key={card.title} className={OFFSETS[i % OFFSETS.length]}>
               <Reveal delay={i * 110}>
                 <Link
                   href={card.href}
-                  className="group relative block aspect-[4/5] overflow-hidden"
+                  className="group relative block aspect-[3/4] overflow-hidden"
                 >
                   {/* Image layer (warm placeholder; swap for a real photo later) */}
                   <span

@@ -10,10 +10,8 @@ export const home = {
   // Hero is image-first (D021): no CTAs — curiosity, not conversion. A short
   // emotional headline + one supporting line, anchored low-left.
   hero: {
-    kicker: "Adamenko · Photographe à Lyon",
+    kicker: "Photographe · Lyon",
     title: "Les moments qui restent.",
-    subtitle:
-      "Famille, grossesse, couple et mariage — photographiés tout en douceur, à Lyon et au-delà.",
     scrollCue: "Faites défiler",
     imageHint:
       "Image d'ouverture — une étreinte, lumière chaude. La toute première chose que le visiteur ressent.",

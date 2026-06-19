@@ -127,7 +127,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         aria-label="Aperçu des galeries — faites défiler ou glissez pour explorer"
-        className="flex cursor-grab items-stretch gap-3 overflow-x-auto overscroll-x-contain px-4 pb-2 select-none active:cursor-grabbing sm:gap-4 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab items-stretch gap-2 overflow-x-auto overscroll-x-contain px-2 pb-2 select-none active:cursor-grabbing sm:gap-3 sm:px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {loop.map((img, n) => {
           const realIndex = n % len;
@@ -142,7 +142,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
               aria-label={`Agrandir : ${img.alt}`}
               // Fixed height; width derives from each photo's natural aspect ratio
               // → an exhibition wall where portraits stay narrow and landscapes wide.
-              className="group h-[46vh] shrink-0 sm:h-[58vh] lg:h-[66vh]"
+              className="group h-[54vh] shrink-0 sm:h-[66vh] lg:h-[74vh]"
             >
               <ImageFigure
                 image={img}
