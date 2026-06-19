@@ -1,4 +1,4 @@
-import type { Gallery, GenreSlug } from "@/types/gallery";
+import type { Gallery, GalleryImage, GenreSlug } from "@/types/gallery";
 
 // The five genre galleries (D007). Each is seeded with reserved frames (no `src`)
 // so the layout and sequencing are real and reviewable now; real photographs drop
@@ -76,6 +76,23 @@ export const galleries: Gallery[] = [
       placeholder("Photographie de mariage", "aspect-[3/2]"),
     ],
   },
+];
+
+/**
+ * A curated cross-genre sequence for the homepage "reel" (HorizontalGallery).
+ * Placeholders until real frames are exported — same reserved, no-CLS frames as
+ * the genre galleries. Replace with the chosen signature frames from real shoots;
+ * varied ratios are intentional (the reel reads as a hand-picked edit, not a grid).
+ */
+export const featured: GalleryImage[] = [
+  { alt: "Photographie de famille", ratio: "aspect-[4/5]" },
+  { alt: "Photographie de grossesse", ratio: "aspect-[3/2]" },
+  { alt: "Photographie de couple", ratio: "aspect-[4/5]" },
+  { alt: "Portrait", ratio: "aspect-[1/1]" },
+  { alt: "Photographie de mariage", ratio: "aspect-[3/2]" },
+  { alt: "Photographie de famille", ratio: "aspect-[5/4]" },
+  { alt: "Photographie de couple", ratio: "aspect-[2/3]" },
+  { alt: "Photographie de mariage", ratio: "aspect-[4/5]" },
 ];
 
 /** Ordered slugs for nav / static params. */

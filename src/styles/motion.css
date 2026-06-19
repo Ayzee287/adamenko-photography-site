@@ -32,3 +32,65 @@
 .motion-rise {
   animation: rise 700ms var(--ease-arrive) both;
 }
+
+/* ── Cinematic homepage layer (D011) ───────────────────────────────────────────
+   Scroll-driven motion, engineered so drama never costs performance or a11y:
+   only `opacity`/`transform` animate (GPU, no reflow → CLS ≈ 0), and the whole
+   layer is GATED on `html[data-js]` (set by a tiny inline script before paint).
+   Without JS, none of these selectors match → content renders fully visible. */
+
+/* Reveal: content rises + fades as it scrolls into view. Hidden state applies
+   only once JS is ready (no flash for JS users; always visible for no-JS). The
+   `is-inview` class is added by the IntersectionObserver in <Reveal>. */
+html[data-js] .reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 800ms var(--ease-arrive),
+    transform 800ms var(--ease-arrive);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+html[data-js] .reveal.is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+/* Parallax / hero-scale targets: JS writes the transform via a CSS var so the
+   compositor does the work. `will-change` is scoped to these elements only. */
+html[data-js] .parallax,
+html[data-js] .hero-media {
+  will-change: transform;
+}
+
+/* Hero scroll cue — a slow, breathing nudge downward. */
+@keyframes cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+html[data-js] .hero-cue {
+  animation: cue-bob 2.4s var(--ease-settle) infinite;
+}
+
+/* Reduced motion: the cinematic layer collapses to "present, instant". The story
+   still reads; nothing moves. (The base rule in globals.css already tames the
+   keyframe entrances.) */
+@media (prefers-reduced-motion: reduce) {
+  html[data-js] .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  html[data-js] .parallax,
+  html[data-js] .hero-media {
+    transform: none !important;
+    will-change: auto;
+  }
+}
