@@ -15,7 +15,7 @@ export function PricingInvestment() {
   const p = home.pricing;
 
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-14 sm:py-28">
       <Container>
         <Reveal>
           <SectionHeading eyebrow={p.eyebrow} title={p.title} intro={p.intro} />

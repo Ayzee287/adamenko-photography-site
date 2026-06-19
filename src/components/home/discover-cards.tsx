@@ -16,9 +16,13 @@ import { home } from "@/content/home";
  * De-carded (D022): borderless, taller, and vertically offset so the three read as
  * an asymmetric trio of windows, not a tidy row of cards.
  */
-// Varied proportions + vertical offsets → a curated trio, not a tidy grid (D023).
-const OFFSETS = ["", "sm:mt-16", "sm:mt-6"];
-const ASPECTS = ["aspect-[3/4]", "aspect-[2/3]", "aspect-[5/6]"];
+// Different widths + heights + vertical offsets → a scattered, curated trio, not a
+// three-column layout (D024). Col-spans 5/4/3 sum to 12.
+const LAYOUT = [
+  { col: "sm:col-span-5", mt: "", aspect: "aspect-[4/5]" },
+  { col: "sm:col-span-4", mt: "sm:mt-28", aspect: "aspect-[2/3]" },
+  { col: "sm:col-span-3", mt: "sm:mt-12", aspect: "aspect-[3/5]" },
+];
 
 export function DiscoverCards() {
   const d = home.discover;
@@ -29,16 +33,15 @@ export function DiscoverCards() {
         <Reveal variant="rise-left">
           <SectionHeading eyebrow={d.eyebrow} title={d.title} />
         </Reveal>
-        <ul className="mt-14 grid gap-6 sm:grid-cols-3 sm:items-start sm:gap-8">
-          {d.cards.map((card, i) => (
-            <li key={card.title} className={OFFSETS[i % OFFSETS.length]}>
+        <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-12 sm:items-start sm:gap-8">
+          {d.cards.map((card, i) => {
+            const l = LAYOUT[i % LAYOUT.length];
+            return (
+            <li key={card.title} className={cn(l.col, l.mt)}>
               <Reveal delay={i * 110}>
                 <Link
                   href={card.href}
-                  className={cn(
-                    "group relative block overflow-hidden",
-                    ASPECTS[i % ASPECTS.length],
-                  )}
+                  className={cn("group relative block overflow-hidden", l.aspect)}
                 >
                   {/* Image (temp demo, D023; swap for a real photo — no layout change) */}
                   <Image
@@ -79,7 +82,8 @@ export function DiscoverCards() {
                 </Link>
               </Reveal>
             </li>
-          ))}
+            );
+          })}
         </ul>
       </Container>
     </section>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { ImageFigure } from "@/components/ui/image-figure";
@@ -8,9 +9,9 @@ import { home } from "@/content/home";
 
 type Scene = (typeof home.seances.scenes)[number];
 
-// A magazine feature organised by emotion — photography leads (D023). Four scenes,
-// four DIFFERENT compositions (split-left · split-right · full-width · text-overlay)
-// so no structure repeats. The genre is a faint whisper; the emotion + image lead.
+// A magazine feature organised by emotion — photography leads (D023/D024). Four
+// scenes, four DIFFERENT compositions: split-left · split-right · full-width ·
+// FULL-BLEED text-overlay. The last breaks the formula completely (D024).
 
 function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
   return (
@@ -79,7 +80,7 @@ function FullWidth({ scene }: { scene: Scene }) {
       </Link>
       <Link
         href={`/galeries/${scene.slug}`}
-        className="group mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
+        className="group mt-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
       >
         <h3 className="font-serif text-5xl leading-[0.95] text-ink sm:text-7xl">
           {scene.emotion}
@@ -95,24 +96,35 @@ function FullWidth({ scene }: { scene: Scene }) {
   );
 }
 
-function Overlay({ scene }: { scene: Scene }) {
+// The pattern-breaker: a full-bleed photograph with the emotion overlaid (D024).
+function FullBleed({ scene }: { scene: Scene }) {
   return (
     <Link
       href={`/galeries/${scene.slug}`}
-      className="dark-surface group relative block overflow-hidden"
+      className="dark-surface group relative block h-[82vh] w-full overflow-hidden sm:h-[88vh]"
     >
-      <ImageFigure
-        image={{ src: scene.src, alt: scene.tag, ratio: "aspect-[3/2]" }}
-        interactive
+      <Image
+        src={scene.src}
+        alt={scene.tag}
+        fill
         sizes="100vw"
+        className="object-cover transition-transform duration-[800ms] ease-[var(--ease-settle)] group-hover:scale-[1.03]"
       />
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/15 to-transparent"
+        className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/10"
       />
-      <div className="absolute inset-x-0 bottom-0 p-7 sm:p-12">
-        <Lede scene={scene} onDark />
-      </div>
+      <Container className="absolute inset-x-0 bottom-0 pb-14 sm:pb-24">
+        <h3 className="max-w-3xl font-serif text-6xl leading-[0.9] text-paper sm:text-7xl lg:text-8xl">
+          {scene.emotion}
+        </h3>
+        <p className="mt-5 max-w-md text-pretty text-lg text-paper/85 sm:text-xl">
+          {scene.emotive}
+        </p>
+        <span className="mt-6 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-paper/70">
+          {scene.tag} →
+        </span>
+      </Container>
     </Link>
   );
 }
@@ -122,7 +134,7 @@ export function ServicesShowcase() {
   const [s0, s1, s2, s3] = seances.scenes;
 
   return (
-    <section className="py-24 sm:py-32">
+    <section className="py-16 sm:py-32">
       <Container>
         <Reveal variant="fade">
           <p className="text-xs uppercase tracking-[0.24em] text-muted">
@@ -133,7 +145,7 @@ export function ServicesShowcase() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 space-y-24 sm:mt-20 sm:space-y-32">
+        <div className="mt-14 space-y-20 sm:mt-20 sm:space-y-32">
           <Reveal variant="rise">
             <Split scene={s0} ratio="aspect-[5/4]" side="left" />
           </Reveal>
@@ -143,12 +155,16 @@ export function ServicesShowcase() {
           <Reveal variant="rise">
             <FullWidth scene={s2} />
           </Reveal>
-          <Reveal variant="rise-slow">
-            <Overlay scene={s3} />
-          </Reveal>
         </div>
+      </Container>
 
-        <div className="mt-20 flex flex-wrap items-center gap-x-8 gap-y-4">
+      {/* Full-bleed pattern break */}
+      <div className="mt-16 sm:mt-28">
+        <FullBleed scene={s3} />
+      </div>
+
+      <Container className="mt-14 sm:mt-20">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
           <ButtonLink href={seances.cta.href} variant="secondary">
             {seances.cta.label}
           </ButtonLink>

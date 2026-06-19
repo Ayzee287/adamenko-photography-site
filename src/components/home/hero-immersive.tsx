@@ -27,6 +27,11 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
         aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-ink/55 via-transparent to-transparent"
       />
+      {/* Top gradient — keeps the navigation legible over any photo (D024). */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink/55 to-transparent"
+      />
 
       {/* Caption anchored low-left — one emotional line, nothing explained.
           The photograph carries the screen; the words just name the feeling. */}
@@ -36,7 +41,7 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
             {hero.kicker}
           </p>
           <h1
-            className="motion-rise mt-4 text-balance font-serif text-[2.65rem] leading-[1.03] text-paper sm:text-6xl lg:text-7xl"
+            className="motion-rise mt-4 text-balance font-serif text-[2.3rem] leading-[1.05] text-paper sm:text-5xl lg:text-6xl"
             style={{ animationDelay: "120ms" }}
           >
             {hero.title}

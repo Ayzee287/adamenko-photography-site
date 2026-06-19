@@ -5,9 +5,23 @@ import { ImageFigure } from "@/components/ui/image-figure";
 import { Lightbox } from "./lightbox";
 import { useLightbox } from "./use-lightbox";
 import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced-motion";
+import { cn } from "@/lib/utils";
 import type { GalleryImage } from "@/types/gallery";
 
 const SPEED = 0.45; // px/frame — a slow, ambient drift (~27px/s @60fps)
+
+// Varied frame heights + occasional overlap break the grid into an exhibition wall
+// (D024): two larger "hero" frames, shorter neighbours, a couple of slight overlaps.
+const FRAMES = [
+  { h: "h-[56vh] sm:h-[62vh] lg:h-[66vh]", ml: "" },
+  { h: "h-[66vh] sm:h-[80vh] lg:h-[88vh]", ml: "" }, // hero frame
+  { h: "h-[50vh] sm:h-[56vh] lg:h-[60vh]", ml: "-ml-3 sm:-ml-7" }, // overlaps
+  { h: "h-[60vh] sm:h-[70vh] lg:h-[76vh]", ml: "" },
+  { h: "h-[52vh] sm:h-[58vh] lg:h-[62vh]", ml: "" },
+  { h: "h-[64vh] sm:h-[78vh] lg:h-[86vh]", ml: "" }, // hero frame
+  { h: "h-[50vh] sm:h-[56vh] lg:h-[60vh]", ml: "-ml-3 sm:-ml-7" }, // overlaps
+  { h: "h-[58vh] sm:h-[66vh] lg:h-[72vh]", ml: "" },
+];
 
 /**
  * The homepage reel — a living exhibition wall (D017). It auto-drifts slowly and
@@ -127,11 +141,12 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         aria-label="Aperçu des galeries — faites défiler ou glissez pour explorer"
-        className="flex cursor-grab items-stretch gap-2 overflow-x-auto overscroll-x-contain px-2 pb-2 select-none active:cursor-grabbing sm:gap-3 sm:px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab items-end gap-1.5 overflow-x-auto overscroll-x-contain px-2 pb-2 select-none active:cursor-grabbing sm:gap-2 sm:px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {loop.map((img, n) => {
           const realIndex = n % len;
           const isClone = n >= len; // first set is the canonical, focusable one
+          const frame = FRAMES[realIndex % FRAMES.length];
           return (
             <button
               key={n}
@@ -140,9 +155,9 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
               aria-hidden={isClone || undefined}
               onClick={() => handleClick(realIndex)}
               aria-label={`Agrandir : ${img.alt}`}
-              // Fixed height; width derives from each photo's natural aspect ratio
-              // → an exhibition wall where portraits stay narrow and landscapes wide.
-              className="group h-[54vh] shrink-0 sm:h-[66vh] lg:h-[74vh]"
+              // Varied height; width derives from each photo's natural aspect ratio
+              // → portraits stay narrow, landscapes wide, big frames anchor the wall.
+              className={cn("group relative shrink-0", frame.h, frame.ml)}
             >
               <ImageFigure
                 image={img}

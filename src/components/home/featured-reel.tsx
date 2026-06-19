@@ -15,7 +15,7 @@ export function FeaturedReel() {
   const { gallery } = home;
 
   return (
-    <section className="py-20 sm:py-28">
+    <section className="py-14 sm:py-28">
       <Container>
         <Reveal variant="rise-left">
           <div className="flex flex-wrap items-end justify-between gap-6">
