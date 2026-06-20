@@ -12,12 +12,12 @@ export function AddOns() {
   const a = home.addons;
 
   return (
-    <section className="bg-[#f3ece1] py-18 sm:py-24">
+    <section className="bg-[#f3ece1] py-10 sm:py-16">
       <Container>
         <Reveal variant="fade">
           <SectionHeading eyebrow={a.eyebrow} title={a.title} />
         </Reveal>
-        <ul className="mt-12 grid gap-x-8 gap-y-12 sm:mt-18 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-10 grid gap-x-8 gap-y-10 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
           {a.items.map((item, i) => (
             <li key={item.title}>
               <Reveal delay={(i % 3) * 70}>

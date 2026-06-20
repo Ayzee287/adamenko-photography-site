@@ -1,22 +1,30 @@
 @import "tailwindcss";
 @import "./motion.css";
 
-/* ── Vertical rhythm tokens (v3) ───────────────────────────────────────────────
-   The ONLY vertical spacing values used for section + block rhythm. Each maps to a
-   Tailwind numeric utility (base unit 0.25rem), so the system stays greppable with
-   zero arbitrary values:
+/* ── Vertical rhythm tokens (v4) ───────────────────────────────────────────────
+   ONE spacing system for all section + block rhythm. Five tokens, each a Tailwind
+   numeric utility (base unit 0.25rem) so the system stays greppable with zero
+   arbitrary values:
 
-     XS  32px → 8     S  48px → 12     M  72px → 18
-     L   96px → 24    XL 128px → 32    2XL 160px → 40
+     XS 24px → 6     S 40px → 10     M 64px → 16     L 96px → 24     XL 128px → 32
 
-   Section padding alternates by role to make the page breathe then tighten:
-     OPEN  py-24 sm:py-40   (96 → 160)  · signature, séances, testimonials(filled)
-     BASE  py-18 sm:py-32   (72 → 128)  · about, reel, pricing, discover, contact
-     BAND  py-18 sm:py-24   (72 → 96)   · experience, add-ons (the dense, tinted beats)
+   The page is "calm, premium, but dense" — density through composition, not air.
+   Almost every section runs the SAME rhythm so transitions read as one metronome
+   and the scroll never stalls:
 
-   Heading→content uses S→M (mt-12 sm:mt-18); inter-block uses L→2XL. Intra-text
-   micro-spacing (eyebrow→title→body, 4–20px) is the finer TYPE scale and is
-   intentionally NOT forced onto these tokens — that would break editorial type. */
+     FLOW   py-10 sm:py-16  (S 40 → M 64)  · every standard section + the tinted
+                                              bands. Paper→paper gap = 128 (XL) on
+                                              desktop, 80 on mobile — one full token.
+     CLOSE  py-16 sm:py-24  (M 64 → L 96)  · the dark contact band only — the
+                                              emotional climax earns a little weight.
+
+   The footer carries NO top margin: it begins the instant the contact band ends,
+   so contact + footer read as a single closing movement, not two screens.
+
+   Heading→content uses S→M (mt-10 sm:mt-16); inter-block (e.g. séance scenes) uses
+   M→L (space-y-16 sm:space-y-24). Intra-text micro-spacing (eyebrow→title→body,
+   4–20px) is the finer TYPE scale and is intentionally NOT forced onto these tokens
+   — forcing 24px between an eyebrow and its title would break editorial type. */
 
 /* Token layer — the warm, near-neutral palette of Adamenko Photography (vault
    design-language, D006). The chrome is a soft warm paper that flatters skin
@@ -38,6 +46,8 @@
      comes to rest, it never springs. */
   --ease-settle: cubic-bezier(0.33, 0, 0.2, 1);
   --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  /* The "opening" of a Pour découvrir destination — a slow, decisive expansion. */
+  --ease-discover: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
@@ -61,6 +71,71 @@
   .reel-region:focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: -3px;
+  }
+
+  /* Reel overlay chevrons (v4) — no chrome, semi-transparent, edge-anchored. On
+     pointer devices they are hidden until the wall is hovered/focused, then sit
+     quietly translucent and reach full strength only under the cursor — navigation
+     that never competes with the photographs. On touch (no hover) they stay gently
+     visible so the wall is obviously explorable. Opacity transition comes from the
+     global interaction clock (button). */
+  .reel-arrow {
+    opacity: 0.5;
+  }
+  @media (hover: hover) {
+    .reel-arrow {
+      opacity: 0;
+    }
+    .reel-wall:hover .reel-arrow,
+    .reel-wall:focus-within .reel-arrow {
+      opacity: 0.55;
+    }
+  }
+  .reel-arrow:hover,
+  .reel-arrow:focus-visible {
+    opacity: 1;
+  }
+
+  /* ── "Pour découvrir" editorial menu (v4) ──────────────────────────────────────
+     Each item is one link. On a pointer device, with motion allowed, at the desktop
+     3-up layout (≥lg), hovering or keyboard-focusing an item "opens" it: the paper
+     cover panel slides off the bottom of the (clipped) frame to reveal the full
+     portrait, while a legibility scrim and a white caption fade in. Transforms +
+     opacity only — fixed footprint, no reflow, no CLS. Touch (no hover) and
+     reduced-motion keep the static default (square + caption, always visible). */
+  .discover-cover {
+    transition: transform 720ms var(--ease-discover);
+    will-change: transform;
+  }
+  /* Resting hidden state lives on the class (not a utility) so the hover/focus reveal
+     below isn't beaten by Tailwind's utilities layer. */
+  .discover-veil {
+    opacity: 0;
+    transition: opacity 600ms var(--ease-discover);
+  }
+  .discover-item:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* The expansion itself — pointer + motion-safe + the desktop layout only. */
+  @media (hover: hover) and (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    .discover-item:hover .discover-cover {
+      transform: translateY(100%);
+    }
+    .discover-item:hover .discover-reveal {
+      opacity: 1;
+    }
+  }
+  /* Keyboard focus gets the same "opening" (any pointer type, still motion-safe). */
+  @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    .discover-item:focus-visible .discover-cover {
+      transform: translateY(100%);
+    }
+    .discover-item:focus-visible .discover-reveal {
+      opacity: 1;
+    }
   }
 
   /* The interaction clock — one timing system, defined once. Components must

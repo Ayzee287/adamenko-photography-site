@@ -15,7 +15,7 @@ export function PricingInvestment() {
   const p = home.pricing;
 
   return (
-    <section className="py-18 sm:py-32">
+    <section className="py-10 sm:py-16">
       <Container>
         <Reveal>
           <SectionHeading eyebrow={p.eyebrow} title={p.title} intro={p.intro} />
@@ -23,7 +23,7 @@ export function PricingInvestment() {
 
         {/* De-boxed (D021): editorial blocks separated by a single top hairline,
             not cards. The hairline carries meaning (it sets one offering apart). */}
-        <div className="mt-12 grid gap-x-12 gap-y-12 sm:mt-18 lg:grid-cols-2 lg:gap-x-24">
+        <div className="mt-10 grid gap-x-12 gap-y-10 sm:mt-16 lg:grid-cols-2 lg:gap-x-24">
           {pricing.packages.map((pkg, i) => (
             <Reveal key={pkg.name} delay={i * 90}>
               <div className="border-t border-line pt-8">
@@ -58,7 +58,7 @@ export function PricingInvestment() {
           ))}
         </div>
 
-        <p className="mt-12 text-sm text-muted">
+        <p className="mt-10 text-sm text-muted">
           Des questions ?{" "}
           <Link href="/prestations#faq" className="text-clay hover:text-ink">
             Voir les questions fréquentes

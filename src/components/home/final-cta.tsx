@@ -17,9 +17,9 @@ export function FinalCta() {
 
   return (
     <section className="dark-surface bg-ink text-paper">
-      <Container className="py-18 sm:py-32">
+      <Container className="py-16 sm:py-24">
         <Reveal variant="rise-slow">
-          <div className="grid gap-12 lg:grid-cols-[7fr_4fr] lg:items-end lg:gap-24">
+          <div className="grid gap-10 lg:grid-cols-[7fr_4fr] lg:items-end lg:gap-24">
             {/* Invitation — left, dominant. */}
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-paper/55">

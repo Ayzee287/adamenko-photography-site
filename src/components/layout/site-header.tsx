@@ -29,6 +29,13 @@ export function SiteHeader() {
   const overHero = isHome && !scrolled;
   const solid = "border-b border-line bg-paper/90 backdrop-blur";
 
+  // Mark the current section so the nav reads as a wayfinding system, not a row of
+  // identical links. /galeries stays active inside a genre (e.g. /galeries/familles).
+  const isActive = (href: string) =>
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
+
   return (
     <header
       className={cn(
@@ -46,12 +53,12 @@ export function SiteHeader() {
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-ink/50 to-transparent"
         />
       ) : null}
-      <Container className="flex h-16 items-center justify-between">
+      <Container className="flex h-16 items-center justify-between sm:h-20">
         <Link
           href="/"
           className={cn(
-            "font-serif text-base tracking-tight",
-            overHero ? "text-paper/90" : "text-ink",
+            "font-serif text-lg sm:text-xl",
+            overHero ? "text-paper" : "text-ink",
           )}
         >
           {site.brand}
@@ -59,27 +66,38 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navigation principale"
-          className="hidden items-center gap-9 sm:flex"
+          className="hidden items-center gap-8 sm:flex lg:gap-10"
         >
-          {site.nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "text-[0.8rem] hover:text-clay",
-                overHero ? "text-paper/75" : "text-ink/80",
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {site.nav.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "text-sm hover:text-clay",
+                  active && "underline decoration-1 underline-offset-8",
+                  overHero
+                    ? active
+                      ? "text-paper decoration-paper/70"
+                      : "text-paper/70"
+                    : active
+                      ? "text-ink decoration-clay"
+                      : "text-ink/70",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <a
             href={site.social.instagram}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-[0.82rem] hover:text-clay",
-              overHero ? "text-paper/65" : "text-muted",
+              "text-sm hover:text-clay",
+              overHero ? "text-paper/55" : "text-muted",
             )}
           >
             Instagram
@@ -99,15 +117,24 @@ export function SiteHeader() {
             aria-label="Navigation principale"
             className="absolute right-0 top-9 z-50 flex w-44 flex-col gap-3 border border-line bg-paper p-4"
           >
-            {site.nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm text-ink hover:text-clay"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {site.nav.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "text-sm hover:text-clay",
+                    active
+                      ? "text-ink underline decoration-1 decoration-clay underline-offset-4"
+                      : "text-ink/70",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
             <a
               href={site.social.instagram}
               target="_blank"

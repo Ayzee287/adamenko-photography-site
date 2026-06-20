@@ -172,7 +172,7 @@ export function ServicesShowcase() {
   const [s0, s1, s2, s3] = seances.scenes;
 
   return (
-    <section className="py-24 sm:py-40">
+    <section className="py-10 sm:py-16">
       <Container>
         <Reveal variant="fade">
           <p className="text-xs uppercase tracking-[0.24em] text-muted">
@@ -183,7 +183,7 @@ export function ServicesShowcase() {
           </h2>
         </Reveal>
 
-        <div className="mt-18 space-y-24 sm:mt-24 sm:space-y-40">
+        <div className="mt-10 space-y-16 sm:mt-16 sm:space-y-24">
           <Reveal variant="rise">
             <Split scene={s0} ratio="aspect-[5/4]" side="left" />
           </Reveal>
@@ -197,11 +197,11 @@ export function ServicesShowcase() {
       </Container>
 
       {/* Full-bleed pattern break */}
-      <div className="mt-24 sm:mt-40">
+      <div className="mt-16 sm:mt-24">
         <FullBleed scene={s3} />
       </div>
 
-      <Container className="mt-18 sm:mt-24">
+      <Container className="mt-10 sm:mt-16">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
           <ButtonLink href={seances.cta.href} variant="secondary">
             {seances.cta.label}

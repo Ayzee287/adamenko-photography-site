@@ -155,7 +155,10 @@ export const home = {
   // intentional with no photography and accepts a real frame with no layout change.
   // FAQ content now lives on /prestations. `hint` directs each frame.
   discover: {
-    eyebrow: "Pour aller plus loin",
+    // Eyebrow distinct from the add-ons title "Pour aller plus loin." just above it
+    // (v4) — the same phrase twice in adjacent sections read as a copy bug once the
+    // rhythm tightened. "Pour découvrir" keeps the invitation, drops the echo.
+    eyebrow: "Pour découvrir",
     title: "Avant de me confier votre histoire.",
     cards: [
       {

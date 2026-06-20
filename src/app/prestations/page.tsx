@@ -14,7 +14,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PrestationsPage() {
   return (
-    <Container className="py-18 sm:py-24">
+    <Container className="py-16 sm:py-24">
       <h1 className="font-serif text-4xl text-ink">{copy.services.title}</h1>
       <p className="mt-4 max-w-xl text-muted">{copy.services.intro}</p>
 
@@ -27,7 +27,7 @@ export default function PrestationsPage() {
       </div>
 
       {/* FAQ — moved here from the homepage so pricing stays uninterrupted (D018). */}
-      <section id="faq" className="mt-20 scroll-mt-24">
+      <section id="faq" className="mt-16 scroll-mt-24">
         <h2 className="font-serif text-2xl text-ink">{home.pricing.faqTitle}</h2>
         <div className="mt-6 max-w-3xl divide-y divide-line border-y border-line">
           {pricing.faq.map((item) => (

@@ -11,7 +11,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function AProposPage() {
   return (
-    <Container className="grid gap-12 py-18 sm:py-24 lg:grid-cols-2 lg:gap-24">
+    <Container className="grid gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:gap-24">
       <div>
         <h1 className="font-serif text-4xl text-ink">{copy.about.title}</h1>
         <div className="mt-6 space-y-4 text-muted">

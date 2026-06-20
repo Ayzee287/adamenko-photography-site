@@ -27,13 +27,13 @@ export function Testimonials() {
   // floating in a void — it's a short, confident statement of integrity (real words
   // only, never invented), tightened so it reads as intentional, not as a gap.
   return (
-    <section className={has ? "py-24 sm:py-40" : "py-12 sm:py-18"}>
+    <section className="py-10 sm:py-16">
       <Container>
         <SectionHeading eyebrow={t.eyebrow} title={t.title} align="center" />
         <div
           className={cn(
             "mx-auto max-w-2xl text-center",
-            has ? "mt-12 max-w-3xl sm:mt-18" : "mt-8 sm:mt-12",
+            has ? "mt-10 max-w-3xl sm:mt-16" : "mt-6 sm:mt-10",
           )}
         >
           {has ? (

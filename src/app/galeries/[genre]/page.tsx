@@ -34,7 +34,7 @@ export default async function GenrePage({ params }: PageProps) {
   if (!gallery) notFound();
 
   return (
-    <Container className="py-18 sm:py-24">
+    <Container className="py-16 sm:py-24">
       <h1 className="font-serif text-4xl text-ink">{gallery.title}</h1>
       <p className="mt-4 max-w-xl text-muted">{gallery.intro}</p>
       <div className="mt-12">

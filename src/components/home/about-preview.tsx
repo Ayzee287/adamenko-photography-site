@@ -22,8 +22,8 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
   };
 
   return (
-    <section className="py-18 sm:py-32">
-      <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
+    <section className="py-10 sm:py-16">
+      <Container className="grid items-center gap-10 lg:grid-cols-2 lg:gap-24">
         <Parallax speed={0.05} className="lg:order-1">
           <ImageFigure image={image} sizes="(min-width:1024px) 45vw, 100vw" />
         </Parallax>

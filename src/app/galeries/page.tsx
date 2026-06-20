@@ -13,7 +13,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function GaleriesPage() {
   return (
-    <Container className="py-18 sm:py-24">
+    <Container className="py-16 sm:py-24">
       <h1 className="font-serif text-4xl text-ink">{copy.galleries.title}</h1>
       <p className="mt-4 max-w-xl text-muted">{copy.galleries.intro}</p>
 
