@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/container";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { site } from "@/content/site";
 import { subscribeScroll } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
@@ -19,11 +20,18 @@ export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDetailsElement | null>(null);
 
   useEffect(() => {
     if (!isHome) return;
     return subscribeScroll(() => setScrolled(window.scrollY > 24));
   }, [isHome]);
+
+  // Close the mobile disclosure after navigating, so the panel never lingers open
+  // on the next page (keyboard + touch).
+  useEffect(() => {
+    if (menuRef.current) menuRef.current.open = false;
+  }, [pathname]);
 
   // Transparent + light only while floating over the dark hero.
   const overHero = isHome && !scrolled;
@@ -102,9 +110,11 @@ export function SiteHeader() {
           >
             Instagram
           </a>
+          {/* Renders nothing until a second locale is active (zero change today). */}
+          <LanguageSwitcher onDark={overHero} />
         </nav>
 
-        <details className="relative sm:hidden">
+        <details ref={menuRef} className="relative sm:hidden">
           <summary
             className={cn(
               "cursor-pointer list-none text-sm [&::-webkit-details-marker]:hidden",
@@ -143,6 +153,8 @@ export function SiteHeader() {
             >
               Instagram
             </a>
+            {/* Renders nothing until a second locale is active (zero change today). */}
+            <LanguageSwitcher className="pt-1" />
           </nav>
         </details>
       </Container>

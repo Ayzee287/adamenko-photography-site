@@ -19,7 +19,20 @@ export default function ContactPage() {
       <ContactForm />
 
       <p className="mt-10 text-sm text-muted">
-        Ou retrouvez-moi sur{" "}
+        {site.contact.email ? (
+          <>
+            Ou écrivez-moi directement à{" "}
+            <a
+              href={`mailto:${site.contact.email}`}
+              className="text-ink underline decoration-clay underline-offset-4 hover:text-clay"
+            >
+              {site.contact.email}
+            </a>
+            , ou retrouvez-moi sur{" "}
+          </>
+        ) : (
+          <>Ou retrouvez-moi sur{" "}</>
+        )}
         <a
           href={site.social.instagram}
           target="_blank"

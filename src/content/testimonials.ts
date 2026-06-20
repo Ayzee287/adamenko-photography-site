@@ -9,6 +9,14 @@ export type Testimonial = {
   name: string;
   /** City / context, e.g. "Lyon". */
   city?: string;
+  /** Which kind of session it was — optional context. */
+  service?: string;
+  /** ISO date (YYYY-MM) of the session — optional, for ordering. */
+  date?: string;
+  /** Where the words came from — for the operator's own tracking, not shown. */
+  source?: "email" | "instagram" | "google" | "form";
 };
 
+// Stays empty until the photographer supplies genuine words (see
+// docs/content-collection/testimonials-questionnaire.md for the collection flow).
 export const testimonials: Testimonial[] = [];

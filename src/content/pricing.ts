@@ -12,7 +12,8 @@ export type PricePackage = {
   includes: string[];
 };
 
-export type PricingFaq = { q: string; a: string };
+// NOTE: the FAQ moved to content/faq.ts (expanded + categorised). Pricing now holds
+// only the package structure (unchanged).
 
 export const pricing = {
   currency: "EUR",
@@ -42,22 +43,4 @@ export const pricing = {
       ],
     },
   ] as PricePackage[],
-  faq: [
-    {
-      q: "Comment réserver une séance ?",
-      a: "Écrivez-moi via le formulaire de contact avec la date, le lieu et ce que vous imaginez. On échange, puis je vous envoie un devis adapté.",
-    },
-    {
-      q: "Quand reçoit-on les photos ?",
-      a: "Vous recevez un aperçu rapidement, puis la galerie complète sous quelques semaines selon la saison. Une livraison express est possible en option.",
-    },
-    {
-      q: "Où ont lieu les séances ?",
-      a: "À Lyon et dans les environs, chez vous ou en extérieur. Je me déplace aussi en France et à l'étranger pour les projets qui le demandent.",
-    },
-    {
-      q: "Et si on n'est pas à l'aise devant l'objectif ?",
-      a: "C'est le cas de presque tout le monde, et c'est mon métier de vous mettre à l'aise. On avance doucement ; les vraies images arrivent quand on oublie l'appareil.",
-    },
-  ] as PricingFaq[],
 } as const;

@@ -21,19 +21,47 @@ type LightboxProps = {
 export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxProps) {
   const isOpen = index !== null;
   const touchX = useRef<number | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
+    // Remember what had focus so we can restore it when the dialog closes.
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       else if (e.key === "ArrowLeft") onPrev();
       else if (e.key === "ArrowRight") onNext();
+      else if (e.key === "Tab") {
+        // Trap focus inside the modal.
+        const root = dialogRef.current;
+        if (!root) return;
+        const focusables = root.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    // Move focus into the dialog so keyboard users start inside it.
+    closeRef.current?.focus();
+
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      previouslyFocused?.focus?.();
     };
   }, [isOpen, onClose, onPrev, onNext]);
 
@@ -56,6 +84,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Aperçu de la photographie"
@@ -64,6 +93,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
     >
       <div className="flex justify-end">
         <button
+          ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Fermer"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { localizedAlternates } from "@/lib/i18n";
 import { HeroImmersive } from "@/components/home/hero-immersive";
 import { SignatureLine } from "@/components/home/signature-line";
 import { AboutPreview } from "@/components/home/about-preview";
@@ -12,7 +13,7 @@ import { Testimonials } from "@/components/home/testimonials";
 import { FinalCta } from "@/components/home/final-cta";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: localizedAlternates("/"),
 };
 
 // The homepage is the product (D010): a long-form narrative that lets a visitor

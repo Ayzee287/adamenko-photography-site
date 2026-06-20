@@ -5,6 +5,9 @@ import { siteUrl } from "@/lib/site";
 import { site } from "@/content/site";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { JsonLd } from "@/components/seo/json-ld";
+import { localBusinessJsonLd } from "@/lib/structured-data";
+import { defaultLocale, htmlLang, ogLocale } from "@/lib/i18n";
 import "@/styles/globals.css";
 
 // Display — a warm humanist serif (vault design-language). Not a high-contrast
@@ -32,7 +35,7 @@ export const metadata: Metadata = {
   description: site.tagline,
   openGraph: {
     siteName: site.brand,
-    locale: "fr_FR",
+    locale: ogLocale[defaultLocale],
     type: "website",
   },
 };
@@ -42,10 +45,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="fr"
+      lang={htmlLang[defaultLocale]}
       className={`${fraunces.variable} ${inter.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-paper font-sans text-ink antialiased">
+        <JsonLd data={localBusinessJsonLd()} />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

@@ -48,9 +48,18 @@ export function SiteFooter() {
           </nav>
         </div>
 
-        <p className="mt-10 text-xs tracking-wide text-muted">
-          © {year} {site.brand}. {copy.footer.rights}
-        </p>
+        <div className="mt-10 flex flex-col gap-3 text-xs tracking-wide text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {year} {site.brand}. {copy.footer.rights}
+          </p>
+          <nav aria-label="Liens légaux" className="flex flex-wrap gap-x-6 gap-y-2">
+            {site.legalNav.map((item) => (
+              <Link key={item.href} href={item.href} className="hover:text-clay">
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </Container>
     </footer>
   );

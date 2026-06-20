@@ -34,7 +34,10 @@
 @theme {
   --color-ink: #2a2420; /* warm charcoal — text / strong */
   --color-paper: #faf6f0; /* warm cream — the signature surface */
-  --color-muted: #8c8178; /* warm gray — secondary text */
+  /* Secondary text. Darkened from #8c8178 (~3.5:1, failed WCAG AA for body) to meet
+     AA 4.5:1 on both paper (~5.2:1) and the warm band #f3ece1 (~4.8:1). Same warm
+     hue, just legible — a required a11y fix, not a restyle. */
+  --color-muted: #6f655c; /* warm gray — secondary text (AA on paper + band) */
   --color-line: #e7ddd0; /* hairline */
   --color-clay: #b07159; /* the single warm accent */
 

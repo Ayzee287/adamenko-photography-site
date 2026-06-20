@@ -4,11 +4,16 @@
 // components. Marketing copy below is a careful DRAFT in the brand voice (warm,
 // plain, first person) — confirm every line with the photographer; never invent
 // biographical facts (years, awards, stories).
+//
+// Identity (brand, location, contact) is NOT duplicated here — it is sourced from
+// the single photographer identity model so a name/contact change is one edit.
+
+import { photographer } from "@/content/photographer";
 
 export const site = {
-  brand: "Adamenko Photography",
-  shortBrand: "Adamenko",
-  location: "Lyon, France",
+  brand: photographer.brand,
+  shortBrand: photographer.shortBrand,
+  location: photographer.location.label,
   // Factual service description — doubles as the default meta description.
   tagline:
     "Photographe de famille, portrait, grossesse, couple et mariage à Lyon et au-delà.",
@@ -18,13 +23,18 @@ export const site = {
     { href: "/prestations", label: "Prestations" },
     { href: "/contact", label: "Contact" },
   ],
+  // Legal routes — surfaced in the footer (mandatory in France: LCEN + RGPD).
+  legalNav: [
+    { href: "/mentions-legales", label: "Mentions légales" },
+    { href: "/confidentialite", label: "Confidentialité" },
+  ],
   social: {
-    instagram: "https://www.instagram.com/adamenko_photography/",
+    instagram: photographer.contact.instagram,
   },
   contact: {
-    // TODO(operator): real address — kept empty rather than fabricated.
-    email: "",
-    instagram: "https://www.instagram.com/adamenko_photography/",
+    // Sourced from the identity model; empty until the operator sets a real inbox.
+    email: photographer.contact.email,
+    instagram: photographer.contact.instagram,
   },
 } as const;
 
@@ -72,9 +82,17 @@ export const copy = {
       occasion: "Type de séance",
       message: "Votre message",
       submit: "Envoyer",
+      sending: "Envoi…",
       success: "Merci — votre message est bien arrivé. Je vous réponds très vite.",
-      // The form is not yet wired to delivery — see contact page note.
-      pending: "Le formulaire sera bientôt connecté.",
+      error:
+        "Désolée, l'envoi n'a pas abouti. Réessayez dans un instant, ou écrivez-moi directement.",
+      // Per-field hints shown when server-side validation rejects a field.
+      errors: {
+        name: "Indiquez votre nom.",
+        email: "Indiquez une adresse e-mail valide.",
+        occasion: "Choisissez un type de séance.",
+        message: "Écrivez quelques mots (au moins 10 caractères).",
+      },
     },
   },
   footer: {
