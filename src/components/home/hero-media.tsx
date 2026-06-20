@@ -54,11 +54,18 @@ export function HeroMedia({
         <>
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-br from-[#43392f] via-[#2a2420] to-[#17120f]"
+            className="absolute inset-0 bg-[radial-gradient(120%_110%_at_75%_15%,#43392f,#15110e)]"
           />
+          {/* Directed full-frame placeholder — the hero reads as a magazine cover
+              waiting for its opening photograph, not an empty band (v3). */}
           {hint ? (
-            <span className="pointer-events-none absolute right-5 top-20 max-w-[26ch] text-right font-serif text-xs italic leading-snug text-paper/35">
-              {hint}
+            <span className="pointer-events-none absolute right-5 top-24 flex max-w-[30ch] flex-col items-end gap-2 text-right sm:right-8 sm:top-28">
+              <span className="text-[0.6rem] uppercase tracking-[0.3em] text-paper/35">
+                Image d&rsquo;ouverture · plein cadre
+              </span>
+              <span className="font-serif text-sm italic leading-snug text-paper/40">
+                {hint}
+              </span>
             </span>
           ) : null}
         </>

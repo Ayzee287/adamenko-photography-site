@@ -15,10 +15,10 @@ export function FeaturedReel() {
   const { gallery } = home;
 
   return (
-    <section className="py-14 sm:py-28">
+    <section className="py-18 sm:py-32">
       <Container>
         <Reveal variant="rise-left">
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
             <SectionHeading
               eyebrow={gallery.eyebrow}
               title={gallery.title}
@@ -32,7 +32,7 @@ export function FeaturedReel() {
         </Reveal>
       </Container>
       {/* The reel breaks out of the container — an edge-to-edge exhibition wall. */}
-      <div className="mt-12 sm:mt-16">
+      <div className="mt-12 sm:mt-18">
         <HorizontalGallery images={featured} />
       </div>
     </section>

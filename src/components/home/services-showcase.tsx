@@ -7,11 +7,21 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { cn } from "@/lib/utils";
 import { home } from "@/content/home";
 
-type Scene = (typeof home.seances.scenes)[number];
+// A scene accepts a real export later (`src` + dimensions) with zero layout change;
+// until then every composition renders its directed reserved frame (v2).
+type Scene = {
+  slug: string;
+  emotion: string;
+  tag: string;
+  emotive: string;
+  src?: string;
+  hint?: string;
+};
 
-// A magazine feature organised by emotion — photography leads (D023/D024). Four
-// scenes, four DIFFERENT compositions: split-left · split-right · full-width ·
-// FULL-BLEED text-overlay. The last breaks the formula completely (D024).
+// A magazine feature organised by emotion — photography leads, but the spread is
+// built to stand on directed placeholders alone (v2). Four scenes, four DIFFERENT
+// compositions: split-left · split-right · full-width · FULL-BLEED text-overlay.
+// The last breaks the formula completely (D024).
 
 function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
   return (
@@ -80,7 +90,7 @@ function FullWidth({ scene }: { scene: Scene }) {
       </Link>
       <Link
         href={`/galeries/${scene.slug}`}
-        className="group mt-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
+        className="group mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
       >
         <h3 className="font-serif text-5xl leading-[0.95] text-ink sm:text-7xl">
           {scene.emotion}
@@ -96,25 +106,53 @@ function FullWidth({ scene }: { scene: Scene }) {
   );
 }
 
-// The pattern-breaker: a full-bleed photograph with the emotion overlaid (D024).
+// The pattern-breaker: a full-bleed band with the emotion overlaid (D024). With a
+// real export it's the photograph; without one it's a directed dark frame — a
+// warm-black field carrying the same big serif, so the break still lands (v2).
 function FullBleed({ scene }: { scene: Scene }) {
+  const hasImage = Boolean(scene.src);
   return (
     <Link
       href={`/galeries/${scene.slug}`}
-      className="dark-surface group relative block h-[82vh] w-full overflow-hidden sm:h-[88vh]"
+      className="dark-surface group relative block h-[72vh] w-full overflow-hidden sm:h-[80vh]"
     >
-      <Image
-        src={scene.src}
-        alt={scene.tag}
-        fill
-        sizes="100vw"
-        className="object-cover transition-transform duration-[800ms] ease-[var(--ease-settle)] group-hover:scale-[1.03]"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/10"
-      />
-      <Container className="absolute inset-x-0 bottom-0 pb-14 sm:pb-24">
+      {hasImage ? (
+        <>
+          <Image
+            src={scene.src as string}
+            alt={scene.tag}
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-[800ms] ease-[var(--ease-settle)] group-hover:scale-[1.03]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/10"
+          />
+        </>
+      ) : (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(120%_120%_at_72%_12%,#3c332b,#1a1511)]"
+          />
+          {/* Directed reserved frame — a quiet, paper-tinted art-direction caption. */}
+          <span
+            aria-hidden
+            className="absolute right-5 top-6 flex max-w-[26ch] flex-col items-end gap-2 text-right sm:right-8 sm:top-8"
+          >
+            <span className="text-[0.6rem] uppercase tracking-[0.28em] text-paper/35">
+              Paysage · 16:9
+            </span>
+            {scene.hint ? (
+              <span className="font-serif text-sm italic leading-snug text-paper/35">
+                {scene.hint}
+              </span>
+            ) : null}
+          </span>
+        </>
+      )}
+      <Container className="absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
         <h3 className="max-w-3xl font-serif text-6xl leading-[0.9] text-paper sm:text-7xl lg:text-8xl">
           {scene.emotion}
         </h3>
@@ -134,7 +172,7 @@ export function ServicesShowcase() {
   const [s0, s1, s2, s3] = seances.scenes;
 
   return (
-    <section className="py-16 sm:py-32">
+    <section className="py-24 sm:py-40">
       <Container>
         <Reveal variant="fade">
           <p className="text-xs uppercase tracking-[0.24em] text-muted">
@@ -145,7 +183,7 @@ export function ServicesShowcase() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 space-y-20 sm:mt-20 sm:space-y-32">
+        <div className="mt-18 space-y-24 sm:mt-24 sm:space-y-40">
           <Reveal variant="rise">
             <Split scene={s0} ratio="aspect-[5/4]" side="left" />
           </Reveal>
@@ -159,11 +197,11 @@ export function ServicesShowcase() {
       </Container>
 
       {/* Full-bleed pattern break */}
-      <div className="mt-16 sm:mt-28">
+      <div className="mt-24 sm:mt-40">
         <FullBleed scene={s3} />
       </div>
 
-      <Container className="mt-14 sm:mt-20">
+      <Container className="mt-18 sm:mt-24">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
           <ButtonLink href={seances.cta.href} variant="secondary">
             {seances.cta.label}

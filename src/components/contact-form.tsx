@@ -72,9 +72,11 @@ export function ContactForm() {
         />
       </label>
 
+      {/* Pill, matching the CTA system (v2): thin border at rest, gentle ink fill
+          on hover. The form's single primary action. */}
       <button
         type="submit"
-        className="self-start border border-ink px-6 py-2 text-sm text-ink hover:border-clay hover:text-clay"
+        className="inline-flex h-[52px] items-center self-start rounded-full border border-ink/35 px-7 text-sm tracking-wide text-ink hover:border-ink hover:bg-ink hover:text-paper active:scale-[0.99]"
       >
         {t.submit}
       </button>

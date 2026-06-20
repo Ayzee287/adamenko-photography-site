@@ -13,6 +13,8 @@ import type { GalleryImage } from "@/types/gallery";
  */
 export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
   const { about } = home;
+  // No `label` here: the section eyebrow already reads "La photographe", so the
+  // frame shows only orientation·ratio + the art-direction note (v3 QA: no echo).
   const image = portrait ?? {
     alt: about.portraitAlt,
     ratio: "aspect-[4/5]",
@@ -20,8 +22,8 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
   };
 
   return (
-    <section className="py-16 sm:py-32">
-      <Container className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+    <section className="py-18 sm:py-32">
+      <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
         <Parallax speed={0.05} className="lg:order-1">
           <ImageFigure image={image} sizes="(min-width:1024px) 45vw, 100vw" />
         </Parallax>

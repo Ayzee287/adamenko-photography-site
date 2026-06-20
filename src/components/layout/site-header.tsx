@@ -32,18 +32,26 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "top-0 z-50 transition-colors duration-300",
+        "isolate top-0 z-50 transition-colors duration-300",
         isHome ? "fixed inset-x-0" : `sticky ${solid}`,
         isHome && (scrolled ? solid : "border-b border-transparent bg-transparent"),
         overHero && "dark-surface",
       )}
     >
+      {/* Legibility scrim — only while floating transparent over photography. Keeps
+          the nav readable over a bright frame without adding any visible chrome. */}
+      {overHero ? (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-ink/50 to-transparent"
+        />
+      ) : null}
       <Container className="flex h-16 items-center justify-between">
         <Link
           href="/"
           className={cn(
             "font-serif text-base tracking-tight",
-            overHero ? "text-paper/80" : "text-ink",
+            overHero ? "text-paper/90" : "text-ink",
           )}
         >
           {site.brand}
@@ -59,7 +67,7 @@ export function SiteHeader() {
               href={item.href}
               className={cn(
                 "text-[0.8rem] hover:text-clay",
-                overHero ? "text-paper/60" : "text-ink/80",
+                overHero ? "text-paper/75" : "text-ink/80",
               )}
             >
               {item.label}
@@ -71,7 +79,7 @@ export function SiteHeader() {
             rel="noopener noreferrer"
             className={cn(
               "text-[0.82rem] hover:text-clay",
-              overHero ? "text-paper/50" : "text-muted",
+              overHero ? "text-paper/65" : "text-muted",
             )}
           >
             Instagram

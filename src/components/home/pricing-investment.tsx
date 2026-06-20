@@ -15,7 +15,7 @@ export function PricingInvestment() {
   const p = home.pricing;
 
   return (
-    <section className="py-14 sm:py-28">
+    <section className="py-18 sm:py-32">
       <Container>
         <Reveal>
           <SectionHeading eyebrow={p.eyebrow} title={p.title} intro={p.intro} />
@@ -23,7 +23,7 @@ export function PricingInvestment() {
 
         {/* De-boxed (D021): editorial blocks separated by a single top hairline,
             not cards. The hairline carries meaning (it sets one offering apart). */}
-        <div className="mt-16 grid gap-x-16 gap-y-12 lg:grid-cols-2">
+        <div className="mt-12 grid gap-x-12 gap-y-12 sm:mt-18 lg:grid-cols-2 lg:gap-x-24">
           {pricing.packages.map((pkg, i) => (
             <Reveal key={pkg.name} delay={i * 90}>
               <div className="border-t border-line pt-8">
@@ -46,8 +46,10 @@ export function PricingInvestment() {
                     </li>
                   ))}
                 </ul>
+                {/* Secondary here so the page keeps a single primary per viewport
+                    (the closing contact CTA); pricing should inform, not shout. */}
                 <div className="mt-8">
-                  <ButtonLink href={p.cta.href} variant="primary">
+                  <ButtonLink href={p.cta.href} variant="secondary">
                     {p.cta.label}
                   </ButtonLink>
                 </div>

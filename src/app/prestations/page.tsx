@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { ButtonLink } from "@/components/ui/button-link";
 import { copy } from "@/content/site";
 import { home } from "@/content/home";
 import { pricing } from "@/content/pricing";
@@ -14,18 +14,17 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PrestationsPage() {
   return (
-    <Container className="py-16">
+    <Container className="py-18 sm:py-24">
       <h1 className="font-serif text-4xl text-ink">{copy.services.title}</h1>
       <p className="mt-4 max-w-xl text-muted">{copy.services.intro}</p>
 
       {/* Inquiry-led; transparent range communicated on request until set (D012). */}
       <p className="mt-8 text-sm text-ink">{copy.services.note}</p>
-      <Link
-        href="/contact"
-        className="mt-6 inline-block border border-ink px-6 py-2 text-sm text-ink hover:border-clay hover:text-clay"
-      >
-        {copy.services.cta}
-      </Link>
+      <div className="mt-7">
+        <ButtonLink href="/contact" variant="primary">
+          {copy.services.cta}
+        </ButtonLink>
+      </div>
 
       {/* FAQ — moved here from the homepage so pricing stays uninterrupted (D018). */}
       <section id="faq" className="mt-20 scroll-mt-24">

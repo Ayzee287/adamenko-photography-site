@@ -25,6 +25,13 @@ export type GalleryImage = {
   /** Aspect-ratio token for the frame, e.g. "aspect-[4/5]". Drives the layout rhythm. */
   ratio?: string;
   /**
+   * Short title shown on a reserved (photo-less) frame — the subject the frame is
+   * reserved for, e.g. "Le lien", "Portrait". Sits under the orientation·ratio
+   * caption so the placeholder reads as a directed art-board, not an empty field.
+   * Ignored once `src` is set.
+   */
+  label?: string;
+  /**
    * Art-direction note shown only on a reserved (photo-less) frame: a quiet line
    * naming the photograph that belongs here and how it should feel — so the
    * placeholder directs rather than apologises (D021). Ignored once `src` is set.

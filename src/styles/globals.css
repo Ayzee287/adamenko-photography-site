@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @import "./motion.css";
 
+/* ── Vertical rhythm tokens (v3) ───────────────────────────────────────────────
+   The ONLY vertical spacing values used for section + block rhythm. Each maps to a
+   Tailwind numeric utility (base unit 0.25rem), so the system stays greppable with
+   zero arbitrary values:
+
+     XS  32px → 8     S  48px → 12     M  72px → 18
+     L   96px → 24    XL 128px → 32    2XL 160px → 40
+
+   Section padding alternates by role to make the page breathe then tighten:
+     OPEN  py-24 sm:py-40   (96 → 160)  · signature, séances, testimonials(filled)
+     BASE  py-18 sm:py-32   (72 → 128)  · about, reel, pricing, discover, contact
+     BAND  py-18 sm:py-24   (72 → 96)   · experience, add-ons (the dense, tinted beats)
+
+   Heading→content uses S→M (mt-12 sm:mt-18); inter-block uses L→2XL. Intra-text
+   micro-spacing (eyebrow→title→body, 4–20px) is the finer TYPE scale and is
+   intentionally NOT forced onto these tokens — that would break editorial type. */
+
 /* Token layer — the warm, near-neutral palette of Adamenko Photography (vault
    design-language, D006). The chrome is a soft warm paper that flatters skin
    tones; the photographs carry all the saturation. Never pure black (cold),
@@ -37,6 +54,13 @@
     outline: 2px solid var(--color-ink);
     outline-offset: 3px;
     border-radius: 2px;
+  }
+
+  /* The reel is a focusable horizontal scroll region (keyboard ← / →). Its ring is
+     INSET so it reads clearly without drawing off the full-bleed edges. */
+  .reel-region:focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: -3px;
   }
 
   /* The interaction clock — one timing system, defined once. Components must

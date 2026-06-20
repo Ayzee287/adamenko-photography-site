@@ -8,7 +8,7 @@ export function ExperienceSteps() {
   const { experience } = home;
 
   return (
-    <section className="bg-[#f3ece1] py-14 sm:py-28">
+    <section className="bg-[#f3ece1] py-18 sm:py-24">
       <Container>
         <Reveal>
           <SectionHeading
@@ -17,7 +17,7 @@ export function ExperienceSteps() {
             intro={experience.intro}
           />
         </Reveal>
-        <ol className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-12 grid gap-x-8 gap-y-12 sm:mt-18 sm:grid-cols-2 lg:grid-cols-4">
           {experience.steps.map((step, i) => (
             <li key={step.n}>
               <Reveal delay={i * 90}>

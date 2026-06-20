@@ -5,16 +5,18 @@ import { cn } from "@/lib/utils";
 type Variant = "primary" | "secondary";
 
 /**
- * The CTA system (D019). Two roles, one warm language:
- * - **primary (emotional)** — a filled, tactile button: on light surfaces a clay
- *   layer *wipes* behind the label on hover (the accent's one expressive moment);
- *   the arrow advances; soft active-scale. On dark bands: paper fill, no wipe
- *   (contrast), just an advancing arrow + a gentle bg settle.
- * - **secondary (informational)** — a quiet link whose underline *draws* from the
- *   left, with an advancing arrow.
+ * The CTA system (v2). Two editorial roles, one warm language:
  *
- * Transform/opacity only; ~400–500ms; reduced-motion collapses these to instant
- * via the global rule (globals.css); touch targets ≥44px.
+ * - **primary** — a pill (radius 999px, 52px tall) with a *thin* border and no
+ *   fill at rest; on hover the surface fills gently (ink on light, paper on dark)
+ *   and the arrow advances ~5px. The fill/colour transition rides the global
+ *   interaction clock (~250–300ms, globals.css); only the arrow's transform is
+ *   local. Used sparingly — one primary per viewport.
+ * - **secondary** — a quiet text link: an underline *draws* from the left and the
+ *   arrow advances. No border, no box, no fill — ever.
+ *
+ * Transform/opacity only; reduced-motion collapses these to instant via the
+ * global rule; touch targets ≥44px.
  */
 export function ButtonLink({
   href,
@@ -32,14 +34,19 @@ export function ButtonLink({
   const external = /^https?:\/\//.test(href);
   const inner =
     variant === "primary" ? (
-      <PrimaryInner onDark={onDark}>{children}</PrimaryInner>
+      <PrimaryInner>{children}</PrimaryInner>
     ) : (
       <SecondaryInner onDark={onDark}>{children}</SecondaryInner>
     );
 
   const base =
     variant === "primary"
-      ? "group relative inline-flex items-center gap-3 overflow-hidden px-7 py-4 text-sm tracking-wide active:scale-[0.98]"
+      ? cn(
+          "group inline-flex h-[52px] items-center gap-3 rounded-full border px-7 text-sm tracking-wide active:scale-[0.99]",
+          onDark
+            ? "border-paper/45 text-paper hover:border-paper hover:bg-paper hover:text-ink"
+            : "border-ink/35 text-ink hover:border-ink hover:bg-ink hover:text-paper",
+        )
       : "group inline-flex min-h-[44px] items-center text-sm";
 
   const cls = cn(base, className);
@@ -58,39 +65,13 @@ export function ButtonLink({
   );
 }
 
-function PrimaryInner({
-  children,
-  onDark,
-}: {
-  children: ReactNode;
-  onDark: boolean;
-}) {
+function PrimaryInner({ children }: { children: ReactNode }) {
   return (
     <>
-      {/* Base fill */}
+      <span>{children}</span>
       <span
         aria-hidden
-        className={cn(
-          "absolute inset-0",
-          onDark ? "bg-paper group-hover:bg-paper/90" : "bg-ink",
-        )}
-      />
-      {/* Clay wipe — light surfaces only */}
-      {!onDark ? (
-        <span
-          aria-hidden
-          className="absolute inset-0 -translate-x-full bg-clay transition-transform duration-500 ease-[var(--ease-arrive)] group-hover:translate-x-0"
-        />
-      ) : null}
-      <span className={cn("relative", onDark ? "text-ink" : "text-paper")}>
-        {children}
-      </span>
-      <span
-        aria-hidden
-        className={cn(
-          "relative transition-transform duration-500 ease-[var(--ease-arrive)] group-hover:translate-x-1",
-          onDark ? "text-ink" : "text-paper",
-        )}
+        className="transition-transform duration-300 ease-[var(--ease-arrive)] group-hover:translate-x-[5px]"
       >
         →
       </span>
@@ -115,7 +96,7 @@ function SecondaryInner({
       <span>{children}</span>
       <span
         aria-hidden
-        className="transition-transform duration-500 ease-[var(--ease-arrive)] group-hover:translate-x-1"
+        className="transition-transform duration-300 ease-[var(--ease-arrive)] group-hover:translate-x-[5px]"
       >
         →
       </span>

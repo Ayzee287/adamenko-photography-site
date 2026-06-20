@@ -12,7 +12,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ContactPage() {
   return (
-    <Container className="py-16">
+    <Container className="py-18 sm:py-24">
       <h1 className="font-serif text-4xl text-ink">{copy.contact.title}</h1>
       <p className="mt-4 max-w-xl text-muted">{copy.contact.intro}</p>
 

@@ -79,23 +79,25 @@ export const galleries: Gallery[] = [
 ];
 
 /**
- * A curated cross-genre sequence for the homepage "reel" (HorizontalGallery).
- * Placeholders until real frames are exported — same reserved, no-CLS frames as
- * the genre galleries. Replace with the chosen signature frames from real shoots;
- * varied ratios are intentional (the reel reads as a hand-picked edit, not a grid).
+ * A curated cross-genre sequence for the homepage reel (HorizontalGallery) — an
+ * exhibition wall of DIRECTED placeholders (v3): no demo imagery, every frame is a
+ * reserved no-CLS frame carrying its orientation·ratio + a one-line art-direction
+ * note. The mixed ratios + emotional sequence are the curation; widths derive from
+ * each ratio at the shared rail height, so it reads as a hand-picked hang, not a
+ * grid. Drop a real frame in by adding `src` (+ `width`/`height`) — zero layout
+ * change. Order is the edit: it should rise and fall like a wall you walk past.
  */
-// TEMP demo imagery (D023, /public/demo — Unsplash, swap for real work). Mixed
-// orientations on purpose: fixed-height reel items → portraits stay narrow,
-// landscapes wide → a real exhibition wall.
 export const featured: GalleryImage[] = [
-  { src: "/demo/famille.jpg", alt: "Une famille réunie à la maison", ratio: "aspect-[4/5]" },
-  { src: "/demo/hero.jpg", alt: "Une famille au coucher du soleil", ratio: "aspect-[16/10]" },
-  { src: "/demo/attente.jpg", alt: "L'attente d'un enfant", ratio: "aspect-[3/2]" },
-  { src: "/demo/intimite.jpg", alt: "Un couple, tout contre", ratio: "aspect-[2/3]" },
-  { src: "/demo/fete.jpg", alt: "Un mariage au bord de l'eau", ratio: "aspect-[3/2]" },
-  { src: "/demo/famille.jpg", alt: "La douceur d'un nouveau-né", ratio: "aspect-[1/1]" },
-  { src: "/demo/intimite.jpg", alt: "Deux mains, une alliance", ratio: "aspect-[4/5]" },
-  { src: "/demo/fete.jpg", alt: "La lumière basse d'une fête", ratio: "aspect-[16/10]" },
+  { alt: "Une étreinte avant le coucher du soleil", ratio: "aspect-[4/5]", hint: "Une étreinte avant le coucher du soleil." },
+  { alt: "Une famille marchant vers la mer", ratio: "aspect-[16/9]", hint: "Une famille marchant vers la mer." },
+  { alt: "Des mains qui se cherchent", ratio: "aspect-[1/1]", hint: "Des mains qui se cherchent." },
+  { alt: "Le premier regard, à la fenêtre", ratio: "aspect-[3/4]", hint: "Le premier regard, à la fenêtre." },
+  { alt: "Des enfants courent dans l'herbe haute", ratio: "aspect-[3/2]", hint: "Des enfants qui courent dans l'herbe haute." },
+  { alt: "Une future maman, de profil", ratio: "aspect-[2/3]", hint: "Une future maman, de profil." },
+  { alt: "Le rire partagé au milieu du repas", ratio: "aspect-[5/4]", hint: "Le rire partagé, au milieu du repas." },
+  { alt: "Front contre front, les yeux fermés", ratio: "aspect-[4/5]", hint: "Front contre front, les yeux fermés." },
+  { alt: "La mariée, juste avant d'entrer", ratio: "aspect-[16/9]", hint: "La mariée, juste avant d'entrer." },
+  { alt: "Un nouveau-né au creux des bras", ratio: "aspect-[1/1]", hint: "Un nouveau-né, au creux des bras." },
 ];
 
 /** Ordered slugs for nav / static params. */

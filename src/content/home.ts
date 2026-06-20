@@ -13,13 +13,14 @@ export const home = {
     kicker: "Photographe · Lyon",
     title: "Les moments qui restent.",
     scrollCue: "Faites défiler",
-    // TEMP demo image (D023) — replace with the photographer's opening frame.
+    // Directed placeholder until a real opening frame lands (v3): photography is
+    // optional during evaluation. Add `image.src` (+ dimensions) to drop the real
+    // frame in with zero layout change — nothing else moves.
     image: {
-      src: "/demo/hero.jpg",
-      alt: "Une famille réunie au coucher du soleil, main dans la main",
+      alt: "Image d'ouverture — une famille réunie au coucher du soleil",
     },
     imageHint:
-      "Image d'ouverture — une étreinte, lumière chaude. La toute première chose que le visiteur ressent.",
+      "Une étreinte, à la lumière chaude de fin de journée. La toute première chose que l'on ressent.",
   },
 
   // The manifesto (D021) — a print pull-quote, broken across lines.
@@ -40,7 +41,8 @@ export const home = {
     values: ["Chaleur", "Sincérité", "Présence", "Patience"],
     cta: { label: "En savoir plus", href: "/a-propos" },
     portraitAlt: "Portrait de la photographe",
-    portraitHint: "Un portrait franc de la photographe — regard direct, lumière douce.",
+    portraitLabel: "La photographe",
+    portraitHint: "Un portrait franc. Regard direct, épaules de trois-quarts. Lumière douce de fenêtre.",
   },
 
   experience: {
@@ -81,8 +83,11 @@ export const home = {
   },
 
   // A magazine feature organised by EMOTION, not category (D021). The genre is a
-  // quiet tag + link; the emotion leads. Editorial spreads, not a grid. `hint`
-  // directs the reserved frame. Copy is DRAFT — confirm with the photographer.
+  // quiet tag + link; the emotion leads. Editorial spreads, not a grid. With no
+  // `src`, each scene renders a directed reserved frame — the spread is designed to
+  // read as intentional on placeholders alone (v2); a real frame drops in with no
+  // layout change. `hint` directs that frame. Copy is DRAFT — confirm with the
+  // photographer.
   seances: {
     eyebrow: "Les séances",
     title: "Quatre émotions, une même tendresse.",
@@ -92,32 +97,28 @@ export const home = {
         emotion: "Le lien",
         tag: "Famille",
         emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
-        src: "/demo/famille.jpg",
-        hint: "Une famille enlacée à la maison — désordre tendre, lumière du matin.",
+        hint: "À la maison. Trois générations enlacées. Lumière du matin, tons doux.",
       },
       {
         slug: "grossesse",
         emotion: "L'attente",
         tag: "Grossesse",
         emotive: "Ces semaines suspendues, juste avant que tout change.",
-        src: "/demo/attente.jpg",
-        hint: "Silhouette d'une future maman à contre-jour, mains sur le ventre.",
+        hint: "Silhouette à contre-jour. Les mains sur le ventre. Cadrage proche, fenêtre.",
       },
       {
         slug: "couples",
         emotion: "L'intimité",
         tag: "Couple",
         emotive: "La façon dont vous vous regardez quand personne ne regarde.",
-        src: "/demo/intimite.jpg",
-        hint: "Un couple front contre front, dehors, fin de journée.",
+        hint: "Dehors, fin de journée. Front contre front. Mouvement, lumière basse.",
       },
       {
         slug: "mariages",
         emotion: "La fête",
         tag: "Mariage",
         emotive: "Toute une journée, racontée comme vous l'avez vécue.",
-        src: "/demo/fete.jpg",
-        hint: "L'instant du oui — larmes et rires, regards qui se croisent.",
+        hint: "L'instant du oui. Larmes et rires. Composition large, lumière chaude.",
       },
     ],
     also: { label: "Aussi : les portraits", href: "/galeries/portraits" },
@@ -148,30 +149,51 @@ export const home = {
     ],
   },
 
-  // Cinematic destination hub (D018) — replaces the inline FAQ; sits after add-ons
-  // so pricing stays uninterrupted. FAQ content now lives on /prestations.
+  // A quiet destination trio (D018) — replaces the inline FAQ; sits after add-ons so
+  // pricing stays uninterrupted. De-carded to a placeholder-first editorial trio
+  // (v2): each is a reserved frame with its caption set below, so it reads as
+  // intentional with no photography and accepts a real frame with no layout change.
+  // FAQ content now lives on /prestations. `hint` directs each frame.
   discover: {
     eyebrow: "Pour aller plus loin",
     title: "Avant de me confier votre histoire.",
     cards: [
-      { label: "L'expérience", title: "À quoi s'attendre", href: "/prestations", img: "/demo/attente.jpg" },
-      { label: "Infos pratiques", title: "Questions fréquentes", href: "/prestations#faq", img: "/demo/fete.jpg" },
-      { label: "À propos", title: "Rencontrer la photographe", href: "/a-propos", img: "/demo/famille.jpg" },
+      {
+        label: "L'expérience",
+        title: "À quoi s'attendre",
+        href: "/prestations",
+        hint: "Un détail tendre d'une séance — des mains, un regard hors-champ.",
+      },
+      {
+        label: "Infos pratiques",
+        title: "Questions fréquentes",
+        href: "/prestations#faq",
+        hint: "Un instant calme, en attente — la lumière d'une fin d'après-midi.",
+      },
+      {
+        label: "À propos",
+        title: "Rencontrer la photographe",
+        href: "/a-propos",
+        hint: "La photographe dans son élément — un geste, entre deux prises.",
+      },
     ],
   },
 
   testimonials: {
     eyebrow: "Elles en parlent",
     title: "La confiance, avant tout.",
-    empty: "Les premiers témoignages arriveront ici très bientôt.",
+    // Reserved-by-choice (v3 QA): frames the absence as integrity, not "coming soon".
+    empty: "Les mots de mes clientes trouveront leur place ici — vrais, et jamais inventés.",
   },
 
   finalCta: {
     eyebrow: "Contact",
     title: "Travaillons ensemble.",
     body: "Parlez-moi de votre projet — la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
+    locationLabel: "Basée à",
     location: "Lyon, France",
-    availability: "Disponible à Lyon et partout dans le monde.",
+    availabilityLabel: "Disponibilité",
+    availability: "À Lyon et partout dans le monde.",
     cta: { label: "Me contacter", href: "/contact" },
     instagramLabel: "Suivre sur Instagram",
   },
