@@ -37,7 +37,7 @@ export default async function GenrePage({ params }: PageProps) {
   if (!gallery) notFound();
 
   return (
-    <Container className="py-10 sm:py-16">
+    <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
         <PageHeader
           eyebrow={copy.galleries.title}

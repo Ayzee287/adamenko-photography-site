@@ -17,7 +17,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PrestationsPage() {
   return (
-    <Container className="py-10 sm:py-16">
+    <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
         <PageHeader
           eyebrow={copy.services.eyebrow}
@@ -37,7 +37,7 @@ export default function PrestationsPage() {
       {/* Service descriptions — de-boxed editorial blocks (existing idiom: top hairline,
           serif title, clay-rule approach list). Each links to its gallery. */}
       <Reveal variant="rise-slow" className="block">
-      <section className="mt-16">
+      <section className="mt-12 sm:mt-16">
         <p className="text-xs uppercase tracking-[0.22em] text-muted">
           {services.eyebrow}
         </p>
@@ -81,7 +81,7 @@ export default function PrestationsPage() {
 
       {/* FAQ — native <details> (no JS), now sourced from the expanded faq model. */}
       <Reveal variant="fade" className="block">
-      <section id="faq" className="mt-16 scroll-mt-24">
+      <section id="faq" className="mt-12 sm:mt-16 scroll-mt-24">
         <h2 className="font-serif text-2xl text-ink">{faq.title}</h2>
         <p className="mt-3 max-w-2xl text-muted">{faq.intro}</p>
         <div className="mt-6 max-w-3xl divide-y divide-line border-y border-line">

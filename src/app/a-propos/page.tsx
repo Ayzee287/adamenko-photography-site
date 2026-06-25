@@ -17,7 +17,7 @@ export const metadata: Metadata = buildMetadata({
 // onto the homepage system (D030): PageHeader, Reveal, FLOW rhythm.
 export default function AProposPage() {
   return (
-    <Container className="py-10 sm:py-16">
+    <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
         <PageHeader eyebrow={photographer.location.label} title={copy.about.title} />
       </Reveal>

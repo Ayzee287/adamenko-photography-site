@@ -39,12 +39,15 @@ export function ButtonLink({
   variant = "primary",
   onDark = false,
   className,
+  onClick,
 }: {
   href: string;
   children: ReactNode;
   variant?: Variant;
   onDark?: boolean;
   className?: string;
+  /** Optional click handler (e.g. close the mobile overlay on navigate). */
+  onClick?: () => void;
 }) {
   const external = /^https?:\/\//.test(href);
   const inner =
@@ -63,13 +66,19 @@ export function ButtonLink({
 
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cls}
+        onClick={onClick}
+      >
         {inner}
       </a>
     );
   }
   return (
-    <Link href={href} className={cls}>
+    <Link href={href} className={cls} onClick={onClick}>
       {inner}
     </Link>
   );

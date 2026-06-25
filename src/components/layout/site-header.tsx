@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/layout/container";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { MobileMenu } from "@/components/layout/mobile-menu";
 import { site } from "@/content/site";
 import { subscribeScroll } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
@@ -13,25 +14,35 @@ import { cn } from "@/lib/utils";
  * Slim, persistent header. On the homepage it floats transparent over the dark
  * hero (light text) and settles to solid warm paper once scrolled past it — the
  * cinematic chrome. On every other route it behaves exactly as before: a sticky,
- * solid, in-flow bar (no layout change to inner pages). The mobile menu stays a
- * no-JS `<details>` disclosure on a solid panel.
+ * solid, in-flow bar (no layout change to inner pages).
+ *
+ * Desktop nav (Design Sprint V2 · D037): links carry a comfortable vertical hit
+ * area and a touch more size/legibility than the old bare 14px text — the owner's
+ * "nav may be too small" note, evaluated against the benchmark's generous targets,
+ * implemented without making the chrome shout.
+ *
+ * Mobile (D038): the old `<details>` dropdown is replaced by a full-screen editorial
+ * overlay (`MobileMenu`), driven by state and opened from a labelled toggle.
  */
 export function SiteHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
-  const menuRef = useRef<HTMLDetailsElement | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isHome) return;
     return subscribeScroll(() => setScrolled(window.scrollY > 24));
   }, [isHome]);
 
-  // Close the mobile disclosure after navigating, so the panel never lingers open
-  // on the next page (keyboard + touch).
-  useEffect(() => {
-    if (menuRef.current) menuRef.current.open = false;
-  }, [pathname]);
+  // Close the overlay whenever the route changes, so it never lingers open on the
+  // next page (covers links to the current path and browser back/forward). React's
+  // recommended "adjust state during render" reset — no effect, no cascading render.
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (pathname !== prevPath) {
+    setPrevPath(pathname);
+    setMenuOpen(false);
+  }
 
   // Transparent + light only while floating over the dark hero.
   const overHero = isHome && !scrolled;
@@ -47,6 +58,10 @@ export function SiteHeader() {
     href === "/"
       ? pathname === "/"
       : pathname === href || pathname.startsWith(`${href}/`);
+
+  // One comfortable nav-link rhythm, shared desktop (D037): ~15px, generous vertical
+  // hit area, gentle clay on hover. Colour resolves per surface (over-hero vs solid).
+  const navLink = "py-2.5 text-[0.95rem] hover:text-clay";
 
   return (
     <header
@@ -88,9 +103,9 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "text-sm hover:text-clay",
-                  // offset-4 (was offset-8) — attaches the active underline to the word
-                  // and matches the mobile menu, so it never reads as a floating 2nd line.
+                  navLink,
+                  // offset-4 attaches the active underline to the word and matches the
+                  // mobile menu, so it never reads as a floating second line.
                   active && "underline decoration-1 underline-offset-4",
                   overHero
                     ? active
@@ -109,10 +124,7 @@ export function SiteHeader() {
             href={site.social.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(
-              "text-sm hover:text-clay",
-              overHero ? "text-paper/55" : "text-muted",
-            )}
+            className={cn(navLink, overHero ? "text-paper/55" : "text-muted")}
           >
             Instagram
           </a>
@@ -120,50 +132,28 @@ export function SiteHeader() {
           <LanguageSwitcher onDark={overHero} />
         </nav>
 
-        <details ref={menuRef} className="relative sm:hidden">
-          <summary
-            className={cn(
-              "cursor-pointer list-none text-sm [&::-webkit-details-marker]:hidden",
-              overHero ? "text-paper" : "text-ink",
-            )}
-          >
-            Menu
-          </summary>
-          <nav
-            aria-label="Navigation principale"
-            className="absolute right-0 top-9 z-50 flex w-44 flex-col gap-3 border border-line bg-paper p-4"
-          >
-            {site.nav.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "text-sm hover:text-clay",
-                    active
-                      ? "text-ink underline decoration-1 decoration-clay underline-offset-4"
-                      : "text-ink/70",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-            <a
-              href={site.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted hover:text-clay"
-            >
-              Instagram
-            </a>
-            {/* Renders nothing until a second locale is active (zero change today). */}
-            <LanguageSwitcher className="pt-1" />
-          </nav>
-        </details>
+        {/* Mobile trigger — opens the full-screen overlay (D038). */}
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          aria-label="Ouvrir le menu"
+          onClick={() => setMenuOpen(true)}
+          className={cn(
+            "py-2.5 text-[0.95rem] hover:text-clay sm:hidden",
+            overHero ? "text-paper" : "text-ink",
+          )}
+        >
+          Menu
+        </button>
       </Container>
+
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        isActive={isActive}
+      />
     </header>
   );
 }

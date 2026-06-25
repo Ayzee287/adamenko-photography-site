@@ -1,28 +1,26 @@
 import { Container } from "@/components/layout/container";
+import { PageHeader } from "@/components/layout/page-header";
+import { Reveal } from "@/components/motion/reveal";
 import type { LegalDocument } from "@/content/legal";
 
 /**
- * Shared renderer for the legal pages (sprint task 2). Uses the established
- * inner-page rhythm (Container + serif title) and the homepage's eyebrow grammar
- * (`text-xs uppercase tracking-[0.22em] text-muted`) so the pages belong to the
- * system without introducing any new visual language. Reading measure is
- * constrained for long-form text; sub-headings are serif; lists carry the brand's
- * clay rule motif.
+ * Shared renderer for the legal pages. Brought fully onto the inner-page system
+ * (Design Sprint V2 · D039): the same `PageHeader` primitive, `Reveal`, and opening
+ * rhythm as /a-propos, /galeries, /prestations and /contact — so a visitor who lands
+ * on the legal pages still feels the one authored product, not a plainer sub-site.
+ * Reading measure is constrained for long-form text; sub-headings are serif; lists
+ * carry the brand's clay-rule motif.
  */
 export function LegalDocumentView({ doc }: { doc: LegalDocument }) {
   return (
-    <Container className="py-16 sm:py-24">
-      <div className="max-w-3xl">
-        <p className="text-xs uppercase tracking-[0.22em] text-muted">
-          {doc.eyebrow}
-        </p>
-        <h1 className="mt-3 font-serif text-4xl text-ink">{doc.title}</h1>
-        {doc.intro ? (
-          <p className="mt-4 max-w-2xl text-pretty text-muted">{doc.intro}</p>
-        ) : null}
+    <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
+      <Reveal>
+        <PageHeader eyebrow={doc.eyebrow} title={doc.title} intro={doc.intro} />
         <p className="mt-3 text-xs text-muted">{doc.updated}</p>
+      </Reveal>
 
-        <div className="mt-12 space-y-10">
+      <Reveal variant="rise-slow" className="block">
+        <div className="mt-10 max-w-3xl space-y-10 sm:mt-16">
           {doc.sections.map((section) => (
             <section key={section.heading}>
               <h2 className="font-serif text-2xl text-ink">{section.heading}</h2>
@@ -47,7 +45,7 @@ export function LegalDocumentView({ doc }: { doc: LegalDocument }) {
             </section>
           ))}
         </div>
-      </div>
+      </Reveal>
     </Container>
   );
 }
