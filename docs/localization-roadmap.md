@@ -1,10 +1,22 @@
 # Localization Roadmap
 
-**Date:** 2026-06-20
-**Status:** Architecture **implemented**; translations **not shipped** (by design).
+**Date:** 2026-06-20 · **Updated:** 2026-06-24
+**Status:** Architecture **implemented**; translations **prepared as drafts, not activated** (by design).
 **Locale plan:** French (canonical, live) → English → Russian → Ukrainian.
 
-The system is built so that **adding a language is a content + config change, not an architecture change.** No runtime/automatic translation is used anywhere — the owner supplies human translations later.
+The system is built so that **adding a language is a content + config change, not an architecture change.** No runtime/automatic translation is used anywhere — human translations only.
+
+> **Update 2026-06-24 — translation DRAFTS prepared.** Idiomatic (not literal) human
+> drafts now exist as `content/dictionaries/{en,ru,uk}.draft.ts`: **English** covers the
+> full UI chrome + page intros + contact form; **Russian/Ukrainian** cover the core chrome
+> + intros (Ukrainian is a natural fit — the photographer is Ukrainian). They are imported
+> by **nothing** (zero runtime impact) and are the ready-to-paste source for activation.
+>
+> **Why drafts and not `en.ts` directly:** the French content modules are `as const`, so
+> every string is a *literal* type — a `DeepPartial` override in `en.ts` is type-locked to
+> the exact French string and can't carry a translation. **Activation step 0** is therefore
+> to widen those literals (see §3 Step 0). This was deliberately not done now to avoid
+> touching the approved content modules before the French copy is final.
 
 ---
 
@@ -41,10 +53,13 @@ These are the **activation** steps below. They were deferred because (a) transla
 
 ## 3. Activation — how to turn on a language (e.g. English)
 
-Do these in order. Steps 1–2 are content; 3–5 are a one-time routing setup shared by all future locales.
+Do these in order. Step 0 is a one-time type change; steps 1–2 are content; 3–5 are a one-time routing setup shared by all future locales.
+
+### Step 0 — Widen the content literals (one time, enables real overrides)
+Because `content/site.ts` etc. are `as const`, the `Dictionary` type pins every string to its French literal. Before any override can compile, relax those modules from `as const` to a `satisfies <Type>` form (or define explicit interfaces whose fields are `string`/`string[]`). Re-run `typecheck` — the French app is unchanged at runtime; only the *types* widen so an English string becomes assignable. The finished translations are already waiting in `*.draft.ts`.
 
 ### Step 1 — Translate the dictionary
-Fill `content/dictionaries/en.ts`, mirroring the French structure from `fr.ts`. Translate only what you want; the rest falls back to French.
+Paste from `content/dictionaries/en.draft.ts` into `content/dictionaries/en.ts`, mirroring the French structure from `fr.ts`. Translate only what you want; the rest falls back to French.
 
 ```ts
 // content/dictionaries/en.ts

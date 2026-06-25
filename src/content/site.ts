@@ -51,9 +51,12 @@ export const copy = {
     contactCta: "Travaillons ensemble",
   },
   galleries: {
+    eyebrow: "Le travail, par thème",
     title: "Galeries",
     intro:
       "Une sélection resserrée, par thème. Chaque série est pensée comme un ensemble cohérent.",
+    /** Secondary affordance shown under each genre cover on the index. */
+    view: "Voir la série",
   },
   about: {
     title: "À propos",
@@ -65,6 +68,7 @@ export const copy = {
     portraitAlt: "Portrait de la photographe",
   },
   services: {
+    eyebrow: "Travailler ensemble",
     title: "Prestations",
     intro:
       "Chaque séance est adaptée à vous : le lieu, le rythme, ce qui compte pour votre famille.",
@@ -73,9 +77,10 @@ export const copy = {
     cta: "Demander les tarifs",
   },
   contact: {
+    eyebrow: "Prendre contact",
     title: "Contact",
     intro:
-      "Parlez-moi de votre projet — la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
+      "Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
     form: {
       name: "Votre nom",
       email: "Votre e-mail",
@@ -83,7 +88,7 @@ export const copy = {
       message: "Votre message",
       submit: "Envoyer",
       sending: "Envoi…",
-      success: "Merci — votre message est bien arrivé. Je vous réponds très vite.",
+      success: "Merci, votre message est bien arrivé. Je vous réponds très vite.",
       error:
         "Désolée, l'envoi n'a pas abouti. Réessayez dans un instant, ou écrivez-moi directement.",
       // Per-field hints shown when server-side validation rejects a field.
@@ -96,7 +101,7 @@ export const copy = {
     },
   },
   footer: {
-    tagline: "Photographe à Lyon — familles, couples, grossesse, mariages.",
+    tagline: "Photographe à Lyon : familles, couples, grossesse, mariages.",
     instagram: "Instagram",
     rights: "Tous droits réservés.",
   },

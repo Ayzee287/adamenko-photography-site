@@ -202,7 +202,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
       <div
         ref={scrollerRef}
         role="region"
-        aria-label="Aperçu des galeries — faites glisser, faites défiler ou utilisez les flèches pour explorer"
+        aria-label="Aperçu des galeries : faites glisser, faites défiler ou utilisez les flèches pour explorer"
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}

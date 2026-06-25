@@ -29,8 +29,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: `${site.brand} — Photographe à Lyon`,
-    template: `%s — ${site.brand}`,
+    default: `${site.brand} · Photographe à Lyon`,
+    template: `%s · ${site.brand}`,
   },
   description: site.tagline,
   openGraph: {

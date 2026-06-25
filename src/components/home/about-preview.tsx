@@ -4,22 +4,24 @@ import { Parallax } from "@/components/motion/parallax";
 import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
 import { home } from "@/content/home";
+import { photographer } from "@/content/photographer";
 import type { GalleryImage } from "@/types/gallery";
 
 /**
  * Section 3 — the person. Portrait (gentle drift) beside a first-person bio and
- * values: humanise before the work, so trust is built early. `portrait` is
- * optional; until a real portrait lands it renders a reserved 4:5 frame.
+ * values: humanise before the work, so trust is built early. Defaults to the
+ * photographer's real portrait from the identity model.
  */
 export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
   const { about } = home;
   // No `label` here: the section eyebrow already reads "La photographe", so the
   // frame shows only orientation·ratio + the art-direction note (v3 QA: no echo).
-  const image = portrait ?? {
-    alt: about.portraitAlt,
-    ratio: "aspect-[4/5]",
-    hint: about.portraitHint,
-  };
+  const image = portrait ??
+    photographer.portrait ?? {
+      alt: about.portraitAlt,
+      ratio: "aspect-[4/5]",
+      hint: about.portraitHint,
+    };
 
   return (
     <section className="py-10 sm:py-16">
@@ -43,7 +45,7 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
             {about.values.map((v) => (
               <li
                 key={v}
-                className="before:mr-2 before:text-clay before:content-['—']"
+                className="before:mr-2 before:text-clay before:content-['·']"
               >
                 {v}
               </li>

@@ -20,7 +20,7 @@ export const pricing = {
   packages: [
     {
       name: "Séance",
-      summary: "Famille, grossesse, couple ou portrait — chez vous ou en extérieur.",
+      summary: "Famille, grossesse, couple ou portrait, chez vous ou en extérieur.",
       // priceFrom: TODO(operator) — set the real starting figure; leave unset until then.
       includes: [
         "1 à 2 heures, un lieu",

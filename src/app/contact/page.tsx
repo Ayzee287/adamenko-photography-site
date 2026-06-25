@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
+import { PageHeader } from "@/components/layout/page-header";
+import { Reveal } from "@/components/motion/reveal";
 import { ContactForm } from "@/components/contact-form";
 import { copy, site } from "@/content/site";
 import { buildMetadata } from "@/lib/seo";
@@ -12,9 +14,14 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ContactPage() {
   return (
-    <Container className="py-16 sm:py-24">
-      <h1 className="font-serif text-4xl text-ink">{copy.contact.title}</h1>
-      <p className="mt-4 max-w-xl text-muted">{copy.contact.intro}</p>
+    <Container className="py-10 sm:py-16">
+      <Reveal>
+        <PageHeader
+          eyebrow={copy.contact.eyebrow}
+          title={copy.contact.title}
+          intro={copy.contact.intro}
+        />
+      </Reveal>
 
       <ContactForm />
 

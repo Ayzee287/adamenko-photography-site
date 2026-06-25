@@ -40,6 +40,7 @@
   --color-muted: #6f655c; /* warm gray — secondary text (AA on paper + band) */
   --color-line: #e7ddd0; /* hairline */
   --color-clay: #b07159; /* the single warm accent */
+  --color-sand: #f3ece1; /* warm band tint — a quiet 6th surface (was hardcoded twice) */
 
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
@@ -56,6 +57,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+
+  /* The single reserved-frame treatment — a warm tonal field with a quiet light in
+     the upper-left, used by every placeholder image (ImageFigure + DiscoverCards +
+     gallery covers). Defined once so the placeholder look can never drift between
+     surfaces; a real photo (object-cover) sits on top with no layout change. */
+  .frame-reserved {
+    background: radial-gradient(120% 120% at 28% 18%, #f6efe4, #e3d6c4);
   }
 
   /* One restrained focus treatment across every interactive element. */

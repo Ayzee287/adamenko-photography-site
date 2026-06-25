@@ -82,7 +82,7 @@ export async function POST(req: Request) {
         from,
         to: [to],
         reply_to: email,
-        subject: `Nouvelle demande — ${occasion} — ${name}`,
+        subject: `Nouvelle demande · ${occasion} · ${name}`,
         text,
       }),
     });

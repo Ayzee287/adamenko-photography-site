@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { subscribeScroll } from "@/lib/scroll";
 import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced-motion";
+import { blurFor } from "@/lib/image-blur";
 import type { GalleryImage } from "@/types/gallery";
 
 /**
@@ -48,6 +49,8 @@ export function HeroMedia({
           fill
           priority
           sizes="100vw"
+          placeholder={blurFor(image.src) ? "blur" : undefined}
+          blurDataURL={blurFor(image.src)}
           className="object-cover"
         />
       ) : (

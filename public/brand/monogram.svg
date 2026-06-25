@@ -1,0 +1,10 @@
+<!-- Adamenko Photography — monogram (matches the favicon / app icon).
+     Use as a social avatar, stamp, or compact mark where the full wordmark
+     won't fit. Ink ground, paper "A", clay underline mark. -->
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="56" fill="#2a2420"/>
+  <text x="128" y="170" text-anchor="middle"
+        font-family="'Fraunces','Playfair Display',Georgia,serif"
+        font-size="150" font-weight="600" fill="#faf6f0">A</text>
+  <rect x="91" y="190" width="74" height="9" rx="4.5" fill="#b07159"/>
+</svg>

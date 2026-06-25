@@ -12,6 +12,16 @@
 
 import { photographer } from "@/content/photographer";
 
+// Confirmed business facts (2026-06-24, operator + INSEE/SIREN). The éditeur block
+// below now renders real values; only the items a French legal professional should
+// still verify (TVA regime, data-retention period) remain flagged.
+const SIRET = "979 493 327 00014";
+const APE = "74.20Z";
+// EI photographers are almost always under the franchise en base de TVA; this is the
+// legally required mention in that case. TODO(operator): confirm — if she is
+// VAT-registered, replace with the intra-EU VAT number instead.
+const TVA_MENTION = "TVA non applicable, art. 293 B du CGI";
+
 export type LegalSection = {
   heading: string;
   paragraphs?: string[];
@@ -42,14 +52,10 @@ export const mentionsLegales: LegalDocument = {
     {
       heading: "Éditeur du site",
       paragraphs: [
-        // TODO(operator): full legal identity — personal/company name, statut juridique
-        // (auto-entrepreneur, EI, EURL/SASU…), and registered address.
-        `${brand} — [À COMPLÉTER : nom et prénom de la photographe / dénomination sociale].`,
-        "[À COMPLÉTER : statut juridique, ex. micro-entrepreneur].",
-        "[À COMPLÉTER : adresse de domiciliation de l'activité].",
-        // TODO(operator): SIRET is mandatory for a registered business; add TVA only
-        // if the business is liable for VAT (sinon mention « TVA non applicable, art. 293 B du CGI »).
-        "SIRET : [À COMPLÉTER]. TVA intracommunautaire : [À COMPLÉTER ou « TVA non applicable, art. 293 B du CGI »].",
+        `${brand}, ${photographer.legalName}, entrepreneur individuel (EI).`,
+        `Siège de l'activité : ${photographer.location.streetAddress}, ${photographer.location.postalCode} ${photographer.location.city}, ${photographer.location.country}.`,
+        `Activité : activités photographiques (code APE ${APE}).`,
+        `SIRET : ${SIRET}. ${TVA_MENTION}.`,
         photographer.contact.email
           ? `Contact : ${photographer.contact.email}.`
           : "Contact : [À COMPLÉTER : adresse e-mail professionnelle].",
@@ -105,8 +111,8 @@ export const confidentialite: LegalDocument = {
       heading: "Responsable du traitement",
       paragraphs: [
         photographer.name
-          ? `${photographer.name} — ${brand}, ${cityCountry}.`
-          : `${brand}, ${cityCountry} — [À COMPLÉTER : nom du responsable du traitement].`,
+          ? `${photographer.name}, ${brand}, ${cityCountry}.`
+          : `${brand}, ${cityCountry}. [À COMPLÉTER : nom du responsable du traitement].`,
         photographer.contact.email
           ? `Pour toute question relative à vos données : ${photographer.contact.email}.`
           : "Pour toute question relative à vos données : [À COMPLÉTER : adresse e-mail].",
@@ -128,8 +134,8 @@ export const confidentialite: LegalDocument = {
         `Vos données ne sont jamais vendues. Elles sont accessibles uniquement à ${brand} et aux prestataires techniques strictement nécessaires au fonctionnement du site :`,
       ],
       bullets: [
-        "Vercel Inc. — hébergement du site et mesure d'audience.",
-        "Resend (Plus Five Five, Inc.) — acheminement des e-mails envoyés via le formulaire de contact.",
+        "Vercel Inc. : hébergement du site et mesure d'audience.",
+        "Resend (Plus Five Five, Inc.) : acheminement des e-mails envoyés via le formulaire de contact.",
       ],
     },
     {

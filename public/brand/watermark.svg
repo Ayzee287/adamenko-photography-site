@@ -1,0 +1,14 @@
+<!-- Adamenko Photography — discreet image watermark (overlay for delivered/preview
+     photos). Paper-white at low opacity so it sits quietly in a lower corner over a
+     photograph without competing with it. Place bottom-right with ~24px padding at
+     ~30-40% opacity. Provided as a brand asset; NOT applied automatically anywhere. -->
+<svg width="360" height="56" viewBox="0 0 360 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#ffffff" fill-opacity="0.85">
+    <text x="0" y="26"
+          font-family="'Fraunces','Playfair Display',Georgia,serif"
+          font-size="22" font-weight="600" letter-spacing="2">Adamenko</text>
+    <text x="2" y="46"
+          font-family="Inter,'Helvetica Neue',Arial,sans-serif"
+          font-size="10.5" letter-spacing="6" fill-opacity="0.7">PHOTOGRAPHY</text>
+  </g>
+</svg>

@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/container";
 import { ImageFigure } from "@/components/ui/image-figure";
 import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
+import { blurFor } from "@/lib/image-blur";
 import { cn } from "@/lib/utils";
 import { home } from "@/content/home";
 
@@ -15,6 +16,7 @@ type Scene = {
   tag: string;
   emotive: string;
   src?: string;
+  alt?: string;
   hint?: string;
 };
 
@@ -63,7 +65,7 @@ function Split({ scene, ratio, side }: { scene: Scene; ratio: string; side: "lef
         className={cn("group block lg:col-span-7", right && "lg:order-2")}
       >
         <ImageFigure
-          image={{ src: scene.src, alt: scene.tag, ratio, hint: scene.hint }}
+          image={{ src: scene.src, alt: scene.alt ?? scene.tag, ratio, hint: scene.hint }}
           interactive
           sizes="(min-width:1024px) 58vw, 100vw"
         />
@@ -83,7 +85,7 @@ function FullWidth({ scene }: { scene: Scene }) {
     <article>
       <Link href={`/galeries/${scene.slug}`} className="group block">
         <ImageFigure
-          image={{ src: scene.src, alt: scene.tag, ratio: "aspect-[16/9]" }}
+          image={{ src: scene.src, alt: scene.alt ?? scene.tag, ratio: "aspect-[16/9]" }}
           interactive
           sizes="100vw"
         />
@@ -120,9 +122,11 @@ function FullBleed({ scene }: { scene: Scene }) {
         <>
           <Image
             src={scene.src as string}
-            alt={scene.tag}
+            alt={scene.alt ?? scene.tag}
             fill
             sizes="100vw"
+            placeholder={blurFor(scene.src) ? "blur" : undefined}
+            blurDataURL={blurFor(scene.src)}
             className="object-cover transition-transform duration-[800ms] ease-[var(--ease-settle)] group-hover:scale-[1.03]"
           />
           <div

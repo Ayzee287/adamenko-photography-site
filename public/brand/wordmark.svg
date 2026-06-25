@@ -1,0 +1,16 @@
+<!-- Adamenko Photography — primary wordmark (light background).
+     For off-site use: email signature, print, photo watermarking, partner listings.
+     The on-site header intentionally renders live text (site.brand) for responsive
+     scaling + future localisation, so this file is an ASSET, not wired into the app.
+     Colours: ink #2a2420, clay #b07159, paper #faf6f0. Display face: Fraunces
+     (falls back to Playfair/Georgia where Fraunces isn't installed). -->
+<svg width="520" height="150" viewBox="0 0 520 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="260" y="78" text-anchor="middle"
+        font-family="'Fraunces','Playfair Display',Georgia,serif"
+        font-size="58" font-weight="600" letter-spacing="6" fill="#2a2420">ADAMENKO</text>
+  <line x1="150" y1="100" x2="230" y2="100" stroke="#b07159" stroke-width="1.4"/>
+  <text x="260" y="116" text-anchor="middle"
+        font-family="Inter,'Helvetica Neue',Arial,sans-serif"
+        font-size="17" letter-spacing="11" fill="#6f655c">PHOTOGRAPHY</text>
+  <line x1="290" y1="100" x2="370" y2="100" stroke="#b07159" stroke-width="1.4"/>
+</svg>

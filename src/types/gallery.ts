@@ -46,6 +46,12 @@ export type Gallery = {
   /** One quiet line introducing the genre. */
   intro: string;
   /**
+   * Single cover frame for the /galeries index (the genre's face on the contact
+   * sheet). A reserved frame until a real photo lands — drops in with no layout
+   * change, like any GalleryImage. Falls back to the first `images` entry if unset.
+   */
+  cover?: GalleryImage;
+  /**
    * Curated, intentionally sequenced images. Empty until a set is ready —
    * a genre is simply not linked while empty (never shown padded, D007).
    */

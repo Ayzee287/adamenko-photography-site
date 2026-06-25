@@ -35,7 +35,11 @@ export function SiteHeader() {
 
   // Transparent + light only while floating over the dark hero.
   const overHero = isHome && !scrolled;
-  const solid = "border-b border-line bg-paper/90 backdrop-blur";
+  // Solid warm-paper bar. NO backdrop-blur: at 90% paper opacity the frost was barely
+  // visible yet caused a Chromium backdrop-filter repaint artifact — on hover the link
+  // glyphs ghosted/"doubled" as the blurred backdrop re-sampled (the reported nav bug).
+  // A fully opaque editorial bar is cleaner, more on-brand, and removes the cause.
+  const solid = "border-b border-line bg-paper";
 
   // Mark the current section so the nav reads as a wayfinding system, not a row of
   // identical links. /galeries stays active inside a genre (e.g. /galeries/familles).
@@ -85,7 +89,9 @@ export function SiteHeader() {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "text-sm hover:text-clay",
-                  active && "underline decoration-1 underline-offset-8",
+                  // offset-4 (was offset-8) — attaches the active underline to the word
+                  // and matches the mobile menu, so it never reads as a floating 2nd line.
+                  active && "underline decoration-1 underline-offset-4",
                   overHero
                     ? active
                       ? "text-paper decoration-paper/70"

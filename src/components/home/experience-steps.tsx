@@ -8,7 +8,7 @@ export function ExperienceSteps() {
   const { experience } = home;
 
   return (
-    <section className="bg-[#f3ece1] py-10 sm:py-16">
+    <section className="bg-sand py-10 sm:py-16">
       <Container>
         <Reveal>
           <SectionHeading

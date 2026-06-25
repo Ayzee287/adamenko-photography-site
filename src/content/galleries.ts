@@ -1,103 +1,128 @@
 import type { Gallery, GalleryImage, GenreSlug } from "@/types/gallery";
 
-// The five genre galleries (D007). Each is seeded with reserved frames (no `src`)
-// so the layout and sequencing are real and reviewable now; real photographs drop
-// in by adding `src` + `width`/`height` + alt, with no layout shift. No genre is
-// shown padded — when a real set is ready it replaces these placeholders.
-//
-// Varied aspect ratios are intentional: they prove the grid handles a mixed,
-// human edit (tall portraits next to wider frames) rather than a uniform tile grid.
-
-const placeholder = (alt: string, ratio: string) => ({ alt, ratio });
+// The five genre galleries (D007). Populated 2026-06-25 with the photographer's REAL
+// recovered, curated photographs (operator-authorized; EXIF-stripped, optimised, and
+// renamed without client identities for privacy/RGPD). Files live under
+// public/galleries/<genre>/. Aspect ratios match each frame so there is no crop and
+// the masonry reads as a hand-made edit (tall portraits beside wider frames), not a
+// uniform tile grid. Alt text is specific, in French, and never names a client.
 
 export const galleries: Gallery[] = [
   {
     slug: "familles",
     title: "Familles",
-    intro: "Le quotidien et les liens — à la maison, dehors, ensemble.",
+    intro: "Le quotidien et les liens, à la maison, dehors, ensemble.",
+    cover: {
+      src: "/galleries/familles/familles-cover.jpg",
+      width: 853, height: 1280, ratio: "aspect-[4/5]",
+      alt: "Une famille à la maison, un parent soulève son enfant dans la lumière de la fenêtre.",
+    },
     images: [
-      placeholder("Photographie de famille", "aspect-[4/5]"),
-      placeholder("Photographie de famille", "aspect-[3/2]"),
-      placeholder("Photographie de famille", "aspect-[1/1]"),
-      placeholder("Photographie de famille", "aspect-[4/5]"),
-      placeholder("Photographie de famille", "aspect-[3/2]"),
-      placeholder("Photographie de famille", "aspect-[5/4]"),
+      { src: "/galleries/familles/familles-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Une mère et son enfant, front contre front, dans les herbes hautes au soleil couchant." },
+      { src: "/galleries/familles/familles-02.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un instant de complicité familiale, en lumière naturelle." },
+      { src: "/galleries/familles/familles-03.jpg", width: 1280, height: 868, ratio: "aspect-[3/2]", alt: "Rires partagés en extérieur, au fil de la séance." },
+      { src: "/galleries/familles/familles-04.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un moment tendre entre parents et enfant." },
+      { src: "/galleries/familles/familles-05.jpg", width: 1280, height: 936, ratio: "aspect-[5/4]", alt: "La douceur du quotidien, en famille." },
+      { src: "/galleries/familles/familles-06.jpg", width: 1280, height: 814, ratio: "aspect-[3/2]", alt: "Une promenade ensemble, au naturel." },
+      { src: "/galleries/familles/familles-07.jpg", width: 900, height: 1280, ratio: "aspect-[2/3]", alt: "Portrait de famille, lumière douce." },
+      { src: "/galleries/familles/familles-08.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Complicité parent-enfant, saisie sur le vif." },
+      { src: "/galleries/familles/familles-09.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un éclat de rire en famille." },
     ],
   },
   {
     slug: "grossesse",
     title: "Grossesse",
     intro: "L'attente, la douceur et l'intimité des semaines qui précèdent.",
+    cover: {
+      src: "/galleries/grossesse/grossesse-cover.jpg",
+      width: 853, height: 1280, ratio: "aspect-[4/5]",
+      alt: "Future maman en robe blanche dans un champ doré, au coucher du soleil.",
+    },
     images: [
-      placeholder("Photographie de grossesse", "aspect-[2/3]"),
-      placeholder("Photographie de grossesse", "aspect-[4/5]"),
-      placeholder("Photographie de grossesse", "aspect-[3/2]"),
-      placeholder("Photographie de grossesse", "aspect-[4/5]"),
-      placeholder("Photographie de grossesse", "aspect-[1/1]"),
-      placeholder("Photographie de grossesse", "aspect-[2/3]"),
+      { src: "/galleries/grossesse/grossesse-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple assis au sol près de la fenêtre, dans l'attente de leur enfant, en noir et blanc." },
+      { src: "/galleries/grossesse/grossesse-02.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Future maman, lumière douce d'intérieur." },
+      { src: "/galleries/grossesse/grossesse-03.jpg", width: 1280, height: 863, ratio: "aspect-[3/2]", alt: "Tendresse d'un couple avant l'arrivée du bébé." },
+      { src: "/galleries/grossesse/grossesse-04.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "L'attente, à la maison." },
+      { src: "/galleries/grossesse/grossesse-05.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Portrait de grossesse en lumière naturelle." },
+      { src: "/galleries/grossesse/grossesse-06.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "La douceur d'une séance grossesse." },
+      { src: "/galleries/grossesse/grossesse-07.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un moment suspendu avant la naissance." },
+      { src: "/galleries/grossesse/grossesse-08.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple s'enlace dans un champ au coucher du soleil, une échographie à la main." },
     ],
   },
   {
     slug: "couples",
     title: "Couples",
-    intro: "Deux personnes, un lien — sans poses figées.",
+    intro: "Deux personnes, un lien. Sans poses figées.",
+    cover: {
+      src: "/galleries/couples/couples-cover.jpg",
+      width: 853, height: 1280, ratio: "aspect-[4/5]",
+      alt: "Un couple s'embrasse, assis sur une bordure de trottoir parisien.",
+    },
     images: [
-      placeholder("Photographie de couple", "aspect-[3/2]"),
-      placeholder("Photographie de couple", "aspect-[4/5]"),
-      placeholder("Photographie de couple", "aspect-[1/1]"),
-      placeholder("Photographie de couple", "aspect-[3/2]"),
-      placeholder("Photographie de couple", "aspect-[4/5]"),
-      placeholder("Photographie de couple", "aspect-[5/4]"),
+      { src: "/galleries/couples/couples-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple complice sous les halles, lumière chaude." },
+      { src: "/galleries/couples/couples-02.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Promenade à deux dans la ville." },
+      { src: "/galleries/couples/couples-03.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Deux amoureux, un regard partagé." },
+      { src: "/galleries/couples/couples-04.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Tendresse d'un couple, sans pose." },
+      { src: "/galleries/couples/couples-05.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Un instant d'intimité à deux." },
+      { src: "/galleries/couples/couples-06.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "La complicité d'un couple, en lumière naturelle." },
+      { src: "/galleries/couples/couples-07.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Deux personnes qui s'aiment, au naturel." },
     ],
   },
   {
     slug: "portraits",
     title: "Portraits",
-    intro: "Un visage, une présence — simple et juste.",
+    intro: "Une personne, une présence. Simple et juste.",
+    cover: {
+      src: "/galleries/portraits/portraits-cover.jpg",
+      width: 889, height: 1280, ratio: "aspect-[4/5]",
+      alt: "Portrait d'une future maman dans un champ doré, au coucher du soleil.",
+    },
     images: [
-      placeholder("Portrait", "aspect-[4/5]"),
-      placeholder("Portrait", "aspect-[2/3]"),
-      placeholder("Portrait", "aspect-[1/1]"),
-      placeholder("Portrait", "aspect-[4/5]"),
-      placeholder("Portrait", "aspect-[2/3]"),
-      placeholder("Portrait", "aspect-[4/5]"),
+      { src: "/galleries/portraits/portraits-01.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Portrait d'une femme en robe blanche, lumière dorée du soir." },
+      { src: "/galleries/portraits/portraits-02.jpg", width: 869, height: 1280, ratio: "aspect-[2/3]", alt: "Future maman regardant son échographie, en noir et blanc." },
+      { src: "/galleries/portraits/portraits-03.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Portrait d'une future maman dans les hautes herbes, en noir et blanc." },
+      { src: "/galleries/portraits/portraits-04.jpg", width: 1280, height: 855, ratio: "aspect-[3/2]", alt: "Une mère et son bébé, instant tendre en noir et blanc." },
     ],
   },
   {
     slug: "mariages",
     title: "Mariages",
-    intro: "Le récit d'une journée — l'émotion plutôt que la mise en scène.",
+    intro: "Le récit d'une journée : l'émotion plutôt que la mise en scène.",
+    cover: {
+      src: "/galleries/mariages/mariages-cover.jpg",
+      width: 853, height: 1280, ratio: "aspect-[4/5]",
+      alt: "Les mariés devant une 2CV bordeaux, à l'entrée d'un château.",
+    },
     images: [
-      placeholder("Photographie de mariage", "aspect-[3/2]"),
-      placeholder("Photographie de mariage", "aspect-[2/3]"),
-      placeholder("Photographie de mariage", "aspect-[3/2]"),
-      placeholder("Photographie de mariage", "aspect-[1/1]"),
-      placeholder("Photographie de mariage", "aspect-[4/5]"),
-      placeholder("Photographie de mariage", "aspect-[3/2]"),
+      { src: "/galleries/mariages/mariages-01.jpg", width: 1280, height: 972, ratio: "aspect-[5/4]", alt: "Les mariés front contre front, éclat de rire, dans une salle ornée." },
+      { src: "/galleries/mariages/mariages-02.jpg", width: 1280, height: 897, ratio: "aspect-[3/2]", alt: "Les mariés dans un jardin botanique, entre les agaves." },
+      { src: "/galleries/mariages/mariages-03.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un instant du grand jour, sur le vif." },
+      { src: "/galleries/mariages/mariages-04.jpg", width: 874, height: 1280, ratio: "aspect-[2/3]", alt: "Portrait des mariés." },
+      { src: "/galleries/mariages/mariages-05.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "La cérémonie, racontée avec discrétion." },
+      { src: "/galleries/mariages/mariages-06.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Un détail de la journée de mariage." },
+      { src: "/galleries/mariages/mariages-07.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "L'émotion d'un mariage, en lumière naturelle." },
+      { src: "/galleries/mariages/mariages-08.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Un moment fort, saisi avec discrétion." },
+      { src: "/galleries/mariages/mariages-09.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Les mariés portés par leurs invités, explosion de joie, en noir et blanc." },
     ],
   },
 ];
 
 /**
- * A curated cross-genre sequence for the homepage reel (HorizontalGallery) — an
- * exhibition wall of DIRECTED placeholders (v3): no demo imagery, every frame is a
- * reserved no-CLS frame carrying its orientation·ratio + a one-line art-direction
- * note. The mixed ratios + emotional sequence are the curation; widths derive from
- * each ratio at the shared rail height, so it reads as a hand-picked hang, not a
- * grid. Drop a real frame in by adding `src` (+ `width`/`height`) — zero layout
- * change. Order is the edit: it should rise and fall like a wall you walk past.
+ * The homepage reel (HorizontalGallery) — a curated cross-genre exhibition wall.
+ * Mixed orientation, colour + black-and-white, sequenced to rise and fall like a
+ * hang you walk past. Real photographs (operator-authorized), not placeholders.
  */
 export const featured: GalleryImage[] = [
-  { alt: "Une étreinte avant le coucher du soleil", ratio: "aspect-[4/5]", hint: "Une étreinte avant le coucher du soleil." },
-  { alt: "Une famille marchant vers la mer", ratio: "aspect-[16/9]", hint: "Une famille marchant vers la mer." },
-  { alt: "Des mains qui se cherchent", ratio: "aspect-[1/1]", hint: "Des mains qui se cherchent." },
-  { alt: "Le premier regard, à la fenêtre", ratio: "aspect-[3/4]", hint: "Le premier regard, à la fenêtre." },
-  { alt: "Des enfants courent dans l'herbe haute", ratio: "aspect-[3/2]", hint: "Des enfants qui courent dans l'herbe haute." },
-  { alt: "Une future maman, de profil", ratio: "aspect-[2/3]", hint: "Une future maman, de profil." },
-  { alt: "Le rire partagé au milieu du repas", ratio: "aspect-[5/4]", hint: "Le rire partagé, au milieu du repas." },
-  { alt: "Front contre front, les yeux fermés", ratio: "aspect-[4/5]", hint: "Front contre front, les yeux fermés." },
-  { alt: "La mariée, juste avant d'entrer", ratio: "aspect-[16/9]", hint: "La mariée, juste avant d'entrer." },
-  { alt: "Un nouveau-né au creux des bras", ratio: "aspect-[1/1]", hint: "Un nouveau-né, au creux des bras." },
+  { src: "/galleries/familles/familles-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Une mère et son enfant, front contre front, au soleil couchant." },
+  { src: "/galleries/couples/couples-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple complice sous les halles, lumière chaude." },
+  { src: "/galleries/portraits/portraits-cover.jpg", width: 889, height: 1280, ratio: "aspect-[2/3]", alt: "Future maman dans un champ doré, au coucher du soleil." },
+  { src: "/galleries/mariages/mariages-09.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Les mariés portés par leurs invités, en noir et blanc." },
+  { src: "/galleries/familles/familles-cover.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Une famille à la maison, dans la lumière de la fenêtre." },
+  { src: "/galleries/grossesse/grossesse-08.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple dans un champ au coucher du soleil, une échographie à la main." },
+  { src: "/galleries/mariages/mariages-01.jpg", width: 1280, height: 972, ratio: "aspect-[5/4]", alt: "Les mariés front contre front, éclat de rire." },
+  { src: "/galleries/couples/couples-cover.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Un couple s'embrasse sur une bordure de trottoir parisien." },
+  { src: "/galleries/grossesse/grossesse-01.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple près de la fenêtre, dans l'attente, en noir et blanc." },
+  { src: "/galleries/mariages/mariages-02.jpg", width: 1280, height: 897, ratio: "aspect-[3/2]", alt: "Les mariés dans un jardin botanique." },
 ];
 
 /** Ordered slugs for nav / static params. */

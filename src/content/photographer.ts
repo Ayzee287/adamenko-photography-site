@@ -4,14 +4,20 @@
 // file. French is canonical (D008); a second locale wraps the string fields later
 // without touching this shape.
 //
-// FILL BEFORE LAUNCH: every value marked `TODO(operator)` is a placeholder kept
-// honest rather than invented (vault brand-voice: never fabricate biographical
-// facts). The site renders correctly with the placeholders; it just reads as a
-// draft until the real values land.
+import type { GalleryImage } from "@/types/gallery";
+
+// 2026-06-24 — confirmed business facts supplied by the operator + recovered from
+// the photographer's OWN previous website (github.com/antonmokryi/photographiAdamenko)
+// were ingested here: real personal name, professional e-mail, legal address, and a
+// biography grounded in her own words (durable facts only — no dating figures, which
+// would now be stale). Items still marked `TODO(operator)` are genuine unknowns kept
+// honest rather than invented (vault brand-voice: never fabricate biographical facts).
 
 export type Photographer = {
-  /** Personal name of the photographer. Empty until confirmed — never invented. */
+  /** Personal name of the photographer (confirmed 2026-06-24). */
   name: string;
+  /** Full legal name as registered (birth name in parentheses) — used on legal pages. */
+  legalName: string;
   /** Business / brand name (already public). */
   brand: string;
   shortBrand: string;
@@ -21,7 +27,7 @@ export type Photographer = {
     country: string;
     /** Display label, e.g. "Lyon, France". */
     label: string;
-    /** TODO(operator): postal address — used for legal pages + LocalBusiness schema. */
+    /** Postal address — used for legal pages + LocalBusiness schema. */
     streetAddress?: string;
     postalCode?: string;
   };
@@ -37,19 +43,26 @@ export type Photographer = {
   specialties: string[];
   /** First-person biography paragraphs. DRAFT — confirm wording with the photographer. */
   biography: string[];
+  /** Portrait of the photographer (her own published image) — about page + Person schema. */
+  portrait?: GalleryImage;
   contact: {
-    /** TODO(operator): real inbox — also the fallback channel on the contact page. */
+    /** Real inbox (confirmed) — also the fallback channel on the contact page. */
     email: string;
     instagram: string;
+    /** Personal Instagram (study/secondary — not surfaced as a business channel). */
+    personalInstagram?: string;
+    facebook?: string;
+    telegram?: string;
     /** TODO(operator): public business phone, if she wants one listed. */
     phone?: string;
   };
 };
 
 export const photographer: Photographer = {
-  // TODO(operator): insert the photographer's real personal name (e.g. "Olena Adamenko").
-  // Left empty until confirmed; the UI hides the name gracefully while empty.
-  name: "",
+  // Confirmed 2026-06-24. Public-facing personal name; the registered birth name
+  // (Sereda) is carried in `legalName` for the mentions légales only.
+  name: "Irina Adamenko",
+  legalName: "Irina Adamenko (Sereda)",
   brand: "Adamenko Photography",
   shortBrand: "Adamenko",
   location: {
@@ -57,10 +70,10 @@ export const photographer: Photographer = {
     region: "Auvergne-Rhône-Alpes",
     country: "France",
     label: "Lyon, France",
-    // TODO(operator): legally required on the Mentions légales page for a registered
-    // business; may be a domiciliation address rather than a home address.
-    streetAddress: undefined,
-    postalCode: undefined,
+    // Confirmed 2026-06-24 (SIREN/INSEE). This is the registered establishment
+    // address; it is the legally required éditeur address on the Mentions légales.
+    streetAddress: "Bât. 1, 173 avenue Barthélemy Buyer",
+    postalCode: "69005",
   },
   availability: {
     base: "Lyon, France",
@@ -68,18 +81,36 @@ export const photographer: Photographer = {
     note: "Disponible pour des séances à Lyon, en France et à l'international.",
   },
   specialties: ["Famille", "Grossesse", "Couple", "Portrait", "Mariage"],
-  // DRAFT placeholders in the brand voice (warm, plain, first person). Confirm every
-  // line; replace with her real story before launch.
+  // DRAFT (2026-06-24) — rewritten from the photographer's OWN words on her previous
+  // site, keeping only DURABLE facts (Ukrainian; based in Lyon; trained in law, then
+  // photography; mother of three; documentary, minimal-posing approach). The original
+  // dating figures ("il y a 8 ans", "depuis près de deux ans") were dropped because
+  // they are now stale and would be fabrication if guessed. Confirm with her, then
+  // optionally restore a current timeframe. Stays warm, plain, first person.
   biography: [
-    "Je suis photographe à Lyon, et je travaille partout où l'on m'emmène.",
-    "Je photographie les liens : une famille qui se serre, l'attente d'un enfant, deux personnes qui s'aiment. Des images douces et sincères, faites pour durer.",
-    "Mon approche est simple : vous mettre à l'aise, puis disparaître — pour que les vraies images arrivent d'elles-mêmes.",
+    "Je m'appelle Irina. Je suis photographe de famille à Lyon, et je travaille partout où l'on m'emmène, en France comme ailleurs en Europe.",
+    "Je suis ukrainienne ; j'ai posé mes valises à Lyon avec ma famille. Avocate de formation, je suis venue à la photographie presque par hasard, puis je n'ai plus pu m'en passer.",
+    "Je suis maman de trois enfants. Les journées avec des tout-petits, les fous rires et les imprévus, je connais : c'est souvent là que se cachent les plus belles images.",
+    "J'aime photographier la vie telle qu'elle est. Avec moi, pas de regard figé vers l'objectif : je vous guide par quelques gestes simples, puis je m'efface. Ce qui m'intéresse, ce sont les vrais moments : un sourire, un câlin, un jeu, les petits rituels du quotidien.",
+    "Mon travail, au fond, c'est de vous rendre ces instants tels que vous les avez vécus : des images douces et sincères, faites pour vivre avec vous et se transmettre.",
   ],
+  // Her own published portrait (B&W, with a film camera) — recovered from her previous
+  // site (operator-authorized). 4:5 frame on the about page; crops gently from 2:3.
+  portrait: {
+    src: "/about/portrait-irina.jpg",
+    width: 853,
+    height: 1198,
+    ratio: "aspect-[4/5]",
+    alt: "Irina Adamenko, photographe à Lyon, un appareil photo argentique entre les mains.",
+  },
   contact: {
-    // TODO(operator): real inbox. Until set, the contact page shows Instagram as the
-    // fallback channel and the API route refuses to send (see app/api/contact).
-    email: "",
+    // Confirmed 2026-06-24. Drives the contact-form fallback link + the API From/To.
+    email: "adamenkoiu@gmail.com",
     instagram: "https://www.instagram.com/adamenko_photography/",
+    personalInstagram: "https://www.instagram.com/sereduha/",
+    facebook: "https://www.facebook.com/profile.php?id=100011367545612",
+    // Recovered from the previous site's contact block — an active channel she used.
+    telegram: "https://t.me/AdamenkoIr",
     phone: undefined,
   },
 };

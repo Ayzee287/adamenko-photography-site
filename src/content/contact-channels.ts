@@ -7,7 +7,7 @@
 import { photographer } from "@/content/photographer";
 
 export type ContactChannel = {
-  id: "email" | "instagram" | "phone" | "form";
+  id: "email" | "instagram" | "phone" | "form" | "facebook" | "telegram";
   label: string;
   /** Display value (may be empty until provided). */
   value: string;
@@ -50,10 +50,19 @@ export const contactChannels = {
       href: contact.instagram,
       external: true,
     },
+    {
+      id: "facebook",
+      label: "Facebook",
+      value: "Adamenko Photography",
+      href: contact.facebook ?? "",
+      external: true,
+    },
+    {
+      id: "telegram",
+      label: "Telegram",
+      value: "@AdamenkoIr",
+      href: contact.telegram ?? "",
+      external: true,
+    },
   ] satisfies ContactChannel[],
 } as const;
-
-/** Only the channels that are actually available right now (non-empty href). */
-export function availableChannels(): ContactChannel[] {
-  return contactChannels.channels.filter((c) => c.href !== "");
-}

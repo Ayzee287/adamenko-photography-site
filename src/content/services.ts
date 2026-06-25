@@ -31,14 +31,14 @@ export const services = {
   eyebrow: "Les prestations",
   title: "Ce que je photographie.",
   intro:
-    "Une approche documentaire, en lumière naturelle : je vous laisse vivre la scène et je photographie ce qui arrive vraiment. Peu de poses, de vraies interactions — en couleur comme en noir et blanc.",
+    "Une approche documentaire, en lumière naturelle : je vous laisse vivre la scène et je photographie ce qui arrive vraiment. Peu de poses, de vraies interactions, en couleur comme en noir et blanc.",
   items: [
     {
       slug: "familles",
       title: "Famille",
       tagline: "Votre quotidien, tel qu'il est vraiment.",
       description: [
-        "Une séance famille n'est pas une séance de poses. On se retrouve chez vous ou dehors, et je vous laisse être ensemble — les jeux, les câlins, le désordre tendre du quotidien.",
+        "Une séance famille n'est pas une séance de poses. On se retrouve chez vous ou dehors, et je vous laisse être ensemble : les jeux, les câlins, le désordre tendre du quotidien.",
         "Je travaille en retrait, à la lumière du jour, pour que les enfants oublient l'appareil et que les vraies interactions reviennent d'elles-mêmes.",
       ],
       approach: [
@@ -54,7 +54,7 @@ export const services = {
       title: "Couple",
       tagline: "La façon dont vous êtes ensemble.",
       description: [
-        "Pas de poses figées ni de regards forcés vers l'objectif. On marche, on parle, on vous laisse vous retrouver — et c'est là, dans le mouvement, que les images justes arrivent.",
+        "Pas de poses figées ni de regards forcés vers l'objectif. On marche, on parle, on vous laisse vous retrouver. C'est là, dans le mouvement, que les images justes arrivent.",
         "Une séance couple est aussi une bonne manière de se sentir à l'aise avant un mariage, si c'est ce qui vous attend.",
       ],
       approach: [
@@ -71,7 +71,7 @@ export const services = {
       tagline: "Ces semaines suspendues, avant que tout change.",
       description: [
         "Une séance grossesse douce et pudique, à la lumière d'une fenêtre ou en extérieur. On prend le temps ; rien n'est précipité.",
-        "L'idée n'est pas de mettre en scène, mais de garder une trace sincère de cette période — seule, en couple, ou avec les aînés.",
+        "L'idée n'est pas de mettre en scène, mais de garder une trace sincère de cette période : seule, en couple ou avec les aînés.",
       ],
       approach: [
         "Chez vous ou en extérieur, dans un cadre calme",
@@ -86,7 +86,7 @@ export const services = {
       title: "Mariage",
       tagline: "Votre journée, racontée comme vous l'avez vécue.",
       description: [
-        "J'aborde le mariage comme un reportage : je suis là, attentive, et je raconte le fil de la journée — les préparatifs, l'émotion, la fête — sans interrompre ce qui se passe.",
+        "J'aborde le mariage comme un reportage : je suis là, attentive, et je raconte le fil de la journée, des préparatifs à la fête, sans interrompre ce qui se passe.",
         "Quelques portraits posés à deux si vous le souhaitez, mais l'essentiel se joue dans les vrais moments, en lumière naturelle autant que possible.",
       ],
       approach: [
@@ -100,7 +100,7 @@ export const services = {
     {
       slug: "portraits",
       title: "Portrait",
-      tagline: "Un visage, une présence — simple et juste.",
+      tagline: "Un visage, une présence. Simple et juste.",
       description: [
         "Un portrait franc, sans artifice : un échange plus qu'une pose. On cherche votre expression la plus naturelle, à la lumière du jour.",
         "Pour un usage personnel comme professionnel, en couleur ou en noir et blanc.",

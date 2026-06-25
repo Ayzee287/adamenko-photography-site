@@ -5,6 +5,21 @@ import { cn } from "@/lib/utils";
 type Variant = "primary" | "secondary";
 
 /**
+ * The canonical primary-pill shape + hover, shared so nothing re-implements it
+ * (the contact submit is a real `<button type="submit">`, which an anchor can't be,
+ * so it consumes this class string rather than the component). Colour/bg/border
+ * transitions ride the global interaction clock; only the local active-scale is here.
+ */
+export function primaryPillClasses({ onDark = false }: { onDark?: boolean } = {}) {
+  return cn(
+    "group inline-flex h-[52px] items-center gap-3 rounded-full border px-7 text-sm tracking-wide active:scale-[0.99]",
+    onDark
+      ? "border-paper/45 text-paper hover:border-paper hover:bg-paper hover:text-ink"
+      : "border-ink/35 text-ink hover:border-ink hover:bg-ink hover:text-paper",
+  );
+}
+
+/**
  * The CTA system (v2). Two editorial roles, one warm language:
  *
  * - **primary** — a pill (radius 999px, 52px tall) with a *thin* border and no
@@ -41,12 +56,7 @@ export function ButtonLink({
 
   const base =
     variant === "primary"
-      ? cn(
-          "group inline-flex h-[52px] items-center gap-3 rounded-full border px-7 text-sm tracking-wide active:scale-[0.99]",
-          onDark
-            ? "border-paper/45 text-paper hover:border-paper hover:bg-paper hover:text-ink"
-            : "border-ink/35 text-ink hover:border-ink hover:bg-ink hover:text-paper",
-        )
+      ? primaryPillClasses({ onDark })
       : "group inline-flex min-h-[44px] items-center text-sm";
 
   const cls = cn(base, className);

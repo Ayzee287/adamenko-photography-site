@@ -33,7 +33,12 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   if (location.streetAddress) address.streetAddress = location.streetAddress;
   if (location.postalCode) address.postalCode = location.postalCode;
 
-  const sameAs = [contact.instagram].filter(Boolean);
+  // Public profiles that corroborate the business identity (local-SEO / E-E-A-T).
+  const sameAs = [
+    contact.instagram,
+    contact.facebook,
+    contact.telegram,
+  ].filter(Boolean);
 
   const business: JsonLdObject = {
     "@context": "https://schema.org",
@@ -41,7 +46,8 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
     "@id": absoluteUrl("/#business"),
     name: photographer.brand,
     url: absoluteUrl("/"),
-    image: absoluteUrl("/opengraph-image"),
+    // A real signature photograph (better for local SEO than the typographic card).
+    image: absoluteUrl("/home/hero.jpg"),
     description: dict.site.tagline,
     address,
     areaServed: locations.areas.map((a) => ({
@@ -56,11 +62,13 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   if (contact.phone) business.telephone = contact.phone;
 
   if (photographer.name) {
-    business.founder = {
+    const founder: JsonLdObject = {
       "@type": "Person",
       name: photographer.name,
       jobTitle: "Photographe",
     };
+    if (photographer.portrait?.src) founder.image = absoluteUrl(photographer.portrait.src);
+    business.founder = founder;
   }
 
   return business;

@@ -34,7 +34,7 @@ export function buildMetadata({
   path?: string;
 }): Metadata {
   const desc = description ?? site.tagline;
-  const ogTitle = title ? `${title} — ${site.brand}` : `${site.brand} — Photographe à Lyon`;
+  const ogTitle = title ? `${title} · ${site.brand}` : `${site.brand} · Photographe à Lyon`;
   return {
     title,
     description: desc,

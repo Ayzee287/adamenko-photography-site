@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
+import { blurFor } from "@/lib/image-blur";
 import { home } from "@/content/home";
 
 /**
@@ -47,13 +49,27 @@ export function DiscoverCards() {
                   className="discover-item group relative block lg:aspect-[2/3] lg:overflow-hidden"
                 >
                   {/* Media — a square in flow on mobile; on lg it fills the portrait
-                      frame so the cover can slide off it and reveal the rest. The warm
-                      radial field is the reserved placeholder; a real export later drops
-                      straight in (object-cover) with no layout change. */}
-                  <span
-                    aria-hidden
-                    className="block aspect-square bg-[radial-gradient(120%_120%_at_28%_18%,#f6efe4,#e3d6c4)] lg:absolute lg:inset-0 lg:aspect-auto"
-                  />
+                      frame so the cover can slide off it and reveal the rest. A real
+                      photograph (object-cover) sits in the same frame; the warm radial
+                      field remains the fallback if a card has no image. */}
+                  {card.image?.src ? (
+                    <span className="relative block aspect-square overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
+                      <Image
+                        src={card.image.src}
+                        alt=""
+                        fill
+                        sizes="(min-width:1024px) 33vw, 100vw"
+                        placeholder={blurFor(card.image.src) ? "blur" : undefined}
+                        blurDataURL={blurFor(card.image.src)}
+                        className="object-cover"
+                      />
+                    </span>
+                  ) : (
+                    <span
+                      aria-hidden
+                      className="frame-reserved block aspect-square lg:absolute lg:inset-0 lg:aspect-auto"
+                    />
+                  )}
 
                   {/* Functional legibility scrim — desktop hover/focus only. Opacity is
                       owned by .discover-reveal (not a utility) so the hover state isn't

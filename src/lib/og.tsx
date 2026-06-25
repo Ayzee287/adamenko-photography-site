@@ -1,25 +1,83 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { site } from "@/content/site";
 
-// Shared social-card renderer for the OpenGraph + Twitter image conventions
-// (sprint task 4). 100% self-contained — no external photo or remote font fetch —
-// so it generates offline at build time and can never break the build on a missing
-// asset. It uses the brand palette; @vercel/og's bundled font covers French accents.
-// (A custom Fraunces serif card is a deliberate post-launch polish, not a blocker.)
-//
-// When a real signature photograph exists, this can become an image-backed card;
-// the file convention and metadata wiring stay identical.
+// Shared social-card renderer for the OpenGraph + Twitter image conventions.
+// Generates offline at build time. Now PHOTO-BACKED (2026-06-25): it embeds the real
+// hero photograph (read from /public at build, inlined as a data URI — no network) with
+// a legibility scrim and the brand wordmark. If the file is ever missing it falls back
+// to the self-contained typographic card, so the build can never break on a missing asset.
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
-export const ogAlt = `${site.brand} — Photographe à Lyon`;
+export const ogAlt = `${site.brand} · Photographe à Lyon`;
 
 const ink = "#2a2420";
 const paper = "#faf6f0";
 const clay = "#b07159";
 const muted = "#6f655c";
 
+/** Inline the hero as a data URI at build, or null if unavailable. */
+function heroDataUri(): string | null {
+  try {
+    const buf = readFileSync(join(process.cwd(), "public/home/hero.jpg"));
+    return `data:image/jpeg;base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
 export function renderOgImage() {
+  const hero = heroDataUri();
+  if (hero) {
+    return new ImageResponse(
+      (
+        <div style={{ position: "relative", display: "flex", width: "100%", height: "100%" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={hero}
+            alt=""
+            width={1200}
+            height={630}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              backgroundImage:
+                "linear-gradient(to top, rgba(26,21,17,0.86) 8%, rgba(26,21,17,0.20) 48%, rgba(26,21,17,0.10) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: 80,
+              bottom: 72,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ display: "flex", fontSize: 30, letterSpacing: 10, textTransform: "uppercase", color: "rgba(250,246,240,0.75)" }}>
+              Photographe · Lyon
+            </div>
+            <div style={{ display: "flex", fontSize: 84, lineHeight: 1.02, color: paper, marginTop: 18 }}>
+              {site.brand}
+            </div>
+            <div style={{ display: "flex", width: 96, height: 5, backgroundColor: clay, margin: "28px 0" }} />
+            <div style={{ display: "flex", fontSize: 30, lineHeight: 1.3, color: "rgba(250,246,240,0.92)", maxWidth: 900 }}>
+              {site.tagline}
+            </div>
+          </div>
+        </div>
+      ),
+      ogSize,
+    );
+  }
+
+  // Fallback — the self-contained typographic card (build-safe if the hero is absent).
   return new ImageResponse(
     (
       <div

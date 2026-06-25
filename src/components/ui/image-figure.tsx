@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { blurFor } from "@/lib/image-blur";
 import type { GalleryImage } from "@/types/gallery";
 
 type ImageFigureProps = {
@@ -59,11 +60,13 @@ export function ImageFigure({
   const ratio = image.ratio ?? "aspect-[4/5]";
   const hasImage = Boolean(image.src);
   const frame = describeFrame(ratio);
+  // Blur-up: the photograph resolves from a soft preview of itself, not a flash.
+  const blur = hasImage ? blurFor(image.src) : undefined;
 
   return (
     <figure
       className={cn(
-        "relative overflow-hidden bg-[radial-gradient(120%_120%_at_28%_18%,#f6efe4,#e3d6c4)]",
+        "frame-reserved relative overflow-hidden",
         ratio,
         className,
       )}
@@ -77,6 +80,8 @@ export function ImageFigure({
             sizes ?? "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
           }
           priority={priority}
+          placeholder={blur ? "blur" : undefined}
+          blurDataURL={blur}
           className={cn(
             "motion-image-fade object-cover",
             interactive &&

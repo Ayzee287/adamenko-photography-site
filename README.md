@@ -33,15 +33,21 @@ src/
     prestations/       Services (inquiry-only, no public prices)
     contact/           Inquiry form
   components/
-    layout/            Container, SiteHeader, SiteFooter
-    gallery/           GalleryView (responsive grid + lightbox)
-    ui/                ImageFigure, Hero
-  content/             Typed content: site identity, nav, galleries (the content schema)
-  lib/                 site config, SEO helpers, utils
+    layout/            Container, SiteHeader, SiteFooter, PageHeader, LanguageSwitcher
+    home/              The homepage section components (the approved benchmark)
+    gallery/           GalleryView (masonry), HorizontalGallery (reel), Lightbox
+    motion/            Reveal, Parallax, reduced-motion hook
+    ui/                ImageFigure, ButtonLink
+    legal/ · seo/      Legal document renderer · JSON-LD injector
+  content/             Typed content schema: identity, galleries, services, FAQ,
+                       legal, locations, i18n dictionaries (no CMS)
+  lib/                 site config, SEO helpers, structured data, i18n, og, blur map, utils
   styles/              globals.css (tokens + interaction clock), motion.css
   types/               Gallery types
 public/
-  galleries/<genre>/   Web-export images live here (NOT committed until ready)
+  galleries/<genre>/   Web-export gallery photographs (committed)
+  home/ · about/       Hero + portrait
+  brand/               Off-site brand marks (wordmark, monogram, watermark)
 ```
 
 Content is **typed data, not a CMS** — adding a photo is one data entry + one export.
@@ -75,15 +81,18 @@ Hosted on **Vercel** with Git integration:
 - `robots.ts` disallows indexing of non-production deployments so previews never
   compete in search.
 
-## Roadmap
+## Status
 
-- [x] Strategy, brand direction, and information architecture (in vault)
-- [x] Next.js scaffold: design system, layout shell, gallery components, routes
-- [ ] Real galleries: cull → grade → export → register (per genre)
-- [ ] Content: home headline · about bio + portrait · services · contact copy
-- [ ] Wire the inquiry form to real delivery (email/spam-guard) — launch blocker
-- [ ] SEO + OpenGraph images per page; performance pass (Lighthouse > 90)
-- [ ] Connect Vercel; launch on subdomain
+The site is **code-complete**. Remaining work is owner content + deployment ops, not engineering:
+
+- [x] Strategy, brand direction, information architecture (in vault)
+- [x] Design system, layout shell, gallery components, all routes
+- [x] Real galleries + hero + portrait (curated, optimised, registered)
+- [x] Content: home, about (bio + portrait), services, FAQ, contact, legal pages
+- [x] Inquiry form wired to delivery (Resend REST + honeypot + server validation)
+- [x] SEO: LocalBusiness/Person JSON-LD, photo-backed OpenGraph, sitemap, robots, hreflang scaffold
+- [ ] Owner: confirm bio/pricing, real testimonials, legal facts — see `docs/owner-todo.md`
+- [ ] Ops: Resend account + verified domain, Vercel import + env vars, launch on subdomain
 
 ## License
 

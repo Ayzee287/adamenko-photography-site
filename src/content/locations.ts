@@ -25,7 +25,7 @@ export const locations = {
     label: "Lyon, France",
   },
   /** Headline used wherever coverage is summarised (matches the homepage CTA tone). */
-  summary: "Basée à Lyon, disponible partout en Europe — projets internationaux étudiés au cas par cas.",
+  summary: "Basée à Lyon, disponible partout en Europe ; les projets internationaux sont étudiés au cas par cas.",
   areas: [
     {
       id: "lyon",
@@ -53,7 +53,7 @@ export const locations = {
       label: "International",
       tier: "international",
       schemaType: "Continent",
-      note: "Les projets hors d'Europe sont étudiés individuellement — parlons-en.",
+      note: "Les projets hors d'Europe sont étudiés individuellement. Parlons-en.",
     },
   ] satisfies Location[],
 } as const;

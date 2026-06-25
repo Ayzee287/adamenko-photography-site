@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { PageHeader } from "@/components/layout/page-header";
+import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
 import { copy } from "@/content/site";
 import { services } from "@/content/services";
@@ -15,20 +17,26 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PrestationsPage() {
   return (
-    <Container className="py-16 sm:py-24">
-      <h1 className="font-serif text-4xl text-ink">{copy.services.title}</h1>
-      <p className="mt-4 max-w-xl text-muted">{copy.services.intro}</p>
+    <Container className="py-10 sm:py-16">
+      <Reveal>
+        <PageHeader
+          eyebrow={copy.services.eyebrow}
+          title={copy.services.title}
+          intro={copy.services.intro}
+        />
 
-      {/* Inquiry-led; transparent range communicated on request until set (D012). */}
-      <p className="mt-8 text-sm text-ink">{copy.services.note}</p>
-      <div className="mt-7">
-        <ButtonLink href="/contact" variant="primary">
-          {copy.services.cta}
-        </ButtonLink>
-      </div>
+        {/* Inquiry-led; transparent range communicated on request until set (D012). */}
+        <p className="mt-8 text-sm text-ink">{copy.services.note}</p>
+        <div className="mt-7">
+          <ButtonLink href="/contact" variant="primary">
+            {copy.services.cta}
+          </ButtonLink>
+        </div>
+      </Reveal>
 
       {/* Service descriptions — de-boxed editorial blocks (existing idiom: top hairline,
           serif title, clay-rule approach list). Each links to its gallery. */}
+      <Reveal variant="rise-slow" className="block">
       <section className="mt-16">
         <p className="text-xs uppercase tracking-[0.22em] text-muted">
           {services.eyebrow}
@@ -69,8 +77,10 @@ export default function PrestationsPage() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       {/* FAQ — native <details> (no JS), now sourced from the expanded faq model. */}
+      <Reveal variant="fade" className="block">
       <section id="faq" className="mt-16 scroll-mt-24">
         <h2 className="font-serif text-2xl text-ink">{faq.title}</h2>
         <p className="mt-3 max-w-2xl text-muted">{faq.intro}</p>
@@ -91,6 +101,7 @@ export default function PrestationsPage() {
           ))}
         </div>
       </section>
+      </Reveal>
     </Container>
   );
 }

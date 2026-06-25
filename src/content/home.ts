@@ -13,11 +13,13 @@ export const home = {
     kicker: "Photographe · Lyon",
     title: "Les moments qui restent.",
     scrollCue: "Faites défiler",
-    // Directed placeholder until a real opening frame lands (v3): photography is
-    // optional during evaluation. Add `image.src` (+ dimensions) to drop the real
-    // frame in with zero layout change — nothing else moves.
+    // Real opening frame (2026-06-25): a documentary wedding moment on a terrace
+    // over the hills at dusk — full-bleed, the headline sits low-left over the scrim.
     image: {
-      alt: "Image d'ouverture — une famille réunie au coucher du soleil",
+      src: "/home/hero.jpg",
+      width: 1280,
+      height: 853,
+      alt: "Des mariés, bras levés face aux collines, sur une terrasse au crépuscule.",
     },
     imageHint:
       "Une étreinte, à la lumière chaude de fin de journée. La toute première chose que l'on ressent.",
@@ -32,11 +34,10 @@ export const home = {
 
   about: {
     eyebrow: "La photographe",
-    // TODO(operator): insert her real name once confirmed (e.g. "Bonjour, je suis …").
     title: "Derrière l'objectif.",
     body: [
-      "Photographe à Lyon, je fais des images douces et sincères, faites pour durer.",
-      "Mon approche est simple : vous mettre à l'aise, puis disparaître — pour que les vraies images arrivent d'elles-mêmes.",
+      "Je m'appelle Irina, photographe de famille à Lyon, ukrainienne d'origine et maman de trois enfants.",
+      "Avocate de formation devenue photographe, je vous mets à l'aise puis je m'efface : ce sont les vrais moments qui m'intéressent, jamais les poses figées.",
     ],
     values: ["Chaleur", "Sincérité", "Présence", "Patience"],
     cta: { label: "En savoir plus", href: "/a-propos" },
@@ -59,7 +60,7 @@ export const home = {
       {
         n: "02",
         title: "On prépare ensemble",
-        body: "Le lieu, le moment, le rythme — on cale tout ce qu'il faut pour être tranquille le jour venu.",
+        body: "Le lieu, le moment, le rythme : on cale tout ce qu'il faut pour être tranquille le jour venu.",
       },
       {
         n: "03",
@@ -97,28 +98,32 @@ export const home = {
         emotion: "Le lien",
         tag: "Famille",
         emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
-        hint: "À la maison. Trois générations enlacées. Lumière du matin, tons doux.",
+        src: "/galleries/familles/familles-01.jpg",
+        alt: "Une mère et son enfant, front contre front, dans les herbes au soleil couchant.",
       },
       {
         slug: "grossesse",
         emotion: "L'attente",
         tag: "Grossesse",
         emotive: "Ces semaines suspendues, juste avant que tout change.",
-        hint: "Silhouette à contre-jour. Les mains sur le ventre. Cadrage proche, fenêtre.",
+        src: "/galleries/grossesse/grossesse-05.jpg",
+        alt: "Future maman en lumière naturelle, l'attente avant la naissance.",
       },
       {
         slug: "couples",
         emotion: "L'intimité",
         tag: "Couple",
         emotive: "La façon dont vous vous regardez quand personne ne regarde.",
-        hint: "Dehors, fin de journée. Front contre front. Mouvement, lumière basse.",
+        src: "/galleries/couples/couples-01.jpg",
+        alt: "Un couple complice sous les halles, lumière chaude.",
       },
       {
         slug: "mariages",
         emotion: "La fête",
         tag: "Mariage",
         emotive: "Toute une journée, racontée comme vous l'avez vécue.",
-        hint: "L'instant du oui. Larmes et rires. Composition large, lumière chaude.",
+        src: "/galleries/mariages/mariages-09.jpg",
+        alt: "Les mariés portés par leurs invités, explosion de joie, en noir et blanc.",
       },
     ],
     also: { label: "Aussi : les portraits", href: "/galeries/portraits" },
@@ -165,19 +170,22 @@ export const home = {
         label: "L'expérience",
         title: "À quoi s'attendre",
         href: "/prestations",
-        hint: "Un détail tendre d'une séance — des mains, un regard hors-champ.",
+        image: { src: "/galleries/familles/familles-04.jpg", alt: "" },
+        hint: "Un détail tendre d'une séance : des mains, un regard hors-champ.",
       },
       {
         label: "Infos pratiques",
         title: "Questions fréquentes",
         href: "/prestations#faq",
-        hint: "Un instant calme, en attente — la lumière d'une fin d'après-midi.",
+        image: { src: "/galleries/couples/couples-06.jpg", alt: "" },
+        hint: "Un instant calme, en attente, dans la lumière d'une fin d'après-midi.",
       },
       {
         label: "À propos",
         title: "Rencontrer la photographe",
         href: "/a-propos",
-        hint: "La photographe dans son élément — un geste, entre deux prises.",
+        image: { src: "/about/portrait-irina.jpg", alt: "" },
+        hint: "La photographe dans son élément, un geste entre deux prises.",
       },
     ],
   },
@@ -186,13 +194,13 @@ export const home = {
     eyebrow: "Elles en parlent",
     title: "La confiance, avant tout.",
     // Reserved-by-choice (v3 QA): frames the absence as integrity, not "coming soon".
-    empty: "Les mots de mes clientes trouveront leur place ici — vrais, et jamais inventés.",
+    empty: "Les mots de mes clientes trouveront leur place ici, vrais et jamais inventés.",
   },
 
   finalCta: {
     eyebrow: "Contact",
     title: "Travaillons ensemble.",
-    body: "Parlez-moi de votre projet — la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
+    body: "Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
     locationLabel: "Basée à",
     location: "Lyon, France",
     availabilityLabel: "Disponibilité",

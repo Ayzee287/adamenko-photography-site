@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent } from "react";
 import { copy, site } from "@/content/site";
 import { CONTACT_OCCASIONS, type ContactErrorField } from "@/lib/contact";
+import { primaryPillClasses } from "@/components/ui/button-link";
 import { cn } from "@/lib/utils";
 
 /**
@@ -175,12 +176,16 @@ export function ContactForm() {
         />
       </div>
 
-      {/* Pill submit — unchanged styling; disabled + aria-busy while sending. */}
+      {/* Pill submit — shares the canonical primary-pill shape with ButtonLink
+          (primaryPillClasses); only the form-specific disabled states are added. */}
       <button
         type="submit"
         disabled={status === "sending"}
         aria-busy={status === "sending"}
-        className="inline-flex h-[52px] items-center self-start rounded-full border border-ink/35 px-7 text-sm tracking-wide text-ink hover:border-ink hover:bg-ink hover:text-paper active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-ink"
+        className={cn(
+          primaryPillClasses(),
+          "self-start disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-ink",
+        )}
       >
         {status === "sending" ? t.sending : t.submit}
       </button>
