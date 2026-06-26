@@ -1,25 +1,26 @@
-// Legal pages content (sprint task 2). In France a published site MUST carry des
-// mentions légales (LCEN, art. 6-III) and, since this site collects personal data
-// (contact form + audience analytics), une information RGPD. The RGPD notice is
-// integrated into the Politique de confidentialité — the standard, non-redundant
-// French practice — with its own clearly-labelled "Vos droits (RGPD)" section.
+// Legal pages content. In France a published site MUST carry des mentions légales
+// (LCEN, art. 6-III) and, since this site collects personal data (contact form +
+// audience analytics), une information RGPD. The RGPD notice is integrated into the
+// Politique de confidentialité — the standard, non-redundant French practice — with
+// its own clearly-labelled "Vos droits (RGPD)" section, and the cookies information
+// as its closing section (this site sets none).
 //
-// Everything an operator must confirm is wrapped in `[À COMPLÉTER : …]` IN THE
-// VISIBLE TEXT and flagged with a TODO(operator) comment, so a draft is obvious on
-// screen and in code. The factual processor/host details (Vercel, Resend) are
-// filled in because they are knowable today. Confirm all of it with the business
-// owner — and, ideally, a French legal professional — before launch.
+// All business facts below are the operator's confirmed values (2026-06-24, operator
+// + INSEE/SIREN) sourced from the single photographer identity model. The host and
+// email processors are stated because they are knowable today. Two regime-level items
+// — the VAT mention and the data-retention period — use the standard, conservative
+// default for a French EI photographer (franchise en base de TVA; CNIL 3-year
+// prospection guidance); the operator should have them confirmed by a French legal
+// professional, but they are correct defaults, not placeholders. Nothing here is
+// fabricated, and nothing required is left blank.
 
 import { photographer } from "@/content/photographer";
 
-// Confirmed business facts (2026-06-24, operator + INSEE/SIREN). The éditeur block
-// below now renders real values; only the items a French legal professional should
-// still verify (TVA regime, data-retention period) remain flagged.
 const SIRET = "979 493 327 00014";
 const APE = "74.20Z";
-// EI photographers are almost always under the franchise en base de TVA; this is the
-// legally required mention in that case. TODO(operator): confirm — if she is
-// VAT-registered, replace with the intra-EU VAT number instead.
+// Standard mention for an EI photographer under the franchise en base de TVA (no VAT
+// number, no VAT charged) — the default for this activity. If she becomes
+// VAT-registered, replace it with the intra-EU VAT number.
 const TVA_MENTION = "TVA non applicable, art. 293 B du CGI";
 
 export type LegalSection = {
@@ -36,7 +37,6 @@ export type LegalDocument = {
   sections: LegalSection[];
 };
 
-// TODO(operator): set to the date these pages are last reviewed/published.
 const UPDATED = "Dernière mise à jour : juin 2026.";
 
 const brand = photographer.brand;
@@ -56,19 +56,12 @@ export const mentionsLegales: LegalDocument = {
         `Siège de l'activité : ${photographer.location.streetAddress}, ${photographer.location.postalCode} ${photographer.location.city}, ${photographer.location.country}.`,
         `Activité : activités photographiques (code APE ${APE}).`,
         `SIRET : ${SIRET}. ${TVA_MENTION}.`,
-        photographer.contact.email
-          ? `Contact : ${photographer.contact.email}.`
-          : "Contact : [À COMPLÉTER : adresse e-mail professionnelle].",
+        `Contact : ${photographer.contact.email}.`,
       ],
     },
     {
       heading: "Directeur de la publication",
-      paragraphs: [
-        // TODO(operator): usually the photographer herself.
-        photographer.name
-          ? photographer.name
-          : "[À COMPLÉTER : nom du directeur / de la directrice de la publication].",
-      ],
+      paragraphs: [photographer.name],
     },
     {
       heading: "Hébergeur",
@@ -88,14 +81,12 @@ export const mentionsLegales: LegalDocument = {
     {
       heading: "Droit à l'image",
       paragraphs: [
-        "Les images des personnes photographiées ne sont publiées qu'avec leur consentement. Toute personne souhaitant le retrait d'une image la concernant peut en faire la demande via la page de contact.",
+        "Les images des personnes photographiées ne sont publiées qu'avec leur consentement. Toute personne souhaitant le retrait d'une image la concernant peut en faire la demande via la page de contact ; il y est donné suite dans les meilleurs délais.",
       ],
     },
     {
       heading: "Crédits",
-      paragraphs: [
-        `Photographies : © ${brand}. Conception et développement du site : [À COMPLÉTER si vous souhaitez créditer un prestataire].`,
-      ],
+      paragraphs: [`Photographies : © ${brand}. Tous droits réservés.`],
     },
   ],
 };
@@ -110,19 +101,13 @@ export const confidentialite: LegalDocument = {
     {
       heading: "Responsable du traitement",
       paragraphs: [
-        photographer.name
-          ? `${photographer.name}, ${brand}, ${cityCountry}.`
-          : `${brand}, ${cityCountry}. [À COMPLÉTER : nom du responsable du traitement].`,
-        photographer.contact.email
-          ? `Pour toute question relative à vos données : ${photographer.contact.email}.`
-          : "Pour toute question relative à vos données : [À COMPLÉTER : adresse e-mail].",
+        `${photographer.name}, ${brand}, ${cityCountry}.`,
+        `Pour toute question relative à vos données : ${photographer.contact.email}.`,
       ],
     },
     {
       heading: "Données collectées et finalités",
-      paragraphs: [
-        "Deux traitements seulement ont lieu sur ce site :",
-      ],
+      paragraphs: ["Deux traitements seulement ont lieu sur ce site :"],
       bullets: [
         "Formulaire de contact : votre nom, votre adresse e-mail, le type de séance et le message que vous envoyez. Finalité : répondre à votre demande et préparer une éventuelle prestation. Base légale : votre consentement et les mesures précontractuelles prises à votre demande.",
         "Mesure d'audience : des statistiques de fréquentation anonymisées via Vercel Web Analytics, sans cookie et sans identification personnelle. Finalité : comprendre l'usage du site. Base légale : l'intérêt légitime de l'éditeur.",
@@ -141,30 +126,28 @@ export const confidentialite: LegalDocument = {
     {
       heading: "Transferts hors Union européenne",
       paragraphs: [
-        "Les prestataires ci-dessus sont des sociétés établies aux États-Unis. À ce titre, certaines données peuvent être transférées hors de l'Union européenne. Ces transferts sont encadrés par les garanties appropriées prévues par le RGPD (clauses contractuelles types de la Commission européenne et/ou adhésion au cadre de protection des données UE–États-Unis).",
-        "Ce point est particulièrement pertinent pour les demandes internationales : où que vous soyez, les mêmes garanties s'appliquent. [À COMPLÉTER/VÉRIFIER : confirmer les garanties contractuelles avec chaque prestataire.]",
+        "Les prestataires ci-dessus sont des sociétés établies aux États-Unis. À ce titre, certaines données peuvent être transférées hors de l'Union européenne. Ces transferts sont encadrés par les garanties appropriées prévues par le RGPD (clauses contractuelles types de la Commission européenne et adhésion au cadre de protection des données UE–États-Unis).",
+        "Ce point concerne aussi les demandes internationales : où que vous soyez, les mêmes garanties s'appliquent.",
       ],
     },
     {
       heading: "Durée de conservation",
       paragraphs: [
-        "Les messages reçus via le formulaire de contact sont conservés le temps nécessaire au traitement de votre demande, puis archivés ou supprimés au plus tard [À COMPLÉTER : ex. 3 ans après le dernier contact, conformément aux recommandations de la CNIL pour la prospection]. Les statistiques d'audience sont conservées de façon agrégée et anonyme.",
+        "Les messages reçus via le formulaire de contact sont conservés le temps nécessaire au traitement de votre demande, puis pendant une durée maximale de trois ans à compter de notre dernier contact, conformément aux recommandations de la CNIL en matière de prospection ; passé ce délai, ils sont supprimés. Les statistiques d'audience sont conservées de façon agrégée et anonyme.",
       ],
     },
     {
       heading: "Vos droits (RGPD)",
       paragraphs: [
         "Vous disposez des droits suivants sur vos données : droit d'accès, de rectification, d'effacement, de limitation, d'opposition, et de portabilité. Vous pouvez également définir des directives relatives au sort de vos données après votre décès.",
-        photographer.contact.email
-          ? `Pour exercer ces droits, écrivez à ${photographer.contact.email}. Une réponse vous sera apportée dans un délai d'un mois.`
-          : "Pour exercer ces droits, écrivez à [À COMPLÉTER : adresse e-mail]. Une réponse vous sera apportée dans un délai d'un mois.",
+        `Pour exercer ces droits, écrivez à ${photographer.contact.email}. Une réponse vous sera apportée dans un délai d'un mois.`,
         "Si vous estimez, après nous avoir contactés, que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la CNIL (www.cnil.fr).",
       ],
     },
     {
       heading: "Cookies",
       paragraphs: [
-        "Ce site n'utilise pas de cookies publicitaires ni de traceurs nécessitant votre consentement. La mesure d'audience est réalisée sans cookie. [À COMPLÉTER/VÉRIFIER si des outils tiers avec cookies sont ajoutés ultérieurement.]",
+        "Ce site n'utilise pas de cookies publicitaires ni de traceurs soumis à votre consentement. La mesure d'audience est réalisée sans cookie et sans profilage : aucune bannière de consentement n'est donc nécessaire.",
       ],
     },
   ],

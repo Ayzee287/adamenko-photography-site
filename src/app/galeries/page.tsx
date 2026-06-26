@@ -46,12 +46,9 @@ export default function GaleriesPage() {
                   <p className="mt-2 max-w-md text-pretty text-sm text-muted">
                     {g.intro}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-2 text-sm text-ink">
+                  <span className="mt-3 inline-flex items-center gap-2 text-sm text-ink group-hover:text-clay">
                     {copy.galleries.view}
-                    <span
-                      aria-hidden
-                      className="transition-transform duration-300 ease-[var(--ease-arrive)] group-hover:translate-x-[5px]"
-                    >
+                    <span aria-hidden className="cta-arrow">
                       →
                     </span>
                   </span>

@@ -184,7 +184,7 @@ export function ContactForm() {
         aria-busy={status === "sending"}
         className={cn(
           primaryPillClasses(),
-          "self-start disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-ink",
+          "self-start disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:text-ink",
         )}
       >
         {status === "sending" ? t.sending : t.submit}

@@ -1,8 +1,7 @@
 // Pricing: transparent in structure, honest in numbers (D012). The section and
 // "ce qui est inclus" exist now; a real `priceFrom` renders "à partir de N €" only
 // once the photographer sets it — a package without a figure shows "Tarif sur
-// demande". No fabricated prices, ever. Inclusions below are a DRAFT to confirm
-// with the photographer (structure is safe; wording is hers to approve).
+// demande" (the deliberate inquiry-only launch state). No fabricated prices, ever.
 
 export type PricePackage = {
   name: string;
@@ -21,7 +20,8 @@ export const pricing = {
     {
       name: "Séance",
       summary: "Famille, grossesse, couple ou portrait, chez vous ou en extérieur.",
-      // priceFrom: TODO(operator) — set the real starting figure; leave unset until then.
+      // priceFrom intentionally unset — inquiry-only (renders "Tarif sur demande").
+      // Add a figure to display "à partir de N €".
       includes: [
         "1 à 2 heures, un lieu",
         "Préparation et repérage ensemble",
@@ -33,7 +33,7 @@ export const pricing = {
     {
       name: "Mariage",
       summary: "Le récit d'une journée, de la préparation à la fête.",
-      // priceFrom: TODO(operator) — set the real starting figure.
+      // priceFrom intentionally unset — inquiry-only (renders "Tarif sur demande").
       includes: [
         "Demi-journée ou journée complète",
         "Rendez-vous de préparation",

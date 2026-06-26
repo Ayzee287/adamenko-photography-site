@@ -12,16 +12,19 @@ import { home } from "@/content/home";
 // until then every composition renders its directed reserved frame (v2).
 type Scene = {
   slug: string;
-  emotion: string;
-  tag: string;
-  emotive: string;
+  /** Genre name — the dominant serif word. */
+  title: string;
+  /** The small uppercase link label. */
+  cta: string;
+  /** One short, concrete line under the title. */
+  caption: string;
   src?: string;
   alt?: string;
   hint?: string;
 };
 
-// A magazine feature organised by emotion — photography leads, but the spread is
-// built to stand on directed placeholders alone (v2). Four scenes, four DIFFERENT
+// A magazine feature of the genres — photography leads, but the spread is built to
+// stand on directed placeholders alone (v2). Four scenes, four DIFFERENT
 // compositions: split-left · split-right · full-width · FULL-BLEED text-overlay.
 // The last breaks the formula completely (D024).
 
@@ -34,7 +37,7 @@ function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
           onDark ? "text-paper" : "text-ink",
         )}
       >
-        {scene.emotion}
+        {scene.title}
       </h3>
       <p
         className={cn(
@@ -42,7 +45,7 @@ function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
           onDark ? "text-paper/85" : "text-ink/85",
         )}
       >
-        {scene.emotive}
+        {scene.caption}
       </p>
       <span
         className={cn(
@@ -50,7 +53,10 @@ function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
           onDark ? "text-paper/70" : "text-muted group-hover:text-clay",
         )}
       >
-        {scene.tag} →
+        {scene.cta}{" "}
+        <span aria-hidden className="cta-arrow inline-block">
+          →
+        </span>
       </span>
     </>
   );
@@ -65,7 +71,7 @@ function Split({ scene, ratio, side }: { scene: Scene; ratio: string; side: "lef
         className={cn("group block lg:col-span-7", right && "lg:order-2")}
       >
         <ImageFigure
-          image={{ src: scene.src, alt: scene.alt ?? scene.tag, ratio, hint: scene.hint }}
+          image={{ src: scene.src, alt: scene.alt ?? scene.title, ratio, hint: scene.hint }}
           interactive
           sizes="(min-width:1024px) 58vw, 100vw"
         />
@@ -85,7 +91,7 @@ function FullWidth({ scene }: { scene: Scene }) {
     <article>
       <Link href={`/galeries/${scene.slug}`} className="group block">
         <ImageFigure
-          image={{ src: scene.src, alt: scene.alt ?? scene.tag, ratio: "aspect-[16/9]" }}
+          image={{ src: scene.src, alt: scene.alt ?? scene.title, ratio: "aspect-[16/9]" }}
           interactive
           sizes="100vw"
         />
@@ -95,12 +101,15 @@ function FullWidth({ scene }: { scene: Scene }) {
         className="group mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
       >
         <h3 className="font-serif text-5xl leading-[0.95] text-ink sm:text-7xl">
-          {scene.emotion}
+          {scene.title}
         </h3>
         <div className="sm:max-w-xs sm:text-right">
-          <p className="text-pretty text-lg text-ink/85 sm:text-xl">{scene.emotive}</p>
+          <p className="text-pretty text-lg text-ink/85 sm:text-xl">{scene.caption}</p>
           <span className="mt-3 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-muted group-hover:text-clay">
-            {scene.tag} →
+            {scene.cta}{" "}
+            <span aria-hidden className="cta-arrow inline-block">
+              →
+            </span>
           </span>
         </div>
       </Link>
@@ -122,7 +131,7 @@ function FullBleed({ scene }: { scene: Scene }) {
         <>
           <Image
             src={scene.src as string}
-            alt={scene.alt ?? scene.tag}
+            alt={scene.alt ?? scene.title}
             fill
             sizes="100vw"
             placeholder={blurFor(scene.src) ? "blur" : undefined}
@@ -158,13 +167,16 @@ function FullBleed({ scene }: { scene: Scene }) {
       )}
       <Container className="absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
         <h3 className="max-w-3xl font-serif text-6xl leading-[0.9] text-paper sm:text-7xl lg:text-8xl">
-          {scene.emotion}
+          {scene.title}
         </h3>
         <p className="mt-5 max-w-md text-pretty text-lg text-paper/85 sm:text-xl">
-          {scene.emotive}
+          {scene.caption}
         </p>
         <span className="mt-6 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-paper/70">
-          {scene.tag} →
+          {scene.cta}{" "}
+          <span aria-hidden className="cta-arrow inline-block">
+            →
+          </span>
         </span>
       </Container>
     </Link>
@@ -205,18 +217,11 @@ export function ServicesShowcase() {
         <FullBleed scene={s3} />
       </div>
 
+      {/* One clear path to the work — Portraits is a normal category on /galeries. */}
       <Container className="mt-10 sm:mt-16">
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-          <ButtonLink href={seances.cta.href} variant="secondary">
-            {seances.cta.label}
-          </ButtonLink>
-          <Link
-            href={seances.also.href}
-            className="text-sm text-muted hover:text-clay"
-          >
-            {seances.also.label} →
-          </Link>
-        </div>
+        <ButtonLink href={seances.cta.href} variant="secondary">
+          {seances.cta.label}
+        </ButtonLink>
       </Container>
     </section>
   );

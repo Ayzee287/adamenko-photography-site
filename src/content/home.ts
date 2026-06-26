@@ -1,17 +1,15 @@
 // Homepage content schema — the long-form conversion narrative (D010). One typed
 // object per section so the page composes from data, French is canonical (D008),
-// and a second locale wraps this later without touching components. All marketing
-// copy is a careful DRAFT in the brand voice (warm, plain, first person); confirm
-// every line with the photographer. Banned: "capturing moments", "passionate
-// about", hype, fabricated facts. Personal first name is intentionally absent
-// until supplied — never invented.
+// and a second locale wraps this later without touching components. Copy is in the
+// brand voice (warm, plain, first person, concrete — not mood words). Banned:
+// "capturing moments", "passionate about", hype, fabricated facts.
 
 export const home = {
   // Hero is image-first (D021): no CTAs — curiosity, not conversion. A short
   // emotional headline + one supporting line, anchored low-left.
   hero: {
     kicker: "Photographe · Lyon",
-    title: "Les moments qui restent.",
+    title: "Des photos qui vous ressemblent.",
     scrollCue: "Faites défiler",
     // Real opening frame (2026-06-25): a documentary wedding moment on a terrace
     // over the hills at dusk — full-bleed, the headline sits low-left over the scrim.
@@ -79,55 +77,53 @@ export const home = {
     eyebrow: "Le travail",
     title: "Un aperçu, à faire défiler.",
     intro:
-      "Quelques images choisies parmi les séances. La sélection complète vit dans les galeries.",
-    cta: { label: "Voir toutes les galeries", href: "/galeries" },
+      "Quelques images, choisies parmi les séances récentes. La sélection complète est dans les galeries.",
+    cta: { label: "Parcourir les galeries", href: "/galeries" },
   },
 
-  // A magazine feature organised by EMOTION, not category (D021). The genre is a
-  // quiet tag + link; the emotion leads. Editorial spreads, not a grid. With no
-  // `src`, each scene renders a directed reserved frame — the spread is designed to
-  // read as intentional on placeholders alone (v2); a real frame drops in with no
-  // layout change. `hint` directs that frame. Copy is DRAFT — confirm with the
-  // photographer.
+  // The genres, shown as an editorial feature (D021): each scene is a real frame,
+  // a short concrete line, and a link to its gallery. Four DIFFERENT compositions
+  // (split-left · split-right · full-width · full-bleed) keep the spread from
+  // reading as a grid. Copy is plain and first person — what each séance is, not a
+  // mood word.
   seances: {
-    eyebrow: "Les séances",
-    title: "Quatre émotions, une même tendresse.",
+    eyebrow: "Par thème",
+    title: "Mes séances.",
     scenes: [
       {
         slug: "familles",
-        emotion: "Le lien",
-        tag: "Famille",
-        emotive: "Le brouhaha du dimanche matin, gardé pour toujours.",
+        title: "Familles",
+        cta: "Voir la galerie",
+        caption: "Le quotidien et les liens, à la maison ou dehors.",
         src: "/galleries/familles/familles-01.jpg",
         alt: "Une mère et son enfant, front contre front, dans les herbes au soleil couchant.",
       },
       {
         slug: "grossesse",
-        emotion: "L'attente",
-        tag: "Grossesse",
-        emotive: "Ces semaines suspendues, juste avant que tout change.",
+        title: "Grossesse",
+        cta: "Voir la galerie",
+        caption: "Les semaines douces avant l'arrivée du bébé.",
         src: "/galleries/grossesse/grossesse-05.jpg",
         alt: "Future maman en lumière naturelle, l'attente avant la naissance.",
       },
       {
         slug: "couples",
-        emotion: "L'intimité",
-        tag: "Couple",
-        emotive: "La façon dont vous vous regardez quand personne ne regarde.",
+        title: "Couples",
+        cta: "Voir la galerie",
+        caption: "Deux personnes, sans poses figées.",
         src: "/galleries/couples/couples-01.jpg",
         alt: "Un couple complice sous les halles, lumière chaude.",
       },
       {
         slug: "mariages",
-        emotion: "La fête",
-        tag: "Mariage",
-        emotive: "Toute une journée, racontée comme vous l'avez vécue.",
+        title: "Mariages",
+        cta: "Voir la galerie",
+        caption: "Votre journée, des préparatifs à la fête.",
         src: "/galleries/mariages/mariages-09.jpg",
         alt: "Les mariés portés par leurs invités, explosion de joie, en noir et blanc.",
       },
     ],
-    also: { label: "Aussi : les portraits", href: "/galeries/portraits" },
-    cta: { label: "Voir les galeries", href: "/galeries" },
+    cta: { label: "Voir toutes les galeries", href: "/galeries" },
   },
 
   pricing: {
@@ -164,7 +160,7 @@ export const home = {
     // (v4) — the same phrase twice in adjacent sections read as a copy bug once the
     // rhythm tightened. "Pour découvrir" keeps the invitation, drops the echo.
     eyebrow: "Pour découvrir",
-    title: "Avant de me confier votre histoire.",
+    title: "Avant de me contacter.",
     cards: [
       {
         label: "L'expérience",
@@ -194,7 +190,7 @@ export const home = {
     eyebrow: "Elles en parlent",
     title: "La confiance, avant tout.",
     // Reserved-by-choice (v3 QA): frames the absence as integrity, not "coming soon".
-    empty: "Les mots de mes clientes trouveront leur place ici, vrais et jamais inventés.",
+    empty: "Les avis de mes clientes apparaîtront ici. De vrais mots, jamais inventés.",
   },
 
   finalCta: {

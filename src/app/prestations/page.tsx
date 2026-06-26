@@ -69,9 +69,12 @@ export default function PrestationsPage() {
               <p className="mt-4 text-sm text-muted">{s.idealFor}</p>
               <Link
                 href={`/galeries/${s.slug}`}
-                className="mt-5 inline-block text-sm text-ink underline decoration-clay underline-offset-4 hover:text-clay"
+                className="group mt-5 inline-flex items-center gap-2 text-sm text-ink underline decoration-clay underline-offset-4 hover:text-clay"
               >
-                Voir la galerie →
+                Voir la galerie
+                <span aria-hidden className="cta-arrow">
+                  →
+                </span>
               </Link>
             </article>
           ))}
