@@ -7,28 +7,34 @@ import { blurFor } from "@/lib/image-blur";
 import { home } from "@/content/home";
 
 /**
- * "Pour découvrir" — a premium editorial navigation menu (v4).
+ * "Pour découvrir" — a premium editorial navigation menu (v6: a print emerging).
  *
  * Three equal destinations sit on one shared baseline: a square media area on mobile, a
  * 2:3 card on desktop, with a centred eyebrow + serif title. The WHOLE column is one link.
  *
- * Desktop interaction — the photograph grows. At rest the photo sits slightly inset
- * inside the card (flush to the top, paper margins on the left, right and bottom) and the
- * caption reads in dark ink on that bottom paper margin. On hover or keyboard-focus the
- * PHOTO ITSELF scales up from a fixed top edge — mostly downward, a little sideways —
- * until it consumes the paper and fills the card; as it passes under the caption, the
- * caption inverts ink→paper in place and a soft scrim fades in for legibility. It reads
- * as the photograph absorbing the card.
+ * Desktop interaction — the photograph WAKES UP. Each card is two physical layers: a warm
+ * paper field, and a photographic print resting on it. At rest the print touches only the
+ * top edge, with real paper margins (sides, and a generous bottom where the caption reads
+ * on paper). On hover/keyboard-focus the print's FRAME opens — not its content: we animate
+ * `clip-path`, never `transform`, so the image is perfectly still (no zoom, no resample,
+ * no "scale" sensation). The clip opens non-symmetrically — top locked, sides a little,
+ * BOTTOM a lot — so the print grows DOWNWARD into the paper until it reaches and covers the
+ * caption. The paper disappears because the photograph occupies it, not because a layer
+ * slides over it.
  *
- * Mechanics (zero CLS, zero text movement): the only things that animate are the media's
- * `transform: scale()` (GPU, origin top-centre, no distortion — object-cover never warps),
- * the caption's `color`, and the scrim's `opacity`. The caption box, its type sizes and
- * its line breaks never change, so the title can neither jump, rewrap, nor ghost. A real
- * photo drops into the same frame untouched. All of it lives in globals.css under
- * `.discover-media` / `.discover-caption` / `.discover-veil`.
+ * It plays as a story, not a flip: the print opens AND warms (the resting wash lifts)
+ * together; then, ~0.5s in, once the opening edge has travelled over the caption, the
+ * caption inverts ink→paper on a delay — a consequence, not a co-animation; a feathered
+ * bottom vignette appears only enough for AA legibility (no dark panel).
  *
- * Touch (no hover) and reduced-motion keep the static inset state: photo + caption,
- * always visible. The growth is gated to pointer + motion-safe + `lg`.
+ * Mechanics (zero CLS, zero text movement): only `clip-path` (the frame), `opacity` (wash
+ * + vignette) and `color` (caption) animate — no transform ever touches the type, so the
+ * title can neither jump, rewrap, nor ghost. A real photo drops into the same frame
+ * untouched. All of it lives in globals.css under `.discover-media` / `.discover-wash` /
+ * `.discover-caption` / `.discover-veil`.
+ *
+ * Touch (no hover) and reduced-motion keep the calm inset print-on-paper state. The reveal
+ * is gated to pointer/focus + motion-safe + `lg`.
  */
 export function DiscoverCards() {
   const d = home.discover;
@@ -79,13 +85,14 @@ export function DiscoverCards() {
                     />
                   </span>
 
-                  {/* Soft legibility gradient — desktop hover/focus only. Light and
-                      restrained (no heavy/muddy overlay): just enough for the inverted
-                      caption to read over the grown photo. Opacity owned by .discover-veil
-                      (not a utility) so the hover state isn't beaten by Tailwind. */}
+                  {/* Feathered legibility vignette — desktop hover/focus only. Concentrated
+                      at the very bottom edge and fading fast to nothing, so it reads as a
+                      natural exposure falloff, never a dark panel sliding in. Just enough
+                      for the inverted caption to clear AA. Opacity owned by .discover-veil
+                      (not a utility) so the delayed wake state isn't beaten by Tailwind. */}
                   <span
                     aria-hidden
-                    className="discover-veil pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/2 bg-gradient-to-t from-ink/45 via-ink/8 to-transparent lg:block"
+                    className="discover-veil pointer-events-none absolute inset-x-0 bottom-0 hidden h-2/5 bg-gradient-to-t from-ink/40 via-ink/5 to-transparent lg:block"
                   />
 
                   {/* Caption — below the image on mobile; on lg fixed in the bottom paper

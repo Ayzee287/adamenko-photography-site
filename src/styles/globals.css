@@ -52,6 +52,11 @@
   --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
   /* The "opening" of a Pour découvrir destination — a slow, decisive expansion. */
   --ease-discover: cubic-bezier(0.22, 1, 0.36, 1);
+  /* The print emerging — a weighted ease-in-out: begins gently (no front-load), moves
+     with confidence through the middle, lands very soft. Carries the clip-path reveal so
+     it reads as a physical object opening over its full duration, never a snappy ease-out
+     that's done in the first third. */
+  --ease-print: cubic-bezier(0.55, 0, 0.2, 1);
 }
 
 @layer base {
@@ -108,37 +113,58 @@
     opacity: 1;
   }
 
-  /* ── "Pour découvrir" editorial menu (v5 — the photograph wakes up) ─────────────
-     On a pointer device, with motion allowed, at the desktop 3-up layout (≥lg),
-     hover/keyboard-focus GROWS the photograph from a fixed top edge (origin top-centre)
-     until it swallows the paper margins and fills the card — and as it grows it BLOOMS:
-     a resting paper wash over the photo lifts away, so the image deepens from quiet,
-     inset, and slightly faded into full, living colour. The caption (fixed in the bottom
-     paper margin) inverts ink→paper IN PLACE over a soft, LIGHT legibility gradient (no
-     muddy dark scrim). Only transform + opacity + colour animate — text never moves,
-     zero CLS, all GPU. Touch (no hover) and reduced-motion keep the calm inset state. */
+  /* ── "Pour découvrir" — the photograph wakes up (v6: a print emerging) ──────────
+     A card is two physical layers: a warm-paper field, and a photographic print
+     resting on it. At rest the print touches only the TOP edge — real paper margins
+     on the left, right and (generously) bottom, where the caption reads on paper.
+
+     On wake (pointer hover OR keyboard focus, motion allowed, ≥lg) the PRINT'S FRAME
+     opens — never its content. We animate `clip-path`, not `transform`: the image is
+     full-card and perfectly still, so there is no zoom, no resample, no symmetric
+     "scale" sensation. The clip window opens NON-symmetrically — top locked, sides a
+     little, BOTTOM a lot — so the print visibly grows DOWNWARD into the paper until it
+     reaches and covers the caption. The paper disappears because the photograph occupies
+     it, not because a layer appears over it.
+
+     It plays as a coupled story, not one flip:
+       1. the print opens (clip) AND warms (the resting paper wash lifts) — together;
+       2. as the opening edge approaches and passes OVER the caption, the caption inverts
+          ink→paper gradually, on the same ease-in-out and a small lead-in delay, so the
+          colour change reads as a direct CONSEQUENCE of the photo passing underneath —
+          finishing with the open, never as a separate event after it;
+       3. a feathered bottom vignette (not a panel) appears only enough for AA legibility.
+
+     Only clip-path + opacity + colour animate → no transform touches the type, zero CLS.
+     Touch (no hover) and reduced-motion keep the calm, inset, print-on-paper state. */
 
   /* Resting colour lives on the class, NOT a `text-ink` utility: Tailwind's utilities
      layer always wins over @layer base regardless of specificity, so a utility colour
      here would beat the hover recolour below. Keeping both colours in the base layer
-     lets specificity decide. */
+     lets specificity decide. The small lead-in delay (on the wake state below) starts the
+     inversion as the print approaches the caption, not before. */
   .discover-caption {
     color: var(--color-ink);
-    transition: color 700ms var(--ease-discover);
+    text-shadow: 0 0 0 rgba(42, 36, 32, 0);
+    /* Coupled to the print's own ease-in-out (not a snappy ease-out) and started early
+       (delay below) so the colour barely moves while the photo is still approaching, then
+       ramps gradually AS the photo passes underneath — a consequence of the passage, not a
+       separate event after it. */
+    transition:
+      color 270ms var(--ease-print),
+      text-shadow 270ms var(--ease-print);
   }
   /* The resting wash — mutes the photo toward the paper tone at rest (quiet, inset);
-     lifts to 0 as the photo grows so the colour blooms in. It lives INSIDE the media so
-     it scales with the photograph and covers only the image, never the paper margins. */
+     lifts to 0 as the print warms. Lives INSIDE the media so the clip-path crops it to
+     the visible photo, never the paper margins. */
   .discover-wash {
     opacity: 1;
-    transition: opacity 760ms var(--ease-discover);
+    transition: opacity 460ms var(--ease-print);
   }
-  /* The legibility gradient — absent at rest, a soft and deliberately LIGHT wash fades
-     in on hover so the inverted caption stays readable over the grown photo. Far lighter
-     than the old from-ink/60 muddy scrim. */
+  /* The legibility vignette — absent at rest; fades in (delayed, with the caption) just
+     enough for the inverted type. Feathered at the very bottom edge, never a dark panel. */
   .discover-veil {
     opacity: 0;
-    transition: opacity 700ms var(--ease-discover);
+    transition: opacity 280ms var(--ease-print);
   }
   .discover-item:focus-visible {
     outline: 2px solid var(--color-ink);
@@ -146,46 +172,59 @@
     border-radius: 2px;
   }
 
-  /* Idle (≥lg only — mobile keeps the full square photo, no scale): the photo sits
-     slightly inset, flush to the top, so the paper card shows as L/R/bottom margins and
-     the caption reads on paper. */
+  /* Idle (≥lg only — mobile keeps the full square photo, no clip): the print is inset,
+     flush to the top, with paper margins L/R and a generous bottom margin for the
+     caption. Top 0, sides 6%, bottom 18% → the bottom has the furthest to travel. */
   @media (min-width: 64rem) {
     .discover-media {
-      transform: scale(0.86);
-      transform-origin: top center;
-      transition: transform 760ms var(--ease-discover);
-      will-change: transform;
+      clip-path: inset(0 6% 18% 6%);
+      transition: clip-path 510ms var(--ease-print);
+      will-change: clip-path;
     }
   }
 
-  /* The growth + bloom — pointer + motion-safe + the desktop layout only. */
+  /* Beat 1 — the print opens + warms. Pointer, motion-safe, desktop only. */
   @media (hover: hover) and (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
     .discover-item:hover .discover-media {
-      transform: scale(1);
-    }
-    .discover-item:hover .discover-caption {
-      color: var(--color-paper);
+      clip-path: inset(0 0 0 0);
     }
     .discover-item:hover .discover-wash {
       opacity: 0;
     }
+    /* Beat 2 + 3 — caption inverts and vignette appears only after the print has
+       travelled down over the caption (delay ≈ 60% of the open). */
+    .discover-item:hover .discover-caption {
+      color: var(--color-paper);
+      /* A soft dark halo on the inverted type — a legibility floor on the glyphs
+         themselves (over even a white-clothing photo bottom), so the vignette can stay
+         feather-light. Reads as natural depth, never a hard drop shadow. */
+      text-shadow: 0 1px 18px rgba(42, 36, 32, 0.55);
+      transition-delay: 230ms;
+    }
     .discover-item:hover .discover-veil {
       opacity: 1;
+      transition-delay: 200ms;
     }
   }
-  /* Keyboard focus gets the same growth (any pointer type, still motion-safe). */
+  /* Keyboard focus produces the identical visual state (any pointer type, motion-safe). */
   @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
     .discover-item:focus-visible .discover-media {
-      transform: scale(1);
-    }
-    .discover-item:focus-visible .discover-caption {
-      color: var(--color-paper);
+      clip-path: inset(0 0 0 0);
     }
     .discover-item:focus-visible .discover-wash {
       opacity: 0;
     }
+    .discover-item:focus-visible .discover-caption {
+      color: var(--color-paper);
+      /* A soft dark halo on the inverted type — a legibility floor on the glyphs
+         themselves (over even a white-clothing photo bottom), so the vignette can stay
+         feather-light. Reads as natural depth, never a hard drop shadow. */
+      text-shadow: 0 1px 18px rgba(42, 36, 32, 0.55);
+      transition-delay: 230ms;
+    }
     .discover-item:focus-visible .discover-veil {
       opacity: 1;
+      transition-delay: 200ms;
     }
   }
 
