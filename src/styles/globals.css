@@ -108,22 +108,37 @@
     opacity: 1;
   }
 
-  /* ── "Pour découvrir" editorial menu (v4) ──────────────────────────────────────
-     Each item is one link. On a pointer device, with motion allowed, at the desktop
-     3-up layout (≥lg), hovering or keyboard-focusing an item "opens" it: the paper
-     cover panel slides off the bottom of the (clipped) frame to reveal the full
-     portrait, while a legibility scrim and a white caption fade in. Transforms +
-     opacity only — fixed footprint, no reflow, no CLS. Touch (no hover) and
-     reduced-motion keep the static default (square + caption, always visible). */
-  .discover-cover {
-    transition: transform 720ms var(--ease-discover);
-    will-change: transform;
+  /* ── "Pour découvrir" editorial menu (v5 — the photograph wakes up) ─────────────
+     On a pointer device, with motion allowed, at the desktop 3-up layout (≥lg),
+     hover/keyboard-focus GROWS the photograph from a fixed top edge (origin top-centre)
+     until it swallows the paper margins and fills the card — and as it grows it BLOOMS:
+     a resting paper wash over the photo lifts away, so the image deepens from quiet,
+     inset, and slightly faded into full, living colour. The caption (fixed in the bottom
+     paper margin) inverts ink→paper IN PLACE over a soft, LIGHT legibility gradient (no
+     muddy dark scrim). Only transform + opacity + colour animate — text never moves,
+     zero CLS, all GPU. Touch (no hover) and reduced-motion keep the calm inset state. */
+
+  /* Resting colour lives on the class, NOT a `text-ink` utility: Tailwind's utilities
+     layer always wins over @layer base regardless of specificity, so a utility colour
+     here would beat the hover recolour below. Keeping both colours in the base layer
+     lets specificity decide. */
+  .discover-caption {
+    color: var(--color-ink);
+    transition: color 700ms var(--ease-discover);
   }
-  /* Resting hidden state lives on the class (not a utility) so the hover/focus reveal
-     below isn't beaten by Tailwind's utilities layer. */
+  /* The resting wash — mutes the photo toward the paper tone at rest (quiet, inset);
+     lifts to 0 as the photo grows so the colour blooms in. It lives INSIDE the media so
+     it scales with the photograph and covers only the image, never the paper margins. */
+  .discover-wash {
+    opacity: 1;
+    transition: opacity 760ms var(--ease-discover);
+  }
+  /* The legibility gradient — absent at rest, a soft and deliberately LIGHT wash fades
+     in on hover so the inverted caption stays readable over the grown photo. Far lighter
+     than the old from-ink/60 muddy scrim. */
   .discover-veil {
     opacity: 0;
-    transition: opacity 600ms var(--ease-discover);
+    transition: opacity 700ms var(--ease-discover);
   }
   .discover-item:focus-visible {
     outline: 2px solid var(--color-ink);
@@ -131,21 +146,45 @@
     border-radius: 2px;
   }
 
-  /* The expansion itself — pointer + motion-safe + the desktop layout only. */
-  @media (hover: hover) and (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
-    .discover-item:hover .discover-cover {
-      transform: translateY(100%);
+  /* Idle (≥lg only — mobile keeps the full square photo, no scale): the photo sits
+     slightly inset, flush to the top, so the paper card shows as L/R/bottom margins and
+     the caption reads on paper. */
+  @media (min-width: 64rem) {
+    .discover-media {
+      transform: scale(0.86);
+      transform-origin: top center;
+      transition: transform 760ms var(--ease-discover);
+      will-change: transform;
     }
-    .discover-item:hover .discover-reveal {
+  }
+
+  /* The growth + bloom — pointer + motion-safe + the desktop layout only. */
+  @media (hover: hover) and (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    .discover-item:hover .discover-media {
+      transform: scale(1);
+    }
+    .discover-item:hover .discover-caption {
+      color: var(--color-paper);
+    }
+    .discover-item:hover .discover-wash {
+      opacity: 0;
+    }
+    .discover-item:hover .discover-veil {
       opacity: 1;
     }
   }
-  /* Keyboard focus gets the same "opening" (any pointer type, still motion-safe). */
+  /* Keyboard focus gets the same growth (any pointer type, still motion-safe). */
   @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
-    .discover-item:focus-visible .discover-cover {
-      transform: translateY(100%);
+    .discover-item:focus-visible .discover-media {
+      transform: scale(1);
     }
-    .discover-item:focus-visible .discover-reveal {
+    .discover-item:focus-visible .discover-caption {
+      color: var(--color-paper);
+    }
+    .discover-item:focus-visible .discover-wash {
+      opacity: 0;
+    }
+    .discover-item:focus-visible .discover-veil {
       opacity: 1;
     }
   }
@@ -171,6 +210,73 @@
   :is(a, button, summary):active {
     opacity: 0.7;
     transition: none;
+  }
+
+  /* ── CTA interaction language (one system, two voices) ─────────────────────────
+     Every call to action on the site shares a single signature: a left→right reveal.
+     The PRIMARY pill fills with ink that wipes in from the left; the SECONDARY text
+     link draws a clay underline in from the left. Both carry the same kinetic arrow.
+     Defined here (not as component utilities) so the timing is one clock and so the
+     classes work identically on an <a> and on a real <button> (the contact submit). */
+
+  /* Kinetic arrow — advances on hover/focus of its `group`. Shared by primary,
+     secondary, and the inline "Genre →" links in the séance spread, so no two CTAs
+     animate their arrow differently. */
+  .cta-arrow {
+    transition: transform 300ms var(--ease-arrive);
+  }
+  .group:hover .cta-arrow,
+  .group:focus-visible .cta-arrow {
+    transform: translateX(5px);
+  }
+
+  /* Primary pill — a directional INK wipe that fills the pill from the left, echoing
+     the secondary underline's draw (one language). The fill is a ::before so the same
+     `.cta-pill` class works on the <button> submit and on <a>/<Link> alike. `isolation`
+     scopes the z-index:-1 fill behind the label without z-indexing every child. The
+     label's ink→paper flip rides the global colour clock; the generous px-7 padding
+     means the fill covers the text region well before the colour flips, so the type is
+     never paper-on-unfilled. */
+  .cta-pill {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .cta-pill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 400ms var(--ease-arrive);
+  }
+  .cta-pill--dark::before {
+    background: var(--color-paper);
+  }
+  .cta-pill:hover::before,
+  .cta-pill:focus-visible::before {
+    transform: scaleX(1);
+  }
+  /* Disabled submit (sending state) shows no fill. */
+  .cta-pill:disabled::before {
+    transform: scaleX(0);
+  }
+
+  /* Secondary-link underline (button-link.tsx) — a directional wipe-through: at rest
+     it is collapsed to the RIGHT edge (invisible); on hover/focus it draws IN from the
+     left; on release it retracts toward the right, so the line reads as passing through
+     rather than springing symmetrically. Transform-only, GPU, motion-system easing. */
+  .link-draw {
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 460ms var(--ease-arrive);
+  }
+  :is(a, summary, button):is(:hover, :focus-visible) .link-draw {
+    transform: scaleX(1);
+    transform-origin: left center;
   }
 
   ::selection {

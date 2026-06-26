@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
  * reduced-motion rule. It closes on Escape, on backdrop-less ×, and on navigation.
  *
  * A11y: scroll-locks the body, moves focus to the close control, traps Tab within
- * the panel, restores focus to the trigger on close (handled by the header), and is
+ * the panel, restores focus to the opener (the header trigger) on close, and is
  * removed from the DOM (not just hidden) when closed. JS-only by design — every page
  * also remains reachable from the always-present footer nav (plain links) and direct
  * URLs, so no content is gated behind it.
@@ -42,16 +42,31 @@ export function MobileMenu({
   const [shown, setShown] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  // When the menu became visible — drives the "just opened" tap guard below.
+  const openedAt = useRef(0);
 
   // Mount the moment we open, via React's "adjust state during render" pattern
   // (guarded, runs once) — never a synchronous setState inside an effect.
   if (open && !mounted) setMounted(true);
+
+  // THE owner's bug, finally pinned (verified on WebKit): the header trigger and the
+  // overlay's × sit in the same top-right corner — centres ~8px apart. A single tap
+  // opens fine (so every automated test passed), but a real thumb often taps twice —
+  // the first opens, the co-located × catches the second and closes it. Net effect:
+  // "the menu doesn't work." We swallow pointer-driven closes for a short window after
+  // opening — the standard "don't let the opening interaction dismiss the dialog"
+  // guard. Keyboard (Escape) and navigation are never guarded, so nothing feels slow.
+  const guardedClose = () => {
+    if (performance.now() - openedAt.current < 360) return;
+    onClose();
+  };
 
   // Drive the enter/exit: a frame after mount flip `shown` on (entrance animates);
   // on close flip it off (exit animates) and unmount after the transition. All
   // setState here lives in rAF / timeout callbacks, not the effect body.
   useEffect(() => {
     if (open) {
+      openedAt.current = performance.now();
       const raf = requestAnimationFrame(() => setShown(true));
       return () => cancelAnimationFrame(raf);
     }
@@ -74,6 +89,16 @@ export function MobileMenu({
       document.body.style.overflow = previous;
     };
   }, [mounted]);
+
+  // Return focus to whatever opened the menu (the header trigger) when it closes —
+  // the dialog focus contract (WCAG 2.4.3). Captured on open, restored on the cleanup
+  // that fires when `open` flips false. Keyed on `open` only, so a header re-render
+  // (e.g. the home scroll state) can never steal focus from the open dialog.
+  useEffect(() => {
+    if (!open) return;
+    const opener = document.activeElement as HTMLElement | null;
+    return () => opener?.focus?.();
+  }, [open]);
 
   // Escape to close; focus the close control on open; trap Tab within the panel.
   useEffect(() => {
@@ -137,7 +162,7 @@ export function MobileMenu({
         <button
           ref={closeRef}
           type="button"
-          onClick={onClose}
+          onClick={guardedClose}
           aria-label="Fermer le menu"
           className="-mr-2.5 flex h-11 w-11 items-center justify-center text-ink hover:text-clay"
         >

@@ -1,9 +1,8 @@
 // Site identity + all UI copy in one place — the content schema (no CMS, D009).
 // French is the canonical language (D008); this object is the seam where a second
 // locale would later be added (wrap `copy` in a `{ fr, en }` map) without touching
-// components. Marketing copy below is a careful DRAFT in the brand voice (warm,
-// plain, first person) — confirm every line with the photographer; never invent
-// biographical facts (years, awards, stories).
+// components. Copy is written in the brand voice (warm, plain, first person);
+// biographical facts are never invented (years, awards, stories).
 //
 // Identity (brand, location, contact) is NOT duplicated here — it is sourced from
 // the single photographer identity model so a name/contact change is one edit.
@@ -40,14 +39,8 @@ export const site = {
 
 export const copy = {
   home: {
-    heroKicker: "Adamenko Photography",
-    heroTitle: "Des images chaleureuses, fidèles à ceux qu'elles montrent.",
-    heroSubtitle: "Photographe de famille, de grossesse et de couple à Lyon.",
-    heroCta: "Voir les galeries",
-    // DRAFT — confirm with the photographer.
-    intro:
-      "Je photographie les liens : une famille qui se serre, l'attente d'un enfant, deux personnes qui s'aiment. Des images douces et sincères, faites pour durer.",
-    featuredTitle: "Explorer par thème",
+    // The homepage narrative lives in content/home.ts; the only shared home string
+    // used elsewhere is the contact CTA (mobile menu's pill).
     contactCta: "Travaillons ensemble",
   },
   galleries: {
@@ -60,11 +53,8 @@ export const copy = {
   },
   about: {
     title: "À propos",
-    // DRAFT placeholders — replace with the photographer's own bio + portrait.
-    body: [
-      "Je suis photographe à Lyon, et je travaille partout où l'on m'emmène.",
-      "Mon approche est simple : vous mettre à l'aise, puis disparaître, pour que les vraies images arrivent d'elles-mêmes.",
-    ],
+    // The bio + portrait render from the photographer identity model
+    // (content/photographer.ts); only the page title + portrait alt come from here.
     portraitAlt: "Portrait de la photographe",
   },
   services: {

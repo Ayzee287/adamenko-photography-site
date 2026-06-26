@@ -132,7 +132,11 @@ export function SiteHeader() {
           <LanguageSwitcher onDark={overHero} />
         </nav>
 
-        {/* Mobile trigger — opens the full-screen overlay (D038). */}
+        {/* Mobile trigger — opens the full-screen overlay (D038). The hit area is a
+            full 48px-tall, padded box (was a bare ~41×43px glyph): a corner target
+            below 44px is exactly the kind a real thumb misses, while every automated
+            test taps dead-centre and never sees it. `-mr-2 px-2` grows the tappable
+            box into the gutter toward the corner without moving the visible word. */}
         <button
           type="button"
           aria-haspopup="dialog"
@@ -141,7 +145,7 @@ export function SiteHeader() {
           aria-label="Ouvrir le menu"
           onClick={() => setMenuOpen(true)}
           className={cn(
-            "py-2.5 text-[0.95rem] hover:text-clay sm:hidden",
+            "-mr-2 flex h-12 items-center px-2 text-[0.95rem] hover:text-clay sm:hidden",
             overHero ? "text-paper" : "text-ink",
           )}
         >

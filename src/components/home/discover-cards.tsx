@@ -7,27 +7,28 @@ import { blurFor } from "@/lib/image-blur";
 import { home } from "@/content/home";
 
 /**
- * "Pour découvrir" — a premium editorial navigation menu (v4 redesign).
+ * "Pour découvrir" — a premium editorial navigation menu (v4).
  *
- * Three equal destinations sit on one shared baseline: a square media area with a
- * centred eyebrow + serif title beneath it. The WHOLE column is one link.
+ * Three equal destinations sit on one shared baseline: a square media area on mobile, a
+ * 2:3 card on desktop, with a centred eyebrow + serif title. The WHOLE column is one link.
  *
- * On desktop, hovering (or keyboard-focusing) an item "opens" the destination: the
- * media expands downward to consume the caption area and the title + label reappear in
- * white over the image — a single, slow, intentional move. There is **no card, border,
- * shadow, or decorative gradient**; the only gradient is a functional legibility scrim
- * (the same device the hero uses) so the white caption stays readable over a light
- * placeholder or a real photograph.
+ * Desktop interaction — the photograph grows. At rest the photo sits slightly inset
+ * inside the card (flush to the top, paper margins on the left, right and bottom) and the
+ * caption reads in dark ink on that bottom paper margin. On hover or keyboard-focus the
+ * PHOTO ITSELF scales up from a fixed top edge — mostly downward, a little sideways —
+ * until it consumes the paper and fills the card; as it passes under the caption, the
+ * caption inverts ink→paper in place and a soft scrim fades in for legibility. It reads
+ * as the photograph absorbing the card.
  *
- * Mechanics (zero CLS, transforms only, no reflow): each item is a fixed-footprint 2:3
- * frame on `lg`. The media fills the whole frame; a paper "cover" panel hides its
- * bottom third and carries the default dark caption, so by default you see a square +
- * caption below. On hover/focus the cover slides down out of the (clipped) frame —
- * revealing the full portrait — while the scrim and white caption fade in. The footprint
- * never changes, so nothing reflows and a real photo drops into the same frame untouched.
+ * Mechanics (zero CLS, zero text movement): the only things that animate are the media's
+ * `transform: scale()` (GPU, origin top-centre, no distortion — object-cover never warps),
+ * the caption's `color`, and the scrim's `opacity`. The caption box, its type sizes and
+ * its line breaks never change, so the title can neither jump, rewrap, nor ghost. A real
+ * photo drops into the same frame untouched. All of it lives in globals.css under
+ * `.discover-media` / `.discover-caption` / `.discover-veil`.
  *
- * Touch (no hover) and reduced-motion keep the static default: square + caption, always
- * visible. The expansion is gated to pointer + motion-safe + `lg` in globals.css.
+ * Touch (no hover) and reduced-motion keep the static inset state: photo + caption,
+ * always visible. The growth is gated to pointer + motion-safe + `lg`.
  */
 export function DiscoverCards() {
   const d = home.discover;
@@ -48,12 +49,13 @@ export function DiscoverCards() {
                   aria-label={`${card.label} : ${card.title}`}
                   className="discover-item group relative block lg:aspect-[2/3] lg:overflow-hidden"
                 >
-                  {/* Media — a square in flow on mobile; on lg it fills the portrait
-                      frame so the cover can slide off it and reveal the rest. A real
-                      photograph (object-cover) sits in the same frame; the warm radial
-                      field remains the fallback if a card has no image. */}
-                  {card.image?.src ? (
-                    <span className="relative block aspect-square overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
+                  {/* Media — a square in flow on mobile; on lg it fills the card and
+                      GROWS (scales from a fixed top edge) on hover/focus, so the
+                      photograph itself expands into the paper margins. A real photograph
+                      (object-cover, never distorted by the scale) sits in the same frame;
+                      the warm radial field remains the fallback if a card has no image. */}
+                  <span className="discover-media relative block aspect-square overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
+                    {card.image?.src ? (
                       <Image
                         src={card.image.src}
                         alt=""
@@ -63,45 +65,40 @@ export function DiscoverCards() {
                         blurDataURL={blurFor(card.image.src)}
                         className="object-cover"
                       />
-                    </span>
-                  ) : (
+                    ) : (
+                      <span aria-hidden className="frame-reserved absolute inset-0" />
+                    )}
+                    {/* Resting paper wash — desktop only. Sits INSIDE the media so it
+                        scales with the photo and covers only the image (never the paper
+                        margins). At rest it mutes the photo toward the paper tone; as the
+                        photo grows it lifts to 0 and the colour blooms in. Opacity owned by
+                        .discover-wash (base layer) so no Tailwind opacity utility competes. */}
                     <span
                       aria-hidden
-                      className="frame-reserved block aspect-square lg:absolute lg:inset-0 lg:aspect-auto"
+                      className="discover-wash pointer-events-none absolute inset-0 hidden bg-paper/15 lg:block"
                     />
-                  )}
-
-                  {/* Functional legibility scrim — desktop hover/focus only. Opacity is
-                      owned by .discover-reveal (not a utility) so the hover state isn't
-                      overridden by Tailwind's utilities layer. */}
-                  <span
-                    aria-hidden
-                    className="discover-veil discover-reveal pointer-events-none absolute inset-0 hidden bg-gradient-to-t from-ink/85 via-ink/35 to-transparent lg:block"
-                  />
-
-                  {/* White caption that fades in over the expanded image (lg only). */}
-                  <span
-                    aria-hidden
-                    className="discover-veil discover-reveal pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/3 flex-col items-center justify-center px-5 text-center text-paper lg:flex"
-                  >
-                    <span className="text-xs uppercase tracking-[0.22em] text-paper/70">
-                      {card.label}
-                    </span>
-                    <span className="mt-2 font-serif text-2xl lg:text-3xl">
-                      {card.title}
-                    </span>
                   </span>
 
-                  {/* Default caption — below the image on mobile; on lg it is the paper
-                      cover panel that slides away on hover/focus. */}
+                  {/* Soft legibility gradient — desktop hover/focus only. Light and
+                      restrained (no heavy/muddy overlay): just enough for the inverted
+                      caption to read over the grown photo. Opacity owned by .discover-veil
+                      (not a utility) so the hover state isn't beaten by Tailwind. */}
                   <span
                     aria-hidden
-                    className="discover-cover mt-5 block text-center lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0 lg:flex lg:h-1/3 lg:flex-col lg:items-center lg:justify-center lg:bg-paper lg:px-5"
+                    className="discover-veil pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/2 bg-gradient-to-t from-ink/45 via-ink/8 to-transparent lg:block"
+                  />
+
+                  {/* Caption — below the image on mobile; on lg fixed in the bottom paper
+                      margin. The growing photo passes UNDER it; only its colour inverts
+                      ink→paper. The text box never moves, rewraps, or duplicates. */}
+                  <span
+                    aria-hidden
+                    className="discover-caption mt-5 block text-center lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0 lg:flex lg:flex-col lg:items-center lg:px-4 lg:pb-5"
                   >
-                    <span className="block text-xs uppercase tracking-[0.22em] text-muted">
+                    <span className="relative block text-xs uppercase tracking-[0.22em] opacity-70">
                       {card.label}
                     </span>
-                    <span className="mt-2 block font-serif text-2xl text-ink transition-colors duration-300 group-hover:text-clay lg:text-3xl">
+                    <span className="relative mt-2 block font-serif text-2xl">
                       {card.title}
                     </span>
                   </span>

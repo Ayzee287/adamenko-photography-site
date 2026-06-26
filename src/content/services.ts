@@ -6,8 +6,8 @@
 // links straight to its gallery. This is DESCRIPTIVE content only — it does not set
 // or change pricing (pricing structure is unchanged, see content/pricing.ts).
 //
-// DRAFT to confirm with the photographer; the structure is safe, the wording is hers
-// to approve. See docs/content-collection/service-descriptions.md for the intake.
+// Launch copy in the brand voice; the structure stays data-driven so a future edit is
+// one change. See docs/content-collection/service-descriptions.md for the intake.
 
 import type { GenreSlug } from "@/types/gallery";
 
@@ -52,7 +52,7 @@ export const services = {
     {
       slug: "couples",
       title: "Couple",
-      tagline: "La façon dont vous êtes ensemble.",
+      tagline: "Vous deux, au naturel.",
       description: [
         "Pas de poses figées ni de regards forcés vers l'objectif. On marche, on parle, on vous laisse vous retrouver. C'est là, dans le mouvement, que les images justes arrivent.",
         "Une séance couple est aussi une bonne manière de se sentir à l'aise avant un mariage, si c'est ce qui vous attend.",
@@ -68,7 +68,7 @@ export const services = {
     {
       slug: "grossesse",
       title: "Grossesse",
-      tagline: "Ces semaines suspendues, avant que tout change.",
+      tagline: "Les semaines qui précèdent la naissance.",
       description: [
         "Une séance grossesse douce et pudique, à la lumière d'une fenêtre ou en extérieur. On prend le temps ; rien n'est précipité.",
         "L'idée n'est pas de mettre en scène, mais de garder une trace sincère de cette période : seule, en couple ou avec les aînés.",
@@ -100,7 +100,7 @@ export const services = {
     {
       slug: "portraits",
       title: "Portrait",
-      tagline: "Un visage, une présence. Simple et juste.",
+      tagline: "Un portrait simple, à la lumière du jour.",
       description: [
         "Un portrait franc, sans artifice : un échange plus qu'une pose. On cherche votre expression la plus naturelle, à la lumière du jour.",
         "Pour un usage personnel comme professionnel, en couleur ou en noir et blanc.",

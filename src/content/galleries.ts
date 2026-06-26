@@ -32,7 +32,7 @@ export const galleries: Gallery[] = [
   {
     slug: "grossesse",
     title: "Grossesse",
-    intro: "L'attente, la douceur et l'intimité des semaines qui précèdent.",
+    intro: "Les semaines douces avant l'arrivée du bébé.",
     cover: {
       src: "/galleries/grossesse/grossesse-cover.jpg",
       width: 853, height: 1280, ratio: "aspect-[4/5]",
@@ -45,7 +45,7 @@ export const galleries: Gallery[] = [
       { src: "/galleries/grossesse/grossesse-04.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "L'attente, à la maison." },
       { src: "/galleries/grossesse/grossesse-05.jpg", width: 853, height: 1280, ratio: "aspect-[2/3]", alt: "Portrait de grossesse en lumière naturelle." },
       { src: "/galleries/grossesse/grossesse-06.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "La douceur d'une séance grossesse." },
-      { src: "/galleries/grossesse/grossesse-07.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un moment suspendu avant la naissance." },
+      { src: "/galleries/grossesse/grossesse-07.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Future maman en lumière douce, avant la naissance." },
       { src: "/galleries/grossesse/grossesse-08.jpg", width: 1280, height: 853, ratio: "aspect-[3/2]", alt: "Un couple s'enlace dans un champ au coucher du soleil, une échographie à la main." },
     ],
   },
@@ -71,7 +71,7 @@ export const galleries: Gallery[] = [
   {
     slug: "portraits",
     title: "Portraits",
-    intro: "Une personne, une présence. Simple et juste.",
+    intro: "Un portrait simple, à la lumière du jour.",
     cover: {
       src: "/galleries/portraits/portraits-cover.jpg",
       width: 889, height: 1280, ratio: "aspect-[4/5]",

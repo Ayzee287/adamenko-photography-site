@@ -10,8 +10,9 @@ import type { GalleryImage } from "@/types/gallery";
 // the photographer's OWN previous website (github.com/antonmokryi/photographiAdamenko)
 // were ingested here: real personal name, professional e-mail, legal address, and a
 // biography grounded in her own words (durable facts only — no dating figures, which
-// would now be stale). Items still marked `TODO(operator)` are genuine unknowns kept
-// honest rather than invented (vault brand-voice: never fabricate biographical facts).
+// would now be stale). The only optional field left unset is the public phone — a
+// genuine unknown kept honest rather than invented (never fabricate facts), and
+// hidden from every surface until provided.
 
 export type Photographer = {
   /** Personal name of the photographer (confirmed 2026-06-24). */
@@ -41,7 +42,7 @@ export type Photographer = {
   };
   /** The five genres she shoots (matches the gallery genres + contact occasions). */
   specialties: string[];
-  /** First-person biography paragraphs. DRAFT — confirm wording with the photographer. */
+  /** First-person biography paragraphs, in her own words (durable facts only). */
   biography: string[];
   /** Portrait of the photographer (her own published image) — about page + Person schema. */
   portrait?: GalleryImage;
@@ -53,7 +54,7 @@ export type Photographer = {
     personalInstagram?: string;
     facebook?: string;
     telegram?: string;
-    /** TODO(operator): public business phone, if she wants one listed. */
+    /** Public business phone, if she wants one listed — left unset, hidden until set. */
     phone?: string;
   };
 };
@@ -81,12 +82,12 @@ export const photographer: Photographer = {
     note: "Disponible pour des séances à Lyon, en France et à l'international.",
   },
   specialties: ["Famille", "Grossesse", "Couple", "Portrait", "Mariage"],
-  // DRAFT (2026-06-24) — rewritten from the photographer's OWN words on her previous
-  // site, keeping only DURABLE facts (Ukrainian; based in Lyon; trained in law, then
+  // Rewritten (2026-06-24) from the photographer's OWN words on her previous site,
+  // keeping only DURABLE facts (Ukrainian; based in Lyon; trained in law, then
   // photography; mother of three; documentary, minimal-posing approach). The original
   // dating figures ("il y a 8 ans", "depuis près de deux ans") were dropped because
-  // they are now stale and would be fabrication if guessed. Confirm with her, then
-  // optionally restore a current timeframe. Stays warm, plain, first person.
+  // they are now stale and would be fabrication if guessed; a current timeframe can be
+  // restored once she confirms one. Warm, plain, first person.
   biography: [
     "Je m'appelle Irina. Je suis photographe de famille à Lyon, et je travaille partout où l'on m'emmène, en France comme ailleurs en Europe.",
     "Je suis ukrainienne ; j'ai posé mes valises à Lyon avec ma famille. Avocate de formation, je suis venue à la photographie presque par hasard, puis je n'ai plus pu m'en passer.",
