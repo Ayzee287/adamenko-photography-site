@@ -126,30 +126,6 @@ export const home = {
     cta: { label: "Voir toutes les galeries", href: "/galeries" },
   },
 
-  pricing: {
-    eyebrow: "Investissement",
-    title: "Transparent, et adapté à vous.",
-    intro:
-      "Chaque projet est différent ; les formules ci-dessous posent le cadre. Le tarif exact dépend de la durée, du lieu et de ce que vous souhaitez garder.",
-    fromLabel: "à partir de",
-    onRequest: "Tarif sur demande",
-    cta: { label: "Demander les tarifs", href: "/contact" },
-    faqTitle: "Questions fréquentes",
-  },
-
-  addons: {
-    eyebrow: "Options",
-    title: "Pour aller plus loin.",
-    items: [
-      { title: "Heures supplémentaires", body: "Plus de temps ensemble, pour ne rien précipiter." },
-      { title: "Lieux additionnels", body: "Un second décor qui compte pour vous." },
-      { title: "Album premium", body: "Un livre imprimé, fait pour durer et se transmettre." },
-      { title: "Livraison express", body: "Vos images en priorité, sous quelques jours." },
-      { title: "Tirages d'art", body: "Des impressions soignées, prêtes à accrocher." },
-      { title: "Sur mesure", body: "Une idée particulière ? Parlons-en, on s'adapte." },
-    ],
-  },
-
   // A quiet destination trio (D018) — replaces the inline FAQ; sits after add-ons so
   // pricing stays uninterrupted. De-carded to a placeholder-first editorial trio
   // (v2): each is a reserved frame with its caption set below, so it reads as
