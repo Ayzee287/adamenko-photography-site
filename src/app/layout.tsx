@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, allowIndexing } from "@/lib/site";
 import { site, siteHeadline } from "@/content/site";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     template: `%s · ${site.brand}`,
   },
   description: site.tagline,
+  // Belt-and-braces with robots.ts: non-production deploys also carry a meta
+  // noindex so a preview URL is never indexed even if robots.txt is bypassed (SEO5).
+  robots: allowIndexing ? undefined : { index: false, follow: false },
   openGraph: {
     siteName: site.brand,
     locale: ogLocale[defaultLocale],
