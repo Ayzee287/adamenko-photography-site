@@ -50,7 +50,7 @@ export default function PrestationsPage() {
           {services.items.map((s) => (
             <article key={s.slug} className="border-t border-line pt-8">
               <h3 className="font-serif text-2xl text-ink">{s.title}</h3>
-              <p className="mt-2 font-serif text-lg italic text-clay">
+              <p className="mt-2 font-serif text-lg italic text-muted">
                 {s.tagline}
               </p>
               <div className="mt-4 space-y-3 text-pretty text-sm text-muted">
@@ -84,7 +84,7 @@ export default function PrestationsPage() {
 
       {/* FAQ — native <details> (no JS), now sourced from the expanded faq model. */}
       <Reveal variant="fade" className="block">
-      <section id="faq" className="mt-12 sm:mt-16 scroll-mt-24">
+      <section id="faq" className="mt-12 sm:mt-16">
         <h2 className="font-serif text-2xl text-ink">{faq.title}</h2>
         <p className="mt-3 max-w-2xl text-muted">{faq.intro}</p>
         <div className="mt-6 max-w-3xl divide-y divide-line border-y border-line">

@@ -125,7 +125,7 @@ function FullBleed({ scene }: { scene: Scene }) {
   return (
     <Link
       href={`/galeries/${scene.slug}`}
-      className="dark-surface group relative block h-[72vh] w-full overflow-hidden sm:h-[80vh]"
+      className="dark-surface group relative block h-[72svh] w-full overflow-hidden sm:h-[80svh]"
     >
       {hasImage ? (
         <>

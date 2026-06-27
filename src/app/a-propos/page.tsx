@@ -23,7 +23,7 @@ export default function AProposPage() {
       </Reveal>
 
       <div className="mt-10 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-24">
-        <Reveal variant="rise-left">
+        <Reveal variant="rise-left" className="order-2 lg:order-1">
           <div className="space-y-4 text-pretty text-muted">
             {photographer.biography.map((paragraph, i) => (
               <p key={i}>{paragraph}</p>
@@ -43,7 +43,7 @@ export default function AProposPage() {
           <p className="mt-6 text-sm text-muted">{photographer.availability.note}</p>
         </Reveal>
 
-        <Reveal delay={120}>
+        <Reveal delay={120} className="order-1 lg:order-2">
           <ImageFigure
             image={
               photographer.portrait ?? {
@@ -51,6 +51,7 @@ export default function AProposPage() {
                 ratio: "aspect-[4/5]",
               }
             }
+            priority
             sizes="(min-width:1024px) 50vw, 100vw"
           />
         </Reveal>

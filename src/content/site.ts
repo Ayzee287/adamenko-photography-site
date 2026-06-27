@@ -37,6 +37,9 @@ export const site = {
   },
 } as const;
 
+/** The de-facto home title / social headline — single source of truth (SEO3). */
+export const siteHeadline = `${site.brand} · Photographe à Lyon`;
+
 export const copy = {
   home: {
     // The homepage narrative lives in content/home.ts; the only shared home string

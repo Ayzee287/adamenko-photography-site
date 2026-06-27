@@ -80,13 +80,22 @@ export function MobileMenu({
     };
   }, [open]);
 
-  // Lock background scroll while the overlay is in the DOM.
+  // Lock background scroll + take the background landmarks out of the a11y tree and
+  // interaction while the overlay is in the DOM — belt-and-braces with aria-modal for
+  // AT/browsers that don't fully honour it (N3). The header bar behind the opaque
+  // panel is already covered by the panel, the focus trap and aria-modal.
   useEffect(() => {
     if (!mounted) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const background = [
+      document.querySelector("main"),
+      document.querySelector("footer"),
+    ];
+    background.forEach((el) => el?.setAttribute("inert", ""));
     return () => {
       document.body.style.overflow = previous;
+      background.forEach((el) => el?.removeAttribute("inert"));
     };
   }, [mounted]);
 

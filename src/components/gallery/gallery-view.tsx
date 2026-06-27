@@ -25,7 +25,11 @@ export function GalleryView({ images }: { images: GalleryImage[] }) {
             aria-label={`Agrandir : ${img.alt}`}
             className="mb-4 block w-full break-inside-avoid"
           >
-            <ImageFigure image={img} index={String(n + 1).padStart(2, "0")} />
+            <ImageFigure
+              image={img}
+              index={String(n + 1).padStart(2, "0")}
+              priority={n === 0}
+            />
           </button>
         ))}
       </div>

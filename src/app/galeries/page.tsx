@@ -38,6 +38,7 @@ export default function GaleriesPage() {
                   <ImageFigure
                     image={cover}
                     interactive
+                    priority={i === 0}
                     sizes="(min-width:640px) 50vw, 100vw"
                   />
                   <h2 className="mt-5 font-serif text-2xl text-ink transition-colors duration-300 group-hover:text-clay">

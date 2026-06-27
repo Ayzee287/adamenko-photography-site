@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { site } from "@/content/site";
+import { site, siteHeadline } from "@/content/site";
 import { defaultLocale, localizedAlternates, ogLocale } from "@/lib/i18n";
 
 // Per-page metadata builder. Next merges metadata shallowly and children inherit a
@@ -34,7 +34,7 @@ export function buildMetadata({
   path?: string;
 }): Metadata {
   const desc = description ?? site.tagline;
-  const ogTitle = title ? `${title} · ${site.brand}` : `${site.brand} · Photographe à Lyon`;
+  const ogTitle = title ? `${title} · ${site.brand}` : siteHeadline;
   return {
     title,
     description: desc,

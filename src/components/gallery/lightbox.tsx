@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, type TouchEvent } from "react";
-import { ImageFigure } from "@/components/ui/image-figure";
+import Image from "next/image";
+import { blurFor } from "@/lib/image-blur";
 import type { GalleryImage } from "@/types/gallery";
 
 type LightboxProps = {
@@ -68,6 +69,8 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
   if (index === null) return null;
   const current = images[index];
   const count = images.length;
+  // Blur-up: the photograph resolves from a soft preview of itself, not a flash.
+  const blur = blurFor(current.src);
 
   const onTouchStart = (e: TouchEvent) => {
     touchX.current = e.touches[0]?.clientX ?? null;
@@ -116,9 +119,16 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
         >
           ‹
         </button>
-        <div className="w-full max-w-3xl">
-          <ImageFigure image={current} sizes="(min-width:768px) 768px, 100vw" />
-        </div>
+        <Image
+          src={current.src as string}
+          alt={current.alt}
+          width={current.width}
+          height={current.height}
+          sizes="(min-width:1024px) 80vw, 100vw"
+          placeholder={blur ? "blur" : undefined}
+          blurDataURL={blur}
+          className="h-auto max-h-[85svh] w-auto max-w-full object-contain"
+        />
         <button
           type="button"
           onClick={onNext}
@@ -130,6 +140,10 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
       </div>
       <p className="pt-3 text-center text-xs uppercase tracking-[0.16em] text-paper/60">
         {index + 1} / {count}
+      </p>
+      {/* Announce the current frame to screen readers as ‹/›/swipe change it. */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {current.alt} · Photographie {index + 1} sur {count}
       </p>
     </div>
   );
