@@ -27,7 +27,7 @@ export function ContactForm() {
   const describedBy = (f: ContactErrorField) => (hasError(f) ? `${f}-error` : undefined);
 
   const inputBase =
-    "border bg-paper px-3 py-2 text-ink outline-none focus:border-clay";
+    "border bg-paper px-3 py-2 text-base text-ink outline-none focus:border-clay";
   const borderFor = (f: ContactErrorField) =>
     hasError(f) ? "border-clay" : "border-line";
 
