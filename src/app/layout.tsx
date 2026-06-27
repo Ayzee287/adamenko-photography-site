@@ -58,9 +58,20 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full`}
     >
       <body className="flex min-h-full flex-col bg-paper font-sans text-ink antialiased">
+        {/* Skip link — the first focusable element, visually hidden until focused.
+            Landmarks already satisfy WCAG 2.4.1; this completes the technique for
+            sighted keyboard users so they bypass the header on every route (N1). */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:border focus:border-ink/35 focus:bg-paper focus:px-5 focus:py-2 focus:text-sm focus:text-ink"
+        >
+          Aller au contenu
+        </a>
         <JsonLd data={localBusinessJsonLd()} />
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1">
+          {children}
+        </main>
         <SiteFooter />
         <Analytics />
       </body>
