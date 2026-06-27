@@ -50,7 +50,7 @@ export default function PrestationsPage() {
           {services.items.map((s) => (
             <article key={s.slug} className="border-t border-line pt-8">
               <h3 className="font-serif text-2xl text-ink">{s.title}</h3>
-              <p className="mt-2 font-serif text-lg italic text-clay">
+              <p className="mt-2 font-serif text-lg italic text-muted">
                 {s.tagline}
               </p>
               <div className="mt-4 space-y-3 text-pretty text-sm text-muted">
