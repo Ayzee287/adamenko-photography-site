@@ -62,6 +62,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Offset in-page anchors so a target never lands under the fixed/sticky header
+       (h-16/h-20 → max 80px). Replaces the prior /prestations scroll-mt patch
+       (N2; also fixes the homepage → /prestations#faq jump, F4). */
+    scroll-padding-top: 6rem;
   }
 
   /* The single reserved-frame treatment — a warm tonal field with a quiet light in
