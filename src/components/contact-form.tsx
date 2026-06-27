@@ -61,10 +61,20 @@ export function ContactForm() {
         const data = (await res.json().catch(() => null)) as
           | { fields?: ContactErrorField[] }
           | null;
-        setFieldErrors(data?.fields ?? []);
+        const fields = data?.fields ?? [];
+        if (fields.length > 0) {
+          // Validation, not a send failure: surface the inline field errors and move
+          // focus to the first invalid field — no misleading transient summary (C2).
+          setFieldErrors(fields);
+          setStatus("idle");
+          requestAnimationFrame(() =>
+            form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
+          );
+          return;
+        }
       }
       setStatus("error");
-      // Move attention to the error summary for screen readers + keyboard users.
+      // Network / server failure: show the transient error + move focus to it.
       requestAnimationFrame(() => errorRef.current?.focus());
     } catch {
       setStatus("error");
