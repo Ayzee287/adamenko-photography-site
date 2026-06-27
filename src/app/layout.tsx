@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { siteUrl, allowIndexing } from "@/lib/site";
@@ -41,6 +41,12 @@ export const metadata: Metadata = {
     locale: ogLocale[defaultLocale],
     type: "website",
   },
+};
+
+// Tints the mobile browser chrome to the site's paper surface so the address bar
+// blends with the page rather than showing the OS default (N5).
+export const viewport: Viewport = {
+  themeColor: "#faf6f0",
 };
 
 export default function RootLayout({
