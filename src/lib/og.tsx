@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { site } from "@/content/site";
+import { site, siteHeadline } from "@/content/site";
 
 // Shared social-card renderer for the OpenGraph + Twitter image conventions.
 // Generates offline at build time. Now PHOTO-BACKED (2026-06-25): it embeds the real
@@ -11,7 +11,7 @@ import { site } from "@/content/site";
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
-export const ogAlt = `${site.brand} · Photographe à Lyon`;
+export const ogAlt = siteHeadline;
 
 const ink = "#2a2420";
 const paper = "#faf6f0";

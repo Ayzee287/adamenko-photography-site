@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { siteUrl } from "@/lib/site";
-import { site } from "@/content/site";
+import { site, siteHeadline } from "@/content/site";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -29,7 +29,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: `${site.brand} · Photographe à Lyon`,
+    default: siteHeadline,
     template: `%s · ${site.brand}`,
   },
   description: site.tagline,
