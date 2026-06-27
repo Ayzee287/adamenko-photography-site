@@ -1,7 +1,8 @@
-// Pricing: transparent in structure, honest in numbers (D012). The section and
-// "ce qui est inclus" exist now; a real `priceFrom` renders "à partir de N €" only
-// once the photographer sets it — a package without a figure shows "Tarif sur
-// demande" (the deliberate inquiry-only launch state). No fabricated prices, ever.
+// Pricing & investment — the SINGLE SOURCE OF TRUTH for the services/investment
+// surface (D012 + P1 IA consolidation). Transparent in structure, honest in numbers:
+// a real `priceFrom` renders "à partir de N €"; otherwise "Tarif sur demande". No
+// fabricated prices, ever. This content renders ONCE, on /prestations (the canonical
+// services funnel); the homepage shows only a teaser that links here.
 
 export type PricePackage = {
   name: string;
@@ -11,11 +12,17 @@ export type PricePackage = {
   includes: string[];
 };
 
-// NOTE: the FAQ moved to content/faq.ts (expanded + categorised). Pricing now holds
-// only the package structure (unchanged).
-
 export const pricing = {
   currency: "EUR",
+  // Investment section copy (rendered on /prestations).
+  eyebrow: "Investissement",
+  title: "Transparent, et adapté à vous.",
+  intro:
+    "Chaque projet est différent ; les formules ci-dessous posent le cadre. Le tarif exact dépend de la durée, du lieu et de ce que vous souhaitez garder.",
+  fromLabel: "à partir de",
+  onRequest: "Tarif sur demande",
+  // Homepage teaser → the full services page (no prices on the homepage).
+  overviewCta: { label: "Voir les prestations", href: "/prestations" },
   packages: [
     {
       name: "Séance",
@@ -43,4 +50,17 @@ export const pricing = {
       ],
     },
   ] as PricePackage[],
+  // Add-ons (rendered on /prestations).
+  addons: {
+    eyebrow: "Options",
+    title: "Pour aller plus loin.",
+    items: [
+      { title: "Heures supplémentaires", body: "Plus de temps ensemble, pour ne rien précipiter." },
+      { title: "Lieux additionnels", body: "Un second décor qui compte pour vous." },
+      { title: "Album premium", body: "Un livre imprimé, fait pour durer et se transmettre." },
+      { title: "Livraison express", body: "Vos images en priorité, sous quelques jours." },
+      { title: "Tirages d'art", body: "Des impressions soignées, prêtes à accrocher." },
+      { title: "Sur mesure", body: "Une idée particulière ? Parlons-en, on s'adapte." },
+    ],
+  },
 } as const;

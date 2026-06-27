@@ -65,8 +65,6 @@ export const copy = {
     title: "Prestations",
     intro:
       "Chaque séance est adaptée à vous : le lieu, le rythme, ce qui compte pour votre famille.",
-    // Q2 → inquiry-only at launch: no public prices (D007).
-    note: "Les tarifs et formules sont communiqués sur demande.",
     cta: "Demander les tarifs",
   },
   contact: {
