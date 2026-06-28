@@ -64,29 +64,32 @@ function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
 
 function Split({ scene, ratio, side }: { scene: Scene; ratio: string; side: "left" | "right" }) {
   const right = side === "right";
+  // One link per genre (F1): the image and the lede live inside a single <Link>
+  // (the grid container) so a screen reader announces the destination once and there
+  // is one tab stop, not two — matching the FullBleed/discover model. Layout unchanged.
   return (
-    <article className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-12">
+    <article>
       <Link
         href={`/galeries/${scene.slug}`}
-        className={cn("group block lg:col-span-7", right && "lg:order-2")}
+        className="group block lg:grid lg:grid-cols-12 lg:items-center lg:gap-12"
       >
-        <ImageFigure
-          image={{ src: scene.src, alt: scene.alt ?? scene.title, ratio, hint: scene.hint }}
-          interactive
-          sizes="(min-width:1024px) 58vw, 100vw"
-        />
-      </Link>
-      <Link
-        href={`/galeries/${scene.slug}`}
-        className={cn("group mt-8 block lg:col-span-5 lg:mt-0", right && "lg:order-1")}
-      >
-        <Lede scene={scene} />
+        <div className={cn("lg:col-span-7", right && "lg:order-2")}>
+          <ImageFigure
+            image={{ src: scene.src, alt: scene.alt ?? scene.title, ratio, hint: scene.hint }}
+            interactive
+            sizes="(min-width:1024px) 58vw, 100vw"
+          />
+        </div>
+        <div className={cn("mt-8 lg:col-span-5 lg:mt-0", right && "lg:order-1")}>
+          <Lede scene={scene} />
+        </div>
       </Link>
     </article>
   );
 }
 
 function FullWidth({ scene }: { scene: Scene }) {
+  // One link per genre (F1): image + lede share a single <Link>; layout unchanged.
   return (
     <article>
       <Link href={`/galeries/${scene.slug}`} className="group block">
@@ -95,22 +98,19 @@ function FullWidth({ scene }: { scene: Scene }) {
           interactive
           sizes="100vw"
         />
-      </Link>
-      <Link
-        href={`/galeries/${scene.slug}`}
-        className="group mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
-      >
-        <h3 className="font-serif text-5xl leading-[0.95] text-ink sm:text-7xl">
-          {scene.title}
-        </h3>
-        <div className="sm:max-w-xs sm:text-right">
-          <p className="text-pretty text-lg text-ink/85 sm:text-xl">{scene.caption}</p>
-          <span className="mt-3 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-muted group-hover:text-clay">
-            {scene.cta}{" "}
-            <span aria-hidden className="cta-arrow inline-block">
-              →
+        <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <h3 className="font-serif text-5xl leading-[0.95] text-ink sm:text-7xl">
+            {scene.title}
+          </h3>
+          <div className="sm:max-w-xs sm:text-right">
+            <p className="text-pretty text-lg text-ink/85 sm:text-xl">{scene.caption}</p>
+            <span className="mt-3 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-muted group-hover:text-clay">
+              {scene.cta}{" "}
+              <span aria-hidden className="cta-arrow inline-block">
+                →
+              </span>
             </span>
-          </span>
+          </div>
         </div>
       </Link>
     </article>
