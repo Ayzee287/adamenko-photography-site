@@ -88,9 +88,12 @@ export default async function PrestationsPage({
                   <p className="mt-4 text-sm text-muted">{s.idealFor}</p>
                   <Link
                     href={localizedPath(locale, `/galeries/${s.slug}`)}
-                    className="group mt-5 inline-flex items-center gap-2 text-sm text-ink underline decoration-clay underline-offset-4 hover:text-clay"
+                    className="group mt-5 inline-flex items-center gap-2 text-sm text-ink hover:text-clay"
                   >
-                    {t.ui.gallery.viewGallery}
+                    {/* Underline only the text — the arrow glyph stays un-underlined. */}
+                    <span className="underline decoration-clay underline-offset-4">
+                      {t.ui.gallery.viewGallery}
+                    </span>
                     <span aria-hidden className="cta-arrow">
                       →
                     </span>
