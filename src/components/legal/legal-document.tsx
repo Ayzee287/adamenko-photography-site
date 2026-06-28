@@ -1,7 +1,11 @@
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Reveal } from "@/components/motion/reveal";
-import type { LegalDocument } from "@/content/legal";
+import type { Dictionary } from "@/content/dictionaries/fr";
+
+// The locale-resolved legal document (same shape as content/legal `LegalDocument`,
+// with the dictionary's widened/readonly types).
+type LegalDoc = Dictionary["legal"]["mentionsLegales"];
 
 /**
  * Shared renderer for the legal pages. Brought fully onto the inner-page system
@@ -11,7 +15,7 @@ import type { LegalDocument } from "@/content/legal";
  * Reading measure is constrained for long-form text; sub-headings are serif; lists
  * carry the brand's clay-rule motif.
  */
-export function LegalDocumentView({ doc }: { doc: LegalDocument }) {
+export function LegalDocumentView({ doc }: { doc: LegalDoc }) {
   return (
     <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>

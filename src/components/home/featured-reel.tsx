@@ -3,8 +3,8 @@ import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
 import { HorizontalGallery } from "@/components/gallery/horizontal-gallery";
-import { home } from "@/content/home";
-import { featured } from "@/content/galleries";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
 /**
  * Section 5 — the immersive gallery. A horizontal "reel" the visitor explores
@@ -12,7 +12,8 @@ import { featured } from "@/content/galleries";
  * in sequence. Real frames replace the reserved ones with no layout change.
  */
 export function FeaturedReel() {
-  const { gallery } = home;
+  const t = getDictionary(getRequestLocale());
+  const { gallery } = t.home;
 
   return (
     <section className="py-10 sm:py-16">
@@ -25,7 +26,7 @@ export function FeaturedReel() {
               intro={gallery.intro}
               className="max-w-xl"
             />
-            <ButtonLink href={gallery.cta.href} variant="secondary">
+            <ButtonLink href={localeHref(gallery.cta.href)} variant="secondary">
               {gallery.cta.label}
             </ButtonLink>
           </div>
@@ -33,7 +34,7 @@ export function FeaturedReel() {
       </Container>
       {/* The reel breaks out of the container — an edge-to-edge exhibition wall. */}
       <div className="mt-10 sm:mt-16">
-        <HorizontalGallery images={featured} />
+        <HorizontalGallery images={t.featured} t={t.ui.gallery} />
       </div>
     </section>
   );

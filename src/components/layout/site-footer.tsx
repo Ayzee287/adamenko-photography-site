@@ -1,26 +1,27 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
-import { site, copy } from "@/content/site";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
 /**
- * Footer, made editorial (v2): one wide line, not a cluster of technical groups.
- * The brand reads large in serif; navigation + Instagram sit as a quiet inline
- * row; a single hairline carries a slim copyright. Stronger hierarchy, far less
- * small print.
- *
- * No top margin (v4): the footer begins the instant the section above it ends, so
- * on the homepage it reads as the quiet sign-off of the dark contact band — one
- * closing movement, not a second screen across a paper void. Its own border-t
- * hairline is the only divider needed.
+ * Footer — one wide editorial line (brand serif + a quiet inline nav row + a slim
+ * copyright). No top margin (v4): it begins the instant the section above it ends.
+ * A server component (the JS-free nav fallback), so it reads the request locale
+ * directly and prefixes every internal link for the active locale.
  */
 export function SiteFooter() {
   const year = new Date().getFullYear();
+  const { site, copy, ui } = getDictionary(getRequestLocale());
+
   return (
     <footer>
       <Container className="border-t border-line py-10 sm:py-16">
         <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Link href="/" className="font-serif text-2xl text-ink sm:text-3xl">
+            <Link
+              href={localeHref("/")}
+              className="font-serif text-2xl text-ink sm:text-3xl"
+            >
               {site.brand}
             </Link>
             <p className="mt-3 max-w-xs text-pretty text-muted">
@@ -29,11 +30,15 @@ export function SiteFooter() {
           </div>
 
           <nav
-            aria-label="Pied de page"
+            aria-label={ui.nav.footer}
             className="flex flex-wrap gap-x-7 gap-y-3 text-sm text-ink/80 sm:justify-end"
           >
             {site.nav.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:text-clay">
+              <Link
+                key={item.href}
+                href={localeHref(item.href)}
+                className="hover:text-clay"
+              >
                 {item.label}
               </Link>
             ))}
@@ -52,9 +57,13 @@ export function SiteFooter() {
           <p>
             © {year} {site.brand}. {copy.footer.rights}
           </p>
-          <nav aria-label="Liens légaux" className="flex flex-wrap gap-x-6 gap-y-2">
+          <nav aria-label={ui.nav.legal} className="flex flex-wrap gap-x-6 gap-y-2">
             {site.legalNav.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:text-clay">
+              <Link
+                key={item.href}
+                href={localeHref(item.href)}
+                className="hover:text-clay"
+              >
                 {item.label}
               </Link>
             ))}

@@ -22,7 +22,7 @@ export const defaultLocale: Locale = "fr";
  * translated and its route tree exists — advertising hreflang for a locale that 404s
  * is an SEO liability. Add "en" here to go live with English.
  */
-export const activeLocales: readonly Locale[] = ["fr"];
+export const activeLocales: readonly Locale[] = ["fr", "en"];
 
 /** Endonyms for the language switcher. */
 export const localeNames: Record<Locale, string> = {
@@ -81,6 +81,23 @@ export function localeFromPathname(pathname: string): Locale {
 export function stripLocale(pathname: string): string {
   const seg = pathname.split("/")[1] ?? "";
   if (isLocale(seg) && seg !== defaultLocale) {
+    const rest = pathname.slice(seg.length + 1);
+    return rest === "" ? "/" : rest;
+  }
+  return pathname;
+}
+
+/**
+ * Strip ANY leading locale prefix (including the default) → the canonical, unprefixed
+ * path. Use this for client-side route comparisons (`usePathname`): the default locale
+ * is generated at "/fr/…" (SSG) but served at "/…" (browser), so comparing the raw
+ * pathname against a prefixed target mismatches between SSR and hydration. Normalising
+ * both sides to the unprefixed path ("/fr/galeries" and "/galeries" → "/galeries")
+ * makes the derived state (isHome / isActive / switcher base) identical in both.
+ */
+export function canonicalPathname(pathname: string): string {
+  const seg = pathname.split("/")[1] ?? "";
+  if (isLocale(seg)) {
     const rest = pathname.slice(seg.length + 1);
     return rest === "" ? "/" : rest;
   }

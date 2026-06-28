@@ -37,10 +37,9 @@ export const site = {
   },
 } as const;
 
-/** The de-facto home title / social headline — single source of truth (SEO3). */
-export const siteHeadline = `${site.brand} · Photographe à Lyon`;
-
 export const copy = {
+  /** The locale-variant tail of the home title / social headline (SEO3). */
+  siteDescriptor: "Photographe à Lyon",
   home: {
     // The homepage narrative lives in content/home.ts; the only shared home string
     // used elsewhere is the contact CTA (mobile menu's pill).
@@ -114,3 +113,8 @@ export const copy = {
     rights: "Tous droits réservés.",
   },
 } as const;
+
+/** The de-facto home title / social headline — single source of truth (SEO3),
+ *  built from the locale-variant descriptor so it localises. `siteHeadline` is the
+ *  French default (used by the shared OG image card). */
+export const siteHeadline = `${site.brand} · ${copy.siteDescriptor}`;

@@ -4,37 +4,57 @@ import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ImageFigure } from "@/components/ui/image-figure";
 import { Reveal } from "@/components/motion/reveal";
-import { copy } from "@/content/site";
-import { galleries } from "@/content/galleries";
 import { buildMetadata } from "@/lib/seo";
+import { getDictionary } from "@/lib/dictionary";
+import { setRequestLocale } from "@/lib/request-locale";
+import { defaultLocale, isLocale, localizedPath, type Locale } from "@/lib/i18n";
 
-export const metadata: Metadata = buildMetadata({
-  title: copy.galleries.title,
-  description: copy.galleries.intro,
-  path: "/galeries",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : defaultLocale;
+  const t = getDictionary(locale);
+  return buildMetadata({
+    title: t.copy.galleries.title,
+    description: t.copy.galleries.intro,
+    path: "/galeries",
+    locale,
+  });
+}
 
 // De-boxed editorial contact sheet (D030): each genre is its cover frame, borderless,
-// the photograph as the object — no bordered text cards (D021). Mirrors the homepage
-// idiom (ImageFigure + Reveal + FLOW rhythm) so /galeries belongs to the homepage.
-export default function GaleriesPage() {
+// the photograph as the object — no bordered text cards (D021). Gallery data + copy are
+// resolved for the request locale; links are locale-prefixed.
+export default async function GaleriesPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : defaultLocale;
+  setRequestLocale(locale);
+  const t = getDictionary(locale);
+  const c = t.copy.galleries;
+
   return (
     <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
-        <PageHeader
-          eyebrow={copy.galleries.eyebrow}
-          title={copy.galleries.title}
-          intro={copy.galleries.intro}
-        />
+        <PageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro} />
       </Reveal>
 
       <ul className="mt-10 grid gap-x-8 gap-y-12 sm:mt-16 sm:grid-cols-2">
-        {galleries.map((g, i) => {
+        {t.galleries.map((g, i) => {
           const cover = g.cover ?? g.images[0];
           return (
             <li key={g.slug}>
               <Reveal delay={(i % 2) * 90}>
-                <Link href={`/galeries/${g.slug}`} className="group block">
+                <Link
+                  href={localizedPath(locale, `/galeries/${g.slug}`)}
+                  className="group block"
+                >
                   <ImageFigure
                     image={cover}
                     interactive
@@ -48,7 +68,7 @@ export default function GaleriesPage() {
                     {g.intro}
                   </p>
                   <span className="mt-3 inline-flex items-center gap-2 text-sm text-ink group-hover:text-clay">
-                    {copy.galleries.view}
+                    {c.view}
                     <span aria-hidden className="cta-arrow">
                       →
                     </span>

@@ -6,7 +6,8 @@ import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
 import { blurFor } from "@/lib/image-blur";
 import { cn } from "@/lib/utils";
-import { home } from "@/content/home";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
 // A scene accepts a real export later (`src` + dimensions) with zero layout change;
 // until then every composition renders its directed reserved frame (v2).
@@ -70,7 +71,7 @@ function Split({ scene, ratio, side }: { scene: Scene; ratio: string; side: "lef
   return (
     <article>
       <Link
-        href={`/galeries/${scene.slug}`}
+        href={localeHref(`/galeries/${scene.slug}`)}
         className="group block lg:grid lg:grid-cols-12 lg:items-center lg:gap-12"
       >
         <div className={cn("lg:col-span-7", right && "lg:order-2")}>
@@ -92,7 +93,7 @@ function FullWidth({ scene }: { scene: Scene }) {
   // One link per genre (F1): image + lede share a single <Link>; layout unchanged.
   return (
     <article>
-      <Link href={`/galeries/${scene.slug}`} className="group block">
+      <Link href={localeHref(`/galeries/${scene.slug}`)} className="group block">
         <ImageFigure
           image={{ src: scene.src, alt: scene.alt ?? scene.title, ratio: "aspect-[16/9]" }}
           interactive
@@ -124,7 +125,7 @@ function FullBleed({ scene }: { scene: Scene }) {
   const hasImage = Boolean(scene.src);
   return (
     <Link
-      href={`/galeries/${scene.slug}`}
+      href={localeHref(`/galeries/${scene.slug}`)}
       className="dark-surface group relative block h-[72svh] w-full overflow-hidden sm:h-[80svh]"
     >
       {hasImage ? (
@@ -184,7 +185,7 @@ function FullBleed({ scene }: { scene: Scene }) {
 }
 
 export function ServicesShowcase() {
-  const { seances } = home;
+  const { seances } = getDictionary(getRequestLocale()).home;
   const [s0, s1, s2, s3] = seances.scenes;
 
   return (
@@ -219,7 +220,7 @@ export function ServicesShowcase() {
 
       {/* One clear path to the work — Portraits is a normal category on /galeries. */}
       <Container className="mt-10 sm:mt-16">
-        <ButtonLink href={seances.cta.href} variant="secondary">
+        <ButtonLink href={localeHref(seances.cta.href)} variant="secondary">
           {seances.cta.label}
         </ButtonLink>
       </Container>

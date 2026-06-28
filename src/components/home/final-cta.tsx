@@ -1,8 +1,8 @@
 import { Container } from "@/components/layout/container";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "@/components/motion/reveal";
-import { home } from "@/content/home";
-import { site } from "@/content/site";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
 /**
  * Section 10 — the close. A warm dark band (inverts chrome via .dark-surface),
@@ -13,7 +13,8 @@ import { site } from "@/content/site";
  * feels should be "I want to work with her — and it's easy to ask".
  */
 export function FinalCta() {
-  const f = home.finalCta;
+  const t = getDictionary(getRequestLocale());
+  const f = t.home.finalCta;
 
   return (
     <section className="dark-surface bg-ink text-paper">
@@ -30,11 +31,11 @@ export function FinalCta() {
               </h2>
               <p className="mt-5 max-w-md text-pretty text-paper/75">{f.body}</p>
               <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-                <ButtonLink href={f.cta.href} variant="primary" onDark>
+                <ButtonLink href={localeHref(f.cta.href)} variant="primary" onDark>
                   {f.cta.label}
                 </ButtonLink>
                 <ButtonLink
-                  href={site.social.instagram}
+                  href={t.site.social.instagram}
                   variant="secondary"
                   onDark
                 >

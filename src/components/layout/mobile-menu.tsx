@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/container";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { ButtonLink } from "@/components/ui/button-link";
-import { copy, site } from "@/content/site";
+import { localizedPath, type Locale } from "@/lib/i18n";
+import type { ChromeStrings } from "./site-header";
 import { cn } from "@/lib/utils";
 
 /**
@@ -31,10 +32,14 @@ export function MobileMenu({
   open,
   onClose,
   isActive,
+  lang,
+  chrome,
 }: {
   open: boolean;
   onClose: () => void;
   isActive: (href: string) => boolean;
+  lang: Locale;
+  chrome: ChromeStrings;
 }) {
   // mounted = in the DOM (kept during the exit transition); shown = the visible CSS
   // state (flipped a frame after mount so the entrance animates).
@@ -149,7 +154,7 @@ export function MobileMenu({
       ref={panelRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Menu"
+      aria-label={chrome.ui.nav.menu}
       onTransitionEnd={(e) => {
         // Only the panel's own opacity transition ends the close → unmount.
         if (e.target === panelRef.current && !open) setMounted(false);
@@ -162,17 +167,17 @@ export function MobileMenu({
       {/* Bar — mirrors the header height so the overlay reads as a continuation. */}
       <Container className="flex h-16 shrink-0 items-center justify-between">
         <Link
-          href="/"
+          href={localizedPath(lang, "/")}
           onClick={onClose}
           className="font-serif text-lg text-ink"
         >
-          {site.brand}
+          {chrome.brand}
         </Link>
         <button
           ref={closeRef}
           type="button"
           onClick={guardedClose}
-          aria-label="Fermer le menu"
+          aria-label={chrome.ui.nav.closeMenu}
           className="-mr-2.5 flex h-11 w-11 items-center justify-center text-ink hover:text-clay"
         >
           <svg
@@ -197,13 +202,13 @@ export function MobileMenu({
           padding gives comfortable tap targets without enlarging the type. */}
       <Container className="flex flex-1 flex-col justify-end pb-12">
         <span aria-hidden className="mb-7 block h-px w-12 bg-clay" />
-        <nav aria-label="Navigation principale" className="flex flex-col">
-          {site.nav.map((item, i) => {
+        <nav aria-label={chrome.ui.nav.primary} className="flex flex-col">
+          {chrome.nav.map((item, i) => {
             const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={localizedPath(lang, item.href)}
                 onClick={onClose}
                 aria-current={active ? "page" : undefined}
                 style={{ transitionDelay: shown ? `${90 + i * 55}ms` : "0ms" }}
@@ -228,25 +233,24 @@ export function MobileMenu({
           as one contact unit rather than a stray, disconnected link. */}
       <Container className="shrink-0 border-t border-line py-8">
         <ButtonLink
-          href="/contact"
+          href={localizedPath(lang, "/contact")}
           variant="primary"
           onClick={onClose}
           className="w-full justify-center"
         >
-          {copy.home.contactCta}
+          {chrome.contactCta}
         </ButtonLink>
         <div className="mt-4 flex items-center justify-between">
           <a
-            href={site.social.instagram}
+            href={chrome.instagramHref}
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}
             className="text-sm text-muted hover:text-clay"
           >
-            Instagram
+            {chrome.ui.nav.instagram}
           </a>
-          {/* Renders nothing until a second locale is active (zero change today). */}
-          <LanguageSwitcher />
+          <LanguageSwitcher label={chrome.ui.nav.language} />
         </div>
       </Container>
     </div>

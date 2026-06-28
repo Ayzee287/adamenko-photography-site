@@ -1,10 +1,21 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { copy, site } from "@/content/site";
-import { CONTACT_OCCASIONS, type ContactErrorField } from "@/lib/contact";
+import { type ContactErrorField } from "@/lib/contact";
 import { primaryPillClasses } from "@/components/ui/button-link";
 import { cn } from "@/lib/utils";
+import type { Dictionary } from "@/content/dictionaries/fr";
+
+/** Locale-resolved form strings + occasion options, passed from the server page. */
+type FormStrings = Dictionary["copy"]["contact"]["form"];
+export type ContactFormProps = {
+  t: FormStrings;
+  /** Display label + canonical (French) value submitted to the server enum. */
+  occasions: readonly { value: string; label: string }[];
+  fallbackEmail: string;
+  instagramHref: string;
+  instagramLabel: string;
+};
 
 /**
  * Inquiry form — the conversion (sprint task 1). Posts JSON to /api/contact, which
@@ -17,8 +28,13 @@ import { cn } from "@/lib/utils";
  */
 type Status = "idle" | "sending" | "success" | "error";
 
-export function ContactForm() {
-  const t = copy.contact.form;
+export function ContactForm({
+  t,
+  occasions,
+  fallbackEmail,
+  instagramHref,
+  instagramLabel,
+}: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
   const [fieldErrors, setFieldErrors] = useState<ContactErrorField[]>([]);
   const errorRef = useRef<HTMLParagraphElement | null>(null);
@@ -142,11 +158,11 @@ export function ContactForm() {
           aria-invalid={hasError("occasion")}
           aria-describedby={describedBy("occasion")}
           className={cn(inputBase, borderFor("occasion"))}
-          defaultValue={CONTACT_OCCASIONS[0]}
+          defaultValue={occasions[0]?.value}
         >
-          {CONTACT_OCCASIONS.map((o) => (
-            <option key={o} value={o}>
-              {o}
+          {occasions.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
             </option>
           ))}
         </select>
@@ -208,21 +224,21 @@ export function ContactForm() {
           className="text-sm text-clay outline-none"
         >
           {t.error}{" "}
-          {site.contact.email ? (
+          {fallbackEmail ? (
             <a
-              href={`mailto:${site.contact.email}`}
+              href={`mailto:${fallbackEmail}`}
               className="text-ink underline decoration-clay underline-offset-4 hover:text-clay"
             >
-              {site.contact.email}
+              {fallbackEmail}
             </a>
           ) : (
             <a
-              href={site.social.instagram}
+              href={instagramHref}
               target="_blank"
               rel="noopener noreferrer"
               className="text-ink underline decoration-clay underline-offset-4 hover:text-clay"
             >
-              Instagram
+              {instagramLabel}
             </a>
           )}
         </p>

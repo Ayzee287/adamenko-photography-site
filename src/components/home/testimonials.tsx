@@ -4,16 +4,23 @@ import { useState } from "react";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { cn } from "@/lib/utils";
-import { home } from "@/content/home";
 import { testimonials } from "@/content/testimonials";
+
+/** Locale-resolved strings, passed from the server home page (this is a client island). */
+export type TestimonialStrings = {
+  eyebrow: string;
+  title: string;
+  empty: string;
+  prevLabel: string;
+  nextLabel: string;
+};
 
 /**
  * Section 9 — testimonials. Real only (never fabricated): a quiet reserved state
  * while empty, a manual carousel (no autoplay — the visitor stays in control)
  * once real words exist. Same layout either way, so nothing shifts when filled.
  */
-export function Testimonials() {
-  const t = home.testimonials;
+export function Testimonials({ t }: { t: TestimonialStrings }) {
   const items = testimonials;
   const [i, setI] = useState(0);
   const has = items.length > 0;
@@ -50,7 +57,7 @@ export function Testimonials() {
                   <button
                     type="button"
                     onClick={prev}
-                    aria-label="Témoignage précédent"
+                    aria-label={t.prevLabel}
                     className={arrow}
                   >
                     ‹
@@ -61,7 +68,7 @@ export function Testimonials() {
                   <button
                     type="button"
                     onClick={next}
-                    aria-label="Témoignage suivant"
+                    aria-label={t.nextLabel}
                     className={arrow}
                   >
                     ›

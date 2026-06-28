@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { site, siteHeadline } from "@/content/site";
+import { defaultLocale, type Locale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/dictionary";
 
 // Shared social-card renderer for the OpenGraph + Twitter image conventions.
 // Generates offline at build time. Now PHOTO-BACKED (2026-06-25): it embeds the real
@@ -28,7 +30,10 @@ function heroDataUri(): string | null {
   }
 }
 
-export function renderOgImage() {
+export function renderOgImage(locale: Locale = defaultLocale) {
+  const dict = getDictionary(locale);
+  const kicker = dict.copy.siteDescriptor; // "Photographe à Lyon" / "Photographer in Lyon"
+  const tagline = dict.site.tagline;
   const hero = heroDataUri();
   if (hero) {
     return new ImageResponse(
@@ -60,15 +65,13 @@ export function renderOgImage() {
               flexDirection: "column",
             }}
           >
-            <div style={{ display: "flex", fontSize: 30, letterSpacing: 10, textTransform: "uppercase", color: "rgba(250,246,240,0.75)" }}>
-              Photographe · Lyon
-            </div>
+            <div style={{ display: "flex", fontSize: 30, letterSpacing: 10, textTransform: "uppercase", color: "rgba(250,246,240,0.75)" }}>{kicker}</div>
             <div style={{ display: "flex", fontSize: 84, lineHeight: 1.02, color: paper, marginTop: 18 }}>
               {site.brand}
             </div>
             <div style={{ display: "flex", width: 96, height: 5, backgroundColor: clay, margin: "28px 0" }} />
             <div style={{ display: "flex", fontSize: 30, lineHeight: 1.3, color: "rgba(250,246,240,0.92)", maxWidth: 900 }}>
-              {site.tagline}
+              {tagline}
             </div>
           </div>
         </div>
@@ -99,9 +102,7 @@ export function renderOgImage() {
             textTransform: "uppercase",
             color: muted,
           }}
-        >
-          Photographe · Lyon
-        </div>
+        >{kicker}</div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
@@ -133,7 +134,7 @@ export function renderOgImage() {
               maxWidth: 880,
             }}
           >
-            {site.tagline}
+            {tagline}
           </div>
         </div>
 

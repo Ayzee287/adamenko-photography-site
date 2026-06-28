@@ -6,12 +6,19 @@
 // from the locations model. Unknown fields are OMITTED, never faked.
 
 import { photographer } from "@/content/photographer";
-import { locations } from "@/content/locations";
 import { absoluteUrl } from "@/lib/site";
 import { defaultLocale, type Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionary";
 
 type JsonLdObject = Record<string, unknown>;
+
+/** Person.jobTitle, localised (proper-noun fields stay; this is a translatable label). */
+const JOB_TITLE: Record<Locale, string> = {
+  fr: "Photographe",
+  en: "Photographer",
+  ru: "Фотограф",
+  uk: "Фотограф",
+};
 
 // schema.org areaServed prefers Place subtypes; "Continent" isn't a clean areaServed
 // type, so it maps to the generic Place.
@@ -22,7 +29,10 @@ function areaType(schemaType: string): string {
 /** LocalBusiness graph for the site (injected once, site-wide, in the root layout). */
 export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObject {
   const dict = getDictionary(locale);
-  const { location, contact, specialties } = photographer;
+  // Address + contact are locale-independent (proper nouns / facts); the specialties
+  // and area labels localise via the dictionary.
+  const { location, contact } = photographer;
+  const specialties = dict.photographer.specialties;
 
   const address: JsonLdObject = {
     "@type": "PostalAddress",
@@ -50,11 +60,11 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
     image: absoluteUrl("/home/hero.jpg"),
     description: dict.site.tagline,
     address,
-    areaServed: locations.areas.map((a) => ({
+    areaServed: dict.locations.areas.map((a) => ({
       "@type": areaType(a.schemaType),
       name: a.label,
     })),
-    knowsAbout: specialties,
+    knowsAbout: [...specialties],
     sameAs,
   };
 
@@ -65,7 +75,7 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
     const founder: JsonLdObject = {
       "@type": "Person",
       name: photographer.name,
-      jobTitle: "Photographe",
+      jobTitle: JOB_TITLE[locale],
     };
     if (photographer.portrait?.src) founder.image = absoluteUrl(photographer.portrait.src);
     business.founder = founder;

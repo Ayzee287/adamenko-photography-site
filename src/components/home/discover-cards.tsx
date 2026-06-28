@@ -4,7 +4,8 @@ import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
 import { blurFor } from "@/lib/image-blur";
-import { home } from "@/content/home";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
 /**
  * "Pour découvrir" — a premium editorial navigation menu (v6: a print emerging).
@@ -37,7 +38,7 @@ import { home } from "@/content/home";
  * is gated to pointer/focus + motion-safe + `lg`.
  */
 export function DiscoverCards() {
-  const d = home.discover;
+  const d = getDictionary(getRequestLocale()).home.discover;
 
   return (
     <section className="py-10 sm:py-16">
@@ -51,7 +52,7 @@ export function DiscoverCards() {
             <li key={card.title}>
               <Reveal delay={i * 110}>
                 <Link
-                  href={card.href}
+                  href={localeHref(card.href)}
                   aria-label={`${card.label} : ${card.title}`}
                   className="discover-item group relative block lg:aspect-[2/3] lg:overflow-hidden"
                 >
