@@ -10,11 +10,14 @@
 
 import type { DeepPartial } from "@/lib/dictionary";
 import type { Dictionary } from "./fr";
+import type { GenreSlug } from "@/types/gallery";
 import { galleries as frGalleries, featured as frFeatured } from "@/content/galleries";
 
 // ── Gallery text overlay (alts in the same order as content/galleries.ts) ──────────
+// Keyed by GenreSlug (not string) so a genre added to the French galleries without an
+// English overlay fails typecheck instead of silently shipping a French alt (I6).
 const galleryText: Record<
-  string,
+  GenreSlug,
   { title: string; intro: string; coverAlt: string; alts: string[] }
 > = {
   familles: {
