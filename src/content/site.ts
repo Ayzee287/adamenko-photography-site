@@ -59,6 +59,12 @@ export const copy = {
     // The bio + portrait render from the photographer identity model
     // (content/photographer.ts); only the page title + portrait alt come from here.
     portraitAlt: "Portrait de la photographe",
+    // Quiet secondary CTA after the bio — closes the trust→inquiry loop at peak
+    // intent (A1). Person-specific meta description distilled from the approved bio,
+    // never freshly authored (A5).
+    cta: "Travaillons ensemble",
+    metaDescription:
+      "Irina Adamenko, photographe de famille à Lyon. Une approche documentaire, des images douces et sincères, en France comme ailleurs en Europe.",
   },
   services: {
     eyebrow: "Travailler ensemble",
@@ -72,6 +78,17 @@ export const copy = {
     title: "Contact",
     intro:
       "Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
+    // Reassurance for the empty space beside the form — lowers the anxiety of the
+    // first message (C1). A factual "what happens next", in the brand voice; no
+    // fabricated claims, surfaces the response-time promise as a visual step.
+    reassurance: {
+      title: "Ce qui se passe ensuite",
+      steps: [
+        "Une réponse sous quelques jours.",
+        "Un échange sur votre projet — la date, le lieu, ce que vous imaginez.",
+        "Une proposition adaptée à votre séance, sans engagement.",
+      ],
+    },
     form: {
       name: "Votre nom",
       email: "Votre e-mail",

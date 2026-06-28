@@ -45,7 +45,7 @@ export function FinalCta() {
 
             {/* Practical meta — offset right, baseline-aligned. */}
             <dl className="lg:text-right">
-              <dt className="text-[0.65rem] uppercase tracking-[0.28em] text-paper/40">
+              <dt className="text-[0.65rem] uppercase tracking-[0.28em] text-paper/55">
                 {f.locationLabel}
               </dt>
               <dd className="mt-1 font-serif text-lg text-paper/85">

@@ -351,5 +351,10 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    /* Also neutralise inline stagger delays (e.g. the mobile-menu link cascade),
+       which the duration reset alone leaves intact → links would still appear in a
+       slight stagger under a no-motion request (N4). */
+    transition-delay: 0s !important;
+    animation-delay: 0s !important;
   }
 }
