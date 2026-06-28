@@ -81,6 +81,10 @@ Hosted on **Vercel** with Git integration:
 - `robots.ts` disallows indexing of non-production deployments so previews never
   compete in search.
 
+**Going live?** Follow [`docs/launch-checklist.md`](./docs/launch-checklist.md) — the single
+production-launch checklist (engineering ✅ verified; remaining items are the Vercel import,
+environment variables, and Resend setup).
+
 ## Status
 
 The site is **code-complete**. Remaining work is owner content + deployment ops, not engineering:
