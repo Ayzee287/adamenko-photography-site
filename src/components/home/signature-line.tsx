@@ -13,10 +13,16 @@ export function SignatureLine() {
       <Container>
         <Reveal variant="fade">
           <span aria-hidden className="mb-10 block h-px w-14 bg-clay" />
+          {/* The author's line breaks are a desktop-only typographic device: on the
+              narrow mobile measure each forced line itself re-wrapped raggedly, so below
+              `sm` the copy flows as one `text-pretty` paragraph and the breaks only apply
+              from `sm` up (F7). The trailing space keeps the inline (mobile) flow from
+              gluing lines together; it's inert on the `sm:block` lines. */}
           <p className="max-w-5xl text-pretty font-serif text-[1.9rem] leading-[1.16] text-ink sm:text-5xl sm:leading-[1.12] lg:text-6xl">
-            {home.signature.map((line) => (
-              <span key={line} className="block">
+            {home.signature.map((line, i) => (
+              <span key={line} className="inline sm:block">
                 {line}
+                {i < home.signature.length - 1 ? " " : ""}
               </span>
             ))}
           </p>
