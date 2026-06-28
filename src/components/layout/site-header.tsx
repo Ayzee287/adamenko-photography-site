@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Container } from "@/components/layout/container";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { MobileMenu } from "@/components/layout/mobile-menu";
-import { localizedPath, type Locale } from "@/lib/i18n";
+import { canonicalPathname, localizedPath, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/content/dictionaries/fr";
 import { subscribeScroll } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
@@ -28,8 +28,12 @@ export type ChromeStrings = {
  */
 export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrings }) {
   const pathname = usePathname();
+  // Normalise the pathname (strip any locale prefix) so SSR (generated at "/fr/…") and
+  // the hydrated client (served at "/…") compute identical state — no hydration
+  // mismatch on the FR home header or the active nav state (I1).
+  const path = canonicalPathname(pathname);
   const homePath = localizedPath(lang, "/");
-  const isHome = pathname === homePath;
+  const isHome = path === "/";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -48,14 +52,13 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
   const overHero = isHome && !scrolled;
   const solid = "border-b border-line bg-paper";
 
-  // Wayfinding: mark the current section. Compares against the locale-prefixed path so
-  // /en/galeries stays active inside /en/galeries/familles.
-  const isActive = (href: string) => {
-    const target = localizedPath(lang, href);
-    return href === "/"
-      ? pathname === target
-      : pathname === target || pathname.startsWith(`${target}/`);
-  };
+  // Wayfinding: mark the current section. `href` is the canonical (unprefixed) nav
+  // path; comparing against the normalised `path` keeps /galeries active inside
+  // /galeries/familles in BOTH locales and matches SSR↔client (I1).
+  const isActive = (href: string) =>
+    href === "/"
+      ? path === "/"
+      : path === href || path.startsWith(`${href}/`);
 
   const navLink = "py-2.5 text-[0.95rem] hover:text-clay";
 

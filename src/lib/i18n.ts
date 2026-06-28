@@ -88,6 +88,23 @@ export function stripLocale(pathname: string): string {
 }
 
 /**
+ * Strip ANY leading locale prefix (including the default) → the canonical, unprefixed
+ * path. Use this for client-side route comparisons (`usePathname`): the default locale
+ * is generated at "/fr/…" (SSG) but served at "/…" (browser), so comparing the raw
+ * pathname against a prefixed target mismatches between SSR and hydration. Normalising
+ * both sides to the unprefixed path ("/fr/galeries" and "/galeries" → "/galeries")
+ * makes the derived state (isHome / isActive / switcher base) identical in both.
+ */
+export function canonicalPathname(pathname: string): string {
+  const seg = pathname.split("/")[1] ?? "";
+  if (isLocale(seg)) {
+    const rest = pathname.slice(seg.length + 1);
+    return rest === "" ? "/" : rest;
+  }
+  return pathname;
+}
+
+/**
  * `alternates` for Next metadata: a localized canonical plus an hreflang map covering
  * every ACTIVE locale and `x-default`. Today that is French + x-default; it grows
  * automatically as locales are activated.

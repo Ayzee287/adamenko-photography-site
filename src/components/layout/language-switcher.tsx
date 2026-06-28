@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   activeLocales,
+  canonicalPathname,
   localeFromPathname,
   localeShort,
   localizedPath,
-  stripLocale,
 } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,9 @@ export function LanguageSwitcher({
   if (activeLocales.length < 2) return null;
 
   const current = localeFromPathname(pathname);
-  const basePath = stripLocale(pathname);
+  // Strip ANY locale prefix (incl. the default) so the per-locale links are identical
+  // and correct between SSR (/fr/…) and the hydrated client (/…) (I1).
+  const basePath = canonicalPathname(pathname);
 
   return (
     <div
