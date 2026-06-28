@@ -92,6 +92,10 @@ framework). There is nothing to change in the repository here.
 
 ## 3 · Operations — 🔴 operator (Resend)
 
+> Full email pipeline reference — architecture, required **DNS records** (MX/SPF/DKIM/DMARC),
+> the ≈5-minute connect sequence, and troubleshooting — is in
+> [`email-architecture.md`](./email-architecture.md).
+
 - [ ] **Create a Resend account** at resend.com and generate an API key → `RESEND_API_KEY`.
 - [ ] **Add + verify the sending domain** (SPF/DKIM DNS records). Set `CONTACT_FROM_EMAIL` to an
   address **on that verified domain** (e.g. `bonjour@<verified-domain>`). Until this is done, the

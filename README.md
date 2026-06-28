@@ -83,7 +83,9 @@ Hosted on **Vercel** with Git integration:
 
 **Going live?** Follow [`docs/launch-checklist.md`](./docs/launch-checklist.md) — the single
 production-launch checklist (engineering ✅ verified; remaining items are the Vercel import,
-environment variables, and Resend setup).
+environment variables, and Resend setup). The contact-email pipeline (architecture, required
+DNS records, env vars, the ≈5-minute Resend connect, and troubleshooting) is documented in
+[`docs/email-architecture.md`](./docs/email-architecture.md).
 
 ## Status
 
