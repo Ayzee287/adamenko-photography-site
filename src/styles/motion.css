@@ -33,6 +33,21 @@
   animation: rise 700ms var(--ease-arrive) both;
 }
 
+/* Page transition (D060) — the page content "settles in" on a client navigation,
+   reusing the heading `rise` (a few-px lift + fade, --ease-arrive) so a route change
+   feels like the same authored system arriving, not a bolted-on effect. Applied ONLY
+   on navigations (app/[lang]/template.tsx skips the first load) so the hero LCP is
+   never animated; transform/opacity only → no CLS, and `both` ends at transform:none
+   so there is no lingering containing block for fixed children (e.g. the lightbox).
+   Quicker than a heading arrival — you have just clicked. */
+.page-enter {
+  /* `backwards` (not `both`): holds the `from` opacity:0 before the first frame (no
+     flash) but reverts to the base style after — leaving NO lingering transform on the
+     wrapper, which would otherwise create a containing block and break the position:fixed
+     lightbox. */
+  animation: rise 420ms var(--ease-arrive) backwards;
+}
+
 /* ── Cinematic homepage layer ──────────────────────────────────────────────────
    Scroll-driven motion, engineered so drama never costs performance or a11y:
    only `opacity`/`transform` animate (GPU, no reflow → CLS ≈ 0).
@@ -108,6 +123,9 @@
     will-change: auto;
   }
   .hero-cue {
+    animation: none;
+  }
+  .page-enter {
     animation: none;
   }
 }
