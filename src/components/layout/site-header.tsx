@@ -65,7 +65,7 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
   return (
     <header
       className={cn(
-        "isolate top-0 z-50 transition-colors duration-300",
+        "isolate top-0 z-50 transition-colors duration-300 ease-[var(--ease-settle)]",
         isHome ? "fixed inset-x-0" : `sticky ${solid}`,
         isHome && (scrolled ? solid : "border-b border-transparent bg-transparent"),
         overHero && "dark-surface",
