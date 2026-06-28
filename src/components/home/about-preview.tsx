@@ -3,8 +3,8 @@ import { ImageFigure } from "@/components/ui/image-figure";
 import { Parallax } from "@/components/motion/parallax";
 import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button-link";
-import { home } from "@/content/home";
-import { photographer } from "@/content/photographer";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale, localeHref } from "@/lib/request-locale";
 import type { GalleryImage } from "@/types/gallery";
 
 /**
@@ -13,11 +13,12 @@ import type { GalleryImage } from "@/types/gallery";
  * photographer's real portrait from the identity model.
  */
 export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
-  const { about } = home;
+  const t = getDictionary(getRequestLocale());
+  const { about } = t.home;
   // No `label` here: the section eyebrow already reads "La photographe", so the
   // frame shows only orientation·ratio + the art-direction note (v3 QA: no echo).
   const image = portrait ??
-    photographer.portrait ?? {
+    t.photographer.portrait ?? {
       alt: about.portraitAlt,
       ratio: "aspect-[4/5]",
       hint: about.portraitHint,
@@ -52,7 +53,7 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
             ))}
           </ul>
           <div className="mt-8">
-            <ButtonLink href={about.cta.href} variant="secondary">
+            <ButtonLink href={localeHref(about.cta.href)} variant="secondary">
               {about.cta.label}
             </ButtonLink>
           </div>

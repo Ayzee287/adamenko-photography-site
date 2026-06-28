@@ -1,6 +1,7 @@
 import { Container } from "@/components/layout/container";
 import { Reveal } from "@/components/motion/reveal";
-import { home } from "@/content/home";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale } from "@/lib/request-locale";
 
 /**
  * Section 2 — the manifesto (D021). A print pull-quote: large editorial serif,
@@ -8,6 +9,7 @@ import { home } from "@/content/home";
  * no border — whitespace frames it.
  */
 export function SignatureLine() {
+  const { home } = getDictionary(getRequestLocale());
   return (
     <section className="py-10 sm:py-16">
       <Container>

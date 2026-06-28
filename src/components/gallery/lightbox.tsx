@@ -4,14 +4,19 @@ import { useEffect, useRef, type TouchEvent } from "react";
 import Image from "next/image";
 import { blurFor } from "@/lib/image-blur";
 import type { GalleryImage } from "@/types/gallery";
+import type { Dictionary } from "@/content/dictionaries/fr";
+
+/** The locale-resolved gallery/lightbox strings, passed from a server parent. */
+export type GalleryStrings = Dictionary["ui"]["gallery"];
 
 type LightboxProps = {
-  images: GalleryImage[];
+  images: readonly GalleryImage[];
   /** Active image index, or null when closed. */
   index: number | null;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
+  t: GalleryStrings;
 };
 
 /**
@@ -19,7 +24,7 @@ type LightboxProps = {
  * keyboard (Esc / ← / →), scroll-lock while open, and touch-swipe; arrows + a
  * counter for the rest. Inverts its details on the dark surface (globals.css).
  */
-export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxProps) {
+export function Lightbox({ images, index, onClose, onPrev, onNext, t }: LightboxProps) {
   const isOpen = index !== null;
   const touchX = useRef<number | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -90,7 +95,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label="Aperçu de la photographie"
+      aria-label={t.lightbox}
       className="dark-surface fixed inset-0 z-[60] flex flex-col bg-ink/95 p-4 sm:p-8"
       onClick={onClose}
     >
@@ -99,10 +104,10 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
           ref={closeRef}
           type="button"
           onClick={onClose}
-          aria-label="Fermer"
+          aria-label={t.close}
           className="text-sm uppercase tracking-[0.16em] text-paper/80 hover:text-paper"
         >
-          Fermer ✕
+          {t.closeLabel}
         </button>
       </div>
       <div
@@ -114,7 +119,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
         <button
           type="button"
           onClick={onPrev}
-          aria-label="Photographie précédente"
+          aria-label={t.prevPhoto}
           className="shrink-0 px-2 text-3xl text-paper/70 hover:text-paper"
         >
           ‹
@@ -132,7 +137,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
         <button
           type="button"
           onClick={onNext}
-          aria-label="Photographie suivante"
+          aria-label={t.nextPhoto}
           className="shrink-0 px-2 text-3xl text-paper/70 hover:text-paper"
         >
           ›
@@ -143,7 +148,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext }: LightboxPro
       </p>
       {/* Announce the current frame to screen readers as ‹/›/swipe change it. */}
       <p role="status" aria-live="polite" className="sr-only">
-        {current.alt} · Photographie {index + 1} sur {count}
+        {current.alt} · {t.photograph} {index + 1} {t.of} {count}
       </p>
     </div>
   );

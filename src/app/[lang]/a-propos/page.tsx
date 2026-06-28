@@ -4,29 +4,45 @@ import { PageHeader } from "@/components/layout/page-header";
 import { ImageFigure } from "@/components/ui/image-figure";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "@/components/motion/reveal";
-import { copy } from "@/content/site";
-import { photographer } from "@/content/photographer";
 import { buildMetadata } from "@/lib/seo";
+import { getDictionary } from "@/lib/dictionary";
+import { setRequestLocale } from "@/lib/request-locale";
+import { defaultLocale, isLocale, localizedPath, type Locale } from "@/lib/i18n";
 
-// Name-as-H1 (A4): "À propos" is a navigation label, not a page subject — the
-// photographer's name is the page's strongest ranking + branding signal, so it is
-// the H1 and "À propos" is demoted to the eyebrow (the nav label is unaffected).
-// The page title keeps "À propos" for wayfinding AND carries the name for the SERP.
-// Description is person-specific, not the inherited site tagline (A5).
-export const metadata: Metadata = buildMetadata({
-  title: `${copy.about.title} — ${photographer.name}`,
-  description: copy.about.metaDescription,
-  path: "/a-propos",
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : defaultLocale;
+  const t = getDictionary(locale);
+  // Name-as-H1 (A4): the photographer's name is the page subject; "À propos"/"About"
+  // is demoted to the eyebrow. The <title> keeps the label AND carries the name (A4);
+  // the description is person-specific, not the inherited tagline (A5).
+  return buildMetadata({
+    title: `${t.copy.about.title} — ${t.photographer.name}`,
+    description: t.copy.about.metaDescription,
+    path: "/a-propos",
+    locale,
+  });
+}
 
-// Bio, location, specialties and availability all come from the single identity
-// model (content/photographer) — nothing about the person is hardcoded here. Brought
-// onto the homepage system (D030): PageHeader, Reveal, FLOW rhythm.
-export default function AProposPage() {
+export default async function AProposPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : defaultLocale;
+  setRequestLocale(locale);
+  const t = getDictionary(locale);
+  const { photographer } = t;
+
   return (
     <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
-        <PageHeader eyebrow={copy.about.title} title={photographer.name} />
+        <PageHeader eyebrow={t.copy.about.title} title={photographer.name} />
       </Reveal>
 
       <div className="mt-10 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-24">
@@ -48,10 +64,13 @@ export default function AProposPage() {
             ))}
           </ul>
           <p className="mt-6 text-sm text-muted">{photographer.availability.note}</p>
-          {/* One quiet forward step at peak trust — secondary, not a loud pill, to
-              stay on the page's calm register (A1). */}
-          <ButtonLink href="/contact" variant="secondary" className="mt-8">
-            {copy.about.cta}
+          {/* One quiet forward step at peak trust — secondary, not a loud pill (A1). */}
+          <ButtonLink
+            href={localizedPath(locale, "/contact")}
+            variant="secondary"
+            className="mt-8"
+          >
+            {t.copy.about.cta}
           </ButtonLink>
         </Reveal>
 
@@ -59,7 +78,7 @@ export default function AProposPage() {
           <ImageFigure
             image={
               photographer.portrait ?? {
-                alt: copy.about.portraitAlt,
+                alt: t.copy.about.portraitAlt,
                 ratio: "aspect-[4/5]",
               }
             }

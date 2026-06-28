@@ -1,6 +1,7 @@
 import { Container } from "@/components/layout/container";
 import { HeroMedia } from "./hero-media";
-import { home } from "@/content/home";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale } from "@/lib/request-locale";
 import type { GalleryImage } from "@/types/gallery";
 
 /**
@@ -11,7 +12,7 @@ import type { GalleryImage } from "@/types/gallery";
  * `image` optional — a directed dark stand-in until a real opening frame lands.
  */
 export function HeroImmersive({ image }: { image?: GalleryImage }) {
-  const { hero } = home;
+  const { hero } = getDictionary(getRequestLocale()).home;
   const heroImage = image ?? hero.image;
 
   return (

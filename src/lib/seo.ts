@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import { site, siteHeadline } from "@/content/site";
-import { defaultLocale, localizedAlternates, ogLocale } from "@/lib/i18n";
+import { site } from "@/content/site";
+import { defaultLocale, localizedAlternates, ogLocale, type Locale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/dictionary";
+
+/** The localised home title / social headline: "<brand> · <localised descriptor>". */
+export function headlineFor(locale: Locale = defaultLocale): string {
+  return `${site.brand} · ${getDictionary(locale).copy.siteDescriptor}`;
+}
 
 // Per-page metadata builder. Next merges metadata shallowly and children inherit a
 // parent's `alternates`/`openGraph` wholesale — so canonical MUST be set per page
 // or every sub-page points at the home page. Page `title` is a plain string; the
 // root layout's title template appends the brand suffix.
 //
-// Locale-aware by construction (sprint task 4): canonical + hreflang come from the
-// i18n seam and the OpenGraph locale from `ogLocale`, so adding `/en` later needs
-// no change here. OpenGraph/Twitter images are supplied site-wide by the
-// `opengraph-image`/`twitter-image` file conventions in app/ and inherited by
-// every page, so they are not repeated per page.
+// Locale-aware by construction: canonical + hreflang come from the i18n seam and the
+// OpenGraph locale from `ogLocale`. Pass the page's `locale` so the canonical is the
+// localized path, the description falls back to the localized tagline, and og:locale
+// is correct. OpenGraph/Twitter images are supplied site-wide by the `opengraph-image`/
+// `twitter-image` file conventions in app/ and inherited by every page.
 
-/** Indexable paths in sitemap order; genre galleries are appended in sitemap.ts. */
+/** Indexable paths (canonical, FR-unprefixed) in sitemap order; genre galleries are
+ *  appended in sitemap.ts. Each is emitted once per active locale. */
 export const INDEXABLE_PATHS = [
   "/",
   "/galeries",
@@ -28,23 +35,26 @@ export function buildMetadata({
   title,
   description,
   path = "/",
+  locale = defaultLocale,
 }: {
   title?: string;
   description?: string;
   path?: string;
+  locale?: Locale;
 }): Metadata {
-  const desc = description ?? site.tagline;
-  const ogTitle = title ? `${title} · ${site.brand}` : siteHeadline;
+  const desc = description ?? getDictionary(locale).site.tagline;
+  const ogTitle = title ? `${title} · ${site.brand}` : headlineFor(locale);
+  const alternates = localizedAlternates(path, locale);
   return {
     title,
     description: desc,
-    alternates: localizedAlternates(path),
+    alternates,
     openGraph: {
       title: ogTitle,
       description: desc,
-      url: path,
+      url: alternates.canonical,
       siteName: site.brand,
-      locale: ogLocale[defaultLocale],
+      locale: ogLocale[locale],
       type: "website",
     },
     twitter: {

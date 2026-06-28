@@ -1,11 +1,12 @@
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
-import { home } from "@/content/home";
+import { getDictionary } from "@/lib/dictionary";
+import { getRequestLocale } from "@/lib/request-locale";
 
 /** Section 4 — how a session feels, as four calm steps (ease the nerves). */
 export function ExperienceSteps() {
-  const { experience } = home;
+  const { experience } = getDictionary(getRequestLocale()).home;
 
   return (
     <section className="bg-sand py-10 sm:py-16">

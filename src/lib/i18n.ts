@@ -22,7 +22,7 @@ export const defaultLocale: Locale = "fr";
  * translated and its route tree exists — advertising hreflang for a locale that 404s
  * is an SEO liability. Add "en" here to go live with English.
  */
-export const activeLocales: readonly Locale[] = ["fr"];
+export const activeLocales: readonly Locale[] = ["fr", "en"];
 
 /** Endonyms for the language switcher. */
 export const localeNames: Record<Locale, string> = {

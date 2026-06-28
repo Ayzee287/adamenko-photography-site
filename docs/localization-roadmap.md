@@ -1,8 +1,20 @@
 # Localization Roadmap
 
-**Date:** 2026-06-20 · **Updated:** 2026-06-24
-**Status:** Architecture **implemented**; translations **prepared as drafts, not activated** (by design).
-**Locale plan:** French (canonical, live) → English → Russian → Ukrainian.
+**Date:** 2026-06-20 · **Updated:** 2026-06-28
+**Status:** **English ACTIVATED 2026-06-28** — French (canonical, `/`) + English (`/en`) both live in production. Russian/Ukrainian remain prepared drafts (not activated).
+**Locale plan:** French (canonical, live) → **English (live)** → Russian → Ukrainian.
+
+> **Update 2026-06-28 — English is live.** The activation below (Steps 0–6) was executed:
+> the content literals were widened (`Widen<typeof fr>` in `dictionaries/fr.ts`), the full
+> English dictionary was written (`dictionaries/en.ts` — a complete human translation, not the
+> stale draft, which has been removed), the **`app/[lang]` route tree + `middleware.ts`** were
+> added (French served unprefixed at `/` via an internal rewrite; English at `/en`; `/fr/*`
+> redirects to `/*`), every server component reads the **request locale** (`lib/request-locale`)
+> and every client island receives resolved strings as props, and **`activeLocales = ["fr","en"]`**.
+> Verified: `<html lang>`, per-locale title/description/canonical/hreflang(fr/en/x-default)/OG/
+> Twitter/JSON-LD, the sitemap (both locales + hreflang), the language switcher, and locale-prefixed
+> internal links all localise. **To add Russian/Ukrainian next: translate `dictionaries/{ru,uk}.ts`
+> and add the locale to `activeLocales` — no further structural change is required.**
 
 The system is built so that **adding a language is a content + config change, not an architecture change.** No runtime/automatic translation is used anywhere — human translations only.
 

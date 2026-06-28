@@ -10,6 +10,7 @@ import { ImageFigure } from "@/components/ui/image-figure";
 import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 import type { GalleryImage } from "@/types/gallery";
+import type { GalleryStrings } from "./lightbox";
 
 /**
  * The homepage reel — an **endless exhibition wall** (v4). Framed prints (directed
@@ -30,7 +31,13 @@ import type { GalleryImage } from "@/types/gallery";
  * The visitor sets the pace; nothing moves on its own. Reduced-motion drops the
  * inertia and uses instant jumps.
  */
-export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
+export function HorizontalGallery({
+  images,
+  t,
+}: {
+  images: readonly GalleryImage[];
+  t: GalleryStrings;
+}) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const reduced = usePrefersReducedMotion();
 
@@ -202,7 +209,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
       <div
         ref={scrollerRef}
         role="region"
-        aria-label="Aperçu des galeries : faites glisser, faites défiler ou utilisez les flèches pour explorer"
+        aria-label={t.reel}
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -231,7 +238,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
       <button
         type="button"
         onClick={() => nudge(-1)}
-        aria-label="Image précédente"
+        aria-label={t.prevImage}
         className="reel-arrow absolute left-2 top-1/2 z-10 -translate-y-1/2 text-ink sm:left-4"
       >
         <Chevron dir="left" />
@@ -239,7 +246,7 @@ export function HorizontalGallery({ images }: { images: GalleryImage[] }) {
       <button
         type="button"
         onClick={() => nudge(1)}
-        aria-label="Image suivante"
+        aria-label={t.nextImage}
         className="reel-arrow absolute right-2 top-1/2 z-10 -translate-y-1/2 text-ink sm:right-4"
       >
         <Chevron dir="right" />

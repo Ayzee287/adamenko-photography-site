@@ -18,10 +18,13 @@ import { contactChannels } from "@/content/contact-channels";
 import { testimonials } from "@/content/testimonials";
 import { photographer } from "@/content/photographer";
 import { mentionsLegales, confidentialite } from "@/content/legal";
+import { ui } from "@/content/ui";
+import { galleries, featured } from "@/content/galleries";
 
 export const fr = {
   site,
   copy,
+  ui,
   home,
   pricing,
   services,
@@ -30,8 +33,29 @@ export const fr = {
   contactChannels,
   testimonials,
   photographer,
+  galleries,
+  featured,
   legal: { mentionsLegales, confidentialite },
 } as const;
 
-/** The shape every locale must follow. */
-export type Dictionary = typeof fr;
+// Activation Step 0 (docs/localization-roadmap.md): the content modules are `as const`,
+// so `typeof fr` pins every string to its French LITERAL — a translation override could
+// never be assignable. `Widen` relaxes those literals to their base types (string /
+// number / …) while preserving the structure (and `readonly`, via the homomorphic
+// mapped type), so a locale dictionary can carry real translations. This is a pure TYPE
+// change: the French modules and runtime are untouched, and `fr` is still assignable to
+// `Dictionary` (literals → their widened bases; tuples → readonly arrays).
+type Widen<T> = T extends string
+  ? string
+  : T extends number
+    ? number
+    : T extends boolean
+      ? boolean
+      : T extends readonly (infer U)[]
+        ? readonly Widen<U>[]
+        : T extends object
+          ? { [K in keyof T]: Widen<T[K]> }
+          : T;
+
+/** The shape every locale must follow (structure of `fr`, with widened string types). */
+export type Dictionary = Widen<typeof fr>;

@@ -22,9 +22,11 @@ import { cn } from "@/lib/utils";
 export function LanguageSwitcher({
   onDark = false,
   className,
+  label = "Language",
 }: {
   onDark?: boolean;
   className?: string;
+  label?: string;
 }) {
   const pathname = usePathname() || "/";
 
@@ -37,7 +39,7 @@ export function LanguageSwitcher({
   return (
     <div
       role="group"
-      aria-label="Choix de la langue"
+      aria-label={label}
       className={cn("flex items-center gap-2 text-sm", className)}
     >
       {activeLocales.map((locale, i) => {
