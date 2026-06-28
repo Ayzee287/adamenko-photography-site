@@ -61,7 +61,7 @@ export default async function GaleriesPage({
                     priority={i === 0}
                     sizes="(min-width:640px) 50vw, 100vw"
                   />
-                  <h2 className="mt-5 font-serif text-2xl text-ink transition-colors duration-300 group-hover:text-clay">
+                  <h2 className="mt-5 font-serif text-2xl text-ink transition-colors duration-300 ease-[var(--ease-settle)] group-hover:text-clay">
                     {g.title}
                   </h2>
                   <p className="mt-2 max-w-md text-pretty text-sm text-muted">
