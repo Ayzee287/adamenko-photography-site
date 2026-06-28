@@ -59,6 +59,12 @@ export const copy = {
     // The bio + portrait render from the photographer identity model
     // (content/photographer.ts); only the page title + portrait alt come from here.
     portraitAlt: "Portrait de la photographe",
+    // Quiet secondary CTA after the bio — closes the trust→inquiry loop at peak
+    // intent (A1). Person-specific meta description distilled from the approved bio,
+    // never freshly authored (A5).
+    cta: "Travaillons ensemble",
+    metaDescription:
+      "Irina Adamenko, photographe de famille à Lyon. Une approche documentaire, des images douces et sincères, en France comme ailleurs en Europe.",
   },
   services: {
     eyebrow: "Travailler ensemble",

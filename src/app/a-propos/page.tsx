@@ -2,13 +2,20 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ImageFigure } from "@/components/ui/image-figure";
+import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "@/components/motion/reveal";
 import { copy } from "@/content/site";
 import { photographer } from "@/content/photographer";
 import { buildMetadata } from "@/lib/seo";
 
+// Name-as-H1 (A4): "À propos" is a navigation label, not a page subject — the
+// photographer's name is the page's strongest ranking + branding signal, so it is
+// the H1 and "À propos" is demoted to the eyebrow (the nav label is unaffected).
+// The page title keeps "À propos" for wayfinding AND carries the name for the SERP.
+// Description is person-specific, not the inherited site tagline (A5).
 export const metadata: Metadata = buildMetadata({
-  title: copy.about.title,
+  title: `${copy.about.title} — ${photographer.name}`,
+  description: copy.about.metaDescription,
   path: "/a-propos",
 });
 
@@ -19,7 +26,7 @@ export default function AProposPage() {
   return (
     <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
       <Reveal>
-        <PageHeader eyebrow={photographer.location.label} title={copy.about.title} />
+        <PageHeader eyebrow={copy.about.title} title={photographer.name} />
       </Reveal>
 
       <div className="mt-10 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-24">
@@ -41,6 +48,11 @@ export default function AProposPage() {
             ))}
           </ul>
           <p className="mt-6 text-sm text-muted">{photographer.availability.note}</p>
+          {/* One quiet forward step at peak trust — secondary, not a loud pill, to
+              stay on the page's calm register (A1). */}
+          <ButtonLink href="/contact" variant="secondary" className="mt-8">
+            {copy.about.cta}
+          </ButtonLink>
         </Reveal>
 
         <Reveal delay={120} className="order-1 lg:order-2">
