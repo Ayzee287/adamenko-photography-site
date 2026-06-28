@@ -17,8 +17,9 @@ type ParallaxProps = {
 /**
  * Drift: translates its children slightly against the scroll for depth.
  * Subscribes to the single shared scroll source (lib/scroll) and writes only a
- * `transform` (compositor-only — no reflow, no CLS). Off under reduced motion
- * and inert without JS. Callers disable it on small viewports via `speed={0}`.
+ * `transform` (compositor-only — no reflow, no CLS). Off under reduced motion,
+ * off below the `lg` breakpoint (motion policy: parallax is a desktop-only depth
+ * cue — F11/PERF1), and inert without JS. `speed={0}` also disables it.
  */
 export function Parallax({ children, speed = 0.1, max = 28, className }: ParallaxProps) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -37,9 +38,25 @@ export function Parallax({ children, speed = 0.1, max = 28, className }: Paralla
       el.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
     };
 
-    const unsub = subscribeScroll(update);
+    // Desktop-only: subscribe to the scroll source only at ≥lg, clear the transform
+    // below it, and re-evaluate when the viewport crosses the breakpoint.
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    let unsub: (() => void) | null = null;
+    const sync = () => {
+      if (desktop.matches && !unsub) {
+        unsub = subscribeScroll(update);
+      } else if (!desktop.matches && unsub) {
+        unsub();
+        unsub = null;
+        el.style.transform = "";
+      }
+    };
+
+    sync();
+    desktop.addEventListener("change", sync);
     return () => {
-      unsub();
+      desktop.removeEventListener("change", sync);
+      if (unsub) unsub();
       el.style.transform = "";
     };
   }, [reduced, speed, max]);
