@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { isBot, validateContact, type ContactInput } from "@/lib/contact";
 import { getEmailConfig } from "@/lib/email/config";
-import { buildContactEmail } from "@/lib/email/templates";
-import { sendContactEmail } from "@/lib/email/send";
+import { buildOwnerNotification, buildVisitorConfirmation } from "@/lib/email/templates";
+import { sendEmail } from "@/lib/email/send";
 import { createLogger } from "@/lib/log";
 
 // Contact delivery endpoint. Production-ready and dependency-free: it posts to the
@@ -10,7 +10,7 @@ import { createLogger } from "@/lib/log";
 // build time. The pieces are split into testable modules:
 //   • lib/contact      — shared validation + honeypot (client & server agree)
 //   • lib/email/config — request-time env validation (safe when unconfigured)
-//   • lib/email/templates — HTML + plain-text body, with sanitization
+//   • lib/email/templates — owner notification + visitor confirmation (HTML + text)
 //   • lib/email/send   — the single Resend call (returns a result, never throws)
 //   • lib/log          — structured JSON logging (no PII)
 //
@@ -19,11 +19,14 @@ import { createLogger } from "@/lib/log";
 //   2. honeypot                   → pretend success, send nothing (don't tip bots)
 //   3. server-side validation     → 422 + the offending field names
 //   4. config check (env present) → 503 if the inbox isn't wired yet
-//   5. send via Resend            → 502 if the provider rejects / is unreachable
-//   6. ok                         → 200 { ok: true }
+//   5. send OWNER notification    → 502 if the provider rejects / is unreachable
+//   6. send VISITOR confirmation  → best-effort, only after (5) succeeds; a failure
+//                                   here is logged but never fails the submission
+//   7. ok                         → 200 { ok: true }
 //
-// Required env (see .env.example): RESEND_API_KEY, CONTACT_TO_EMAIL,
-// CONTACT_FROM_EMAIL (the FROM must be on a Resend-verified domain).
+// `from` is always the branded CONTACT_FROM_EMAIL; Reply-To differs per message:
+//   - owner notification → Reply-To = the visitor (the photographer replies to them)
+//   - visitor confirmation → Reply-To = the owner inbox (their reply reaches her)
 
 export const runtime = "nodejs";
 
@@ -51,6 +54,7 @@ export async function POST(req: Request) {
       { status: 422 },
     );
   }
+  const { data } = result;
 
   const config = getEmailConfig();
   if (!config.ok) {
@@ -61,20 +65,41 @@ export async function POST(req: Request) {
   }
   // Non-fatal: surface placeholder/temporary-sender misconfiguration in the logs.
   if (config.warnings.length) log.warn("config_warning", { warnings: config.warnings });
+  const cfg = config.config;
 
-  const email = buildContactEmail(result.data);
-  const sent = await sendContactEmail(config.config, email);
-
-  if (!sent.ok) {
+  // 5 · Owner notification — the inquiry itself. Reply-To = visitor, so the
+  //     photographer's "Reply" goes straight back to them. This is the success gate.
+  const ownerSent = await sendEmail(cfg, {
+    to: cfg.to,
+    replyTo: data.email,
+    ...buildOwnerNotification(data),
+  });
+  if (!ownerSent.ok) {
     log.error("delivery_failed", {
-      reason: sent.reason,
-      status: sent.status,
-      detail: sent.detail,
+      reason: ownerSent.reason,
+      status: ownerSent.status,
+      detail: ownerSent.detail,
     });
     return NextResponse.json({ ok: false, error: "delivery" }, { status: 502 });
   }
+  log.info("delivered", { occasion: data.occasion, id: ownerSent.id });
 
-  // Metadata only — never the visitor's name, e-mail, or message body.
-  log.info("delivered", { occasion: result.data.occasion, id: sent.id });
+  // 6 · Visitor confirmation — best-effort, ONLY now that the inquiry is delivered.
+  //     Reply-To = the owner inbox. A failure here must NOT fail the submission: the
+  //     photographer already has the inquiry, so the visitor still sees success.
+  const confirmation = await sendEmail(cfg, {
+    to: data.email,
+    replyTo: cfg.to,
+    ...buildVisitorConfirmation(data),
+  });
+  if (confirmation.ok) {
+    log.info("confirmation_sent", { id: confirmation.id });
+  } else {
+    log.warn("confirmation_failed", {
+      reason: confirmation.reason,
+      status: confirmation.status,
+    });
+  }
+
   return NextResponse.json({ ok: true });
 }

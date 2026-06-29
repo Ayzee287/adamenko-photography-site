@@ -1,10 +1,23 @@
 import { RESEND_ENDPOINT, type EmailConfig } from "@/lib/email/config";
-import type { ContactEmail } from "@/lib/email/templates";
 
 // The one network call to Resend. Pure and dependency-free: it POSTs to the REST API
 // with `fetch` (no SDK, nothing at build time) and returns a discriminated result so
-// the route decides the HTTP status + logs. It deliberately does no logging itself,
+// the caller decides the HTTP status + logs. It deliberately does no logging itself,
 // and never throws — a network failure is returned as `{ ok: false, reason }`.
+//
+// `from` is ALWAYS the branded `CONTACT_FROM_EMAIL` (config.from); only `to` and
+// `replyTo` vary per message, so the same transport sends both the owner notification
+// (Reply-To = visitor) and the visitor confirmation (Reply-To = owner inbox).
+
+export type OutgoingEmail = {
+  /** Recipient address. */
+  to: string;
+  /** Reply-To address — where a reply to this message should go. */
+  replyTo: string;
+  subject: string;
+  text: string;
+  html: string;
+};
 
 export type SendResult =
   | { ok: true; id?: string }
@@ -18,10 +31,10 @@ export type SendResult =
       detail?: string;
     };
 
-/** Deliver one inquiry email via Resend. Returns a result; never throws. */
-export async function sendContactEmail(
+/** Deliver one email via Resend. Returns a result; never throws. */
+export async function sendEmail(
   config: EmailConfig,
-  email: ContactEmail,
+  message: OutgoingEmail,
 ): Promise<SendResult> {
   let res: Response;
   try {
@@ -33,11 +46,11 @@ export async function sendContactEmail(
       },
       body: JSON.stringify({
         from: config.from,
-        to: [config.to],
-        reply_to: email.replyTo,
-        subject: email.subject,
-        text: email.text,
-        html: email.html,
+        to: [message.to],
+        reply_to: message.replyTo,
+        subject: message.subject,
+        text: message.text,
+        html: message.html,
       }),
     });
   } catch (err) {
