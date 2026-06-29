@@ -12,6 +12,12 @@ item below is ✅ done and verified. The remaining open items are **external ope
 (accounts, the Vercel import, environment variables, and post-deploy verification) — none of them
 are code.
 
+**Update (2026-06-29): LIVE.** Domain purchased + connected (`adamenko-photography.com`, serving on
+`www`); **Resend integration complete** (domain verified EU/Ireland, SPF+DKIM pass), env vars set,
+deployed. Contact form delivers in production (real `200` send) and now sends **two** emails — the
+owner notification **and** a visitor auto-reply confirmation. See
+[`email-architecture.md`](./email-architecture.md).
+
 ---
 
 ## How the launch gate breaks down
@@ -20,7 +26,7 @@ are code.
 |---|---|---|
 | **Engineering** | ✅ Complete + verified (see §1) | — |
 | **Infrastructure** | 🔴 Pending — Vercel import + env vars (§2) | Operator |
-| **Operations** | 🔴 Pending — Resend account + verified sending domain (§3) | Operator |
+| **Operations** | ✅ Done (2026-06-29) — Resend account + verified sending domain; delivery live | Operator |
 | **Content** | 🟠 Mostly done; owner confirmations remain (§4) | Owner |
 | **Post-deploy verification** | 🔬 Pending — runs against the live deploy (§5) | Operator/Owner |
 

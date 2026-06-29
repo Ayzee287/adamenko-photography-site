@@ -4,27 +4,37 @@ The contact form's delivery pipeline, and the **complete** steps to switch it on
 production domain is purchased. The engineering is finished; everything below the
 "Architecture" section is operator configuration — **no code change is required**.
 
-> **Current state:** code-complete and production-ready. With no mail credentials set,
-> `/api/contact` returns **503** and the form shows its graceful email/Instagram fallback —
-> the site stays fully usable. Setting three environment variables activates delivery.
+> **Current state (2026-06-29): LIVE in production.** Resend domain `adamenko-photography.com`
+> verified (EU/Ireland, SPF+DKIM pass), env vars set in Vercel, deployed. A real production
+> submission returns `200` and delivers both the owner notification and the visitor confirmation.
+> (With no mail credentials, `/api/contact` would return **503** and the form shows its graceful
+> email/Instagram fallback — the site stays usable either way.)
 
 ---
 
 ## Architecture
 
 A visitor submits the form → the client posts JSON to `/api/contact` → the route validates,
-screens the honeypot, builds the email, and delivers it through the **Resend REST API**
-(`fetch`, no SDK, nothing at build time). The photographer receives the inquiry and can
-**reply directly** (Reply-To is the visitor's address).
+screens the honeypot, then sends **two** emails through the **Resend REST API** (`fetch`, no SDK,
+nothing at build time):
+
+1. **Owner notification** → the photographer's inbox. `From` = branded sender,
+   **Reply-To = the visitor**, so her "Reply" goes straight back to them. This send is the
+   success gate.
+2. **Visitor confirmation** → the visitor — a courteous auto-reply, sent **only after** the owner
+   notification succeeds, and **best-effort**: if it fails the submission still succeeds (the
+   inquiry is already delivered). `From` = branded sender, **Reply-To = the owner inbox**, so the
+   visitor's reply reaches her.
 
 ```
 contact-form.tsx ──POST /api/contact──▶ route.ts
-                                          │  1. parse JSON            → 400 malformed
-                                          │  2. honeypot (isBot)      → 200, send nothing
-                                          │  3. validateContact       → 422 + field names
-                                          │  4. getEmailConfig        → 503 if env missing
-                                          │  5. sendContactEmail      → 502 if Resend fails
-                                          └▶ 200 { ok: true }  ──▶ Resend ──▶ inbox
+                                          │  1. parse JSON              → 400 malformed
+                                          │  2. honeypot (isBot)        → 200, send nothing
+                                          │  3. validateContact         → 422 + field names
+                                          │  4. getEmailConfig          → 503 if env missing
+                                          │  5. send OWNER notification  → 502 if Resend fails  (gate)
+                                          │  6. send VISITOR confirmation→ best-effort (logged, never fails 200)
+                                          └▶ 200 { ok: true }
 ```
 
 ### Modules
@@ -33,20 +43,24 @@ contact-form.tsx ──POST /api/contact──▶ route.ts
 |---|---|
 | [`src/lib/contact.ts`](../src/lib/contact.ts) | Shared validation + honeypot. The **same** module is imported by the client form and the server route, so the select options and the server enum can never drift. |
 | [`src/lib/email/config.ts`](../src/lib/email/config.ts) | Reads + validates the three env vars **at request time** (never at build). Returns `missing` names when incomplete and non-fatal `warnings` for placeholder / `resend.dev` senders. |
-| [`src/lib/email/templates.ts`](../src/lib/email/templates.ts) | Builds the subject, **plain-text + HTML** body, and Reply-To. Escapes all HTML and strips control chars from header-bound values (header-injection defence). |
-| [`src/lib/email/send.ts`](../src/lib/email/send.ts) | The one Resend `fetch`. Returns a discriminated result (`provider` / `network` failure); never throws. |
+| [`src/lib/email/templates.ts`](../src/lib/email/templates.ts) | `buildOwnerNotification` + `buildVisitorConfirmation`, both rendered through one shared `renderShell` (same editorial layout). Each returns subject + **plain-text + HTML**. Escapes all HTML and strips control chars from the subject (header-injection defence). |
+| [`src/lib/email/send.ts`](../src/lib/email/send.ts) | `sendEmail(config, { to, replyTo, subject, text, html })` — the one Resend `fetch`; `from` is always the branded sender. Returns a discriminated result (`provider` / `network`); never throws. |
 | [`src/lib/log.ts`](../src/lib/log.ts) | Structured JSON logging (one object per line). **No PII** — only counts, enums, and provider status codes. |
-| [`src/app/api/contact/route.ts`](../src/app/api/contact/route.ts) | Composes the above into the HTTP pipeline. `runtime = "nodejs"`. |
+| [`src/app/api/contact/route.ts`](../src/app/api/contact/route.ts) | Composes the above; orchestrates the two sends with the gate/best-effort semantics. `runtime = "nodejs"`. |
 
 ### Status codes (and what the form does)
 
 | Code | Meaning | Form behaviour |
 |---|---|---|
-| `200` | Delivered (or honeypot silently dropped) | Success confirmation replaces the form |
+| `200` | **Owner notification delivered** (or honeypot silently dropped). Visitor confirmation is best-effort and does not affect this. | Success confirmation replaces the form |
 | `400` | Malformed JSON body | Generic transient error + fallback link |
 | `422` | Validation failed | Inline per-field errors; focus the first invalid field |
 | `503` | Email **not configured** (env missing) | Graceful error + email/Instagram fallback |
-| `502` | Resend rejected or was unreachable | Generic transient error + fallback link |
+| `502` | Resend rejected/unreachable on the **owner** notification | Generic transient error + fallback link |
+
+Log events: `delivered` (owner ok), `confirmation_sent` / `confirmation_failed` (visitor, the latter
+a `warn` that never fails the request), `honeypot_drop`, `unconfigured`, `config_warning`,
+`delivery_failed`.
 
 ### Security / abuse properties
 
@@ -54,7 +68,7 @@ contact-form.tsx ──POST /api/contact──▶ route.ts
 - **Server-side validation** is the source of truth (the browser's `required`/`type=email` is a first pass only).
 - **HTML escaping** on every interpolated value; **control-char stripping** on the subject.
 - **No secret ever reaches the client** — the API key lives only in server env; the bundle imports none of the email modules.
-- **Reply-To** = the visitor, so the photographer replies from her own inbox.
+- **Reply-To** is intentional per message: owner notification → the **visitor**; visitor confirmation → the **owner inbox**. `From` is always the branded `CONTACT_FROM_EMAIL`.
 - Logs carry **no visitor PII** (name/email/message are never logged).
 
 ---
