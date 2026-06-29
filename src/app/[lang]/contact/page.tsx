@@ -59,6 +59,7 @@ export default async function ContactPage({
           <ContactForm
             t={c.form}
             occasions={occasions}
+            locale={locale}
             fallbackEmail={email}
             instagramHref={instagram}
             instagramLabel={t.ui.nav.instagram}

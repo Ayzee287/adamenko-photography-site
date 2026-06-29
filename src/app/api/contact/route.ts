@@ -87,10 +87,12 @@ export async function POST(req: Request) {
   // 6 · Visitor confirmation — best-effort, ONLY now that the inquiry is delivered.
   //     Reply-To = the owner inbox. A failure here must NOT fail the submission: the
   //     photographer already has the inquiry, so the visitor still sees success.
+  //     Localised to the site the form was submitted from ("en" → English, else French).
+  const confirmationLocale = body.locale === "en" ? "en" : "fr";
   const confirmation = await sendEmail(cfg, {
     to: data.email,
     replyTo: cfg.to,
-    ...buildVisitorConfirmation(data),
+    ...buildVisitorConfirmation(data, confirmationLocale),
   });
   if (confirmation.ok) {
     log.info("confirmation_sent", { id: confirmation.id });

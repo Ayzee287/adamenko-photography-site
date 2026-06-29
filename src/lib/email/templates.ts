@@ -70,14 +70,20 @@ function renderShell(opts: {
   intro?: string;
   content: string;
   footerNote?: string;
+  /** Document language for `<html lang>`. Defaults to French (owner notification). */
+  lang?: "fr" | "en";
+  /** Footer brand-line tail. Defaults to the French tagline (owner notification). */
+  brandTagline?: string;
 }): string {
   const intro = opts.intro
     ? `<p style="margin:8px 0 0;font-size:13px;color:${COLOR.muted};">${opts.intro}</p>`
     : "";
   const footerNote = opts.footerNote ? `<br>${opts.footerNote}` : "";
+  const lang = opts.lang ?? "fr";
+  const brandTagline = opts.brandTagline ?? BRAND_TAGLINE;
 
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${lang}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -103,7 +109,7 @@ function renderShell(opts: {
               <td style="padding:30px 36px 34px;">
                 <hr style="border:none;border-top:1px solid ${COLOR.line};margin:0 0 14px;">
                 <p style="margin:0;font-size:12px;line-height:1.6;color:${COLOR.muted};">
-                  ${BRAND} · ${BRAND_TAGLINE}${footerNote}
+                  ${BRAND} · ${brandTagline}${footerNote}
                 </p>
               </td>
             </tr>
@@ -191,54 +197,106 @@ export function buildOwnerNotification(data: ValidContact): EmailContent {
 
 // ── Visitor confirmation ──────────────────────────────────────────────────────
 
+/** Locales with a hand-written (never machine-translated) visitor confirmation. */
+export type ConfirmationLocale = "fr" | "en";
+
+// Native copy per locale. Layout, spacing, typography and branding are identical
+// (shared `renderShell`); only the words, the `<html lang>`, and the footer tagline
+// differ. Each locale is authored by hand — no automatic translation. The owner
+// notification is unaffected (always French).
+const VISITOR_CONFIRMATION: Record<
+  ConfirmationLocale,
+  {
+    subject: string;
+    heading: string;
+    preheader: string;
+    /** Greeting line, given the visitor's (sanitised) name. */
+    greeting: (name: string) => string;
+    /** Static body paragraphs, in order. */
+    body: readonly string[];
+    signoff: string;
+    signature: string;
+    /** Localised footer brand-line tail. */
+    brandTagline: string;
+    footerNote: string;
+  }
+> = {
+  fr: {
+    subject: "Merci, votre message est bien arrivé",
+    heading: "Merci pour votre message",
+    preheader: "Merci pour votre message. Je l'ai bien reçu.",
+    greeting: (name) => `Bonjour ${name},`,
+    body: [
+      "Merci pour votre message. Je l'ai bien reçu.",
+      "Je prendrai le temps de le lire et je vous répondrai dès que possible.",
+      "Si vous souhaitez ajouter une précision concernant votre séance, vous pouvez simplement répondre à cet e-mail.",
+    ],
+    signoff: "À bientôt,",
+    signature: "Irina",
+    brandTagline: BRAND_TAGLINE,
+    footerNote: "Vous recevez cet e-mail car vous avez utilisé le formulaire de contact du site.",
+  },
+  en: {
+    subject: "Thank you for your message",
+    heading: "Thank you for your message",
+    preheader: "Thank you for your message. I have received it.",
+    greeting: (name) => `Hello ${name},`,
+    body: [
+      "Thank you for your message. I have received it.",
+      "I'll get back to you as soon as I can.",
+      "If you'd like to add any details about your session, simply reply to this email.",
+    ],
+    signoff: "Best regards,",
+    signature: "Irina",
+    brandTagline: "Family photographer in Lyon",
+    footerNote:
+      "You are receiving this email because you submitted the contact form on the website.",
+  },
+};
+
 /**
  * The courteous auto-reply the visitor receives after the owner notification has
  * been delivered. Reply-To (set by the route) is the owner inbox, so a reply to this
- * message reaches the photographer. First-person, in the site's warm voice.
+ * message reaches the photographer. Copy is the native, hand-written text for the
+ * locale the form was submitted from (never machine-translated); defaults to French.
  */
-export function buildVisitorConfirmation(data: ValidContact): EmailContent {
+export function buildVisitorConfirmation(
+  data: ValidContact,
+  locale: ConfirmationLocale = "fr",
+): EmailContent {
+  const t = VISITOR_CONFIRMATION[locale] ?? VISITOR_CONFIRMATION.fr;
   const name = sanitizeHeader(data.name);
 
-  const subject = "Merci, votre message est bien arrivé";
-
-  const text = [
-    `Bonjour ${name},`,
-    "",
-    "Merci pour votre message. Je l'ai bien reçu.",
-    "",
-    "Je prendrai le temps de le lire et je vous répondrai dès que possible.",
-    "",
-    "Si vous souhaitez ajouter une précision concernant votre séance, vous pouvez simplement répondre à cet e-mail.",
-    "",
-    "À bientôt,",
-    "Irina",
-    "",
-    `${BRAND} · ${BRAND_TAGLINE}`,
-    "Vous recevez cet e-mail car vous avez utilisé le formulaire de contact du site.",
-  ].join("\n");
+  const lines: string[] = [t.greeting(name), ""];
+  for (const p of t.body) lines.push(p, "");
+  lines.push(t.signoff, t.signature, "", `${BRAND} · ${t.brandTagline}`, t.footerNote);
+  const text = lines.join("\n");
 
   const eName = escapeHtml(name);
   const paragraph = (html: string) =>
     `<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:${COLOR.ink};">${html}</p>`;
 
+  // Static body copy carries no HTML-special characters; only the visitor name is escaped.
+  const bodyHtml = t.body.map((p) => paragraph(p)).join("\n                ");
+
   const content = `
             <tr>
               <td style="padding:24px 36px 0;">
                 <hr style="border:none;border-top:1px solid ${COLOR.line};margin:0 0 22px;">
-                ${paragraph(`Bonjour ${eName},`)}
-                ${paragraph("Merci pour votre message. Je l'ai bien reçu.")}
-                ${paragraph("Je prendrai le temps de le lire et je vous répondrai dès que possible.")}
-                ${paragraph("Si vous souhaitez ajouter une précision concernant votre séance, vous pouvez simplement répondre à cet e-mail.")}
-                <p style="margin:6px 0 0;font-size:15px;line-height:1.7;color:${COLOR.ink};">À bientôt,<br><span style="font-family:${SERIF};font-size:17px;">Irina</span></p>
+                ${paragraph(t.greeting(eName))}
+                ${bodyHtml}
+                <p style="margin:6px 0 0;font-size:15px;line-height:1.7;color:${COLOR.ink};">${t.signoff}<br><span style="font-family:${SERIF};font-size:17px;">${t.signature}</span></p>
               </td>
             </tr>`;
 
   const html = renderShell({
-    preheader: "Merci pour votre message. Je l'ai bien reçu.",
-    heading: "Merci pour votre message",
+    lang: locale,
+    preheader: t.preheader,
+    heading: t.heading,
     content,
-    footerNote: "Vous recevez cet e-mail car vous avez utilisé le formulaire de contact du site.",
+    footerNote: t.footerNote,
+    brandTagline: t.brandTagline,
   });
 
-  return { subject, text, html };
+  return { subject: t.subject, text, html };
 }

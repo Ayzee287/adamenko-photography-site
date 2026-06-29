@@ -20,6 +20,8 @@ export type ContactInput = {
   message?: string;
   /** Honeypot — must be empty for a human submission. */
   company?: string;
+  /** Locale the form was submitted from ("fr" | "en"); selects the confirmation language. */
+  locale?: string;
 };
 
 export type ValidContact = {

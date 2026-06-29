@@ -12,6 +12,8 @@ export type ContactFormProps = {
   t: FormStrings;
   /** Display label + canonical (French) value submitted to the server enum. */
   occasions: readonly { value: string; label: string }[];
+  /** Locale the form is rendered in — submitted so the confirmation email matches. */
+  locale: string;
   fallbackEmail: string;
   instagramHref: string;
   instagramLabel: string;
@@ -31,6 +33,7 @@ type Status = "idle" | "sending" | "success" | "error";
 export function ContactForm({
   t,
   occasions,
+  locale,
   fallbackEmail,
   instagramHref,
   instagramLabel,
@@ -58,6 +61,7 @@ export function ContactForm({
       occasion: String(fd.get("occasion") ?? ""),
       message: String(fd.get("message") ?? ""),
       company: String(fd.get("company") ?? ""), // honeypot
+      locale, // selects the confirmation-email language
     };
 
     setStatus("sending");
