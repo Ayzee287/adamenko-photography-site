@@ -204,13 +204,17 @@ export function buildVisitorConfirmation(data: ValidContact): EmailContent {
   const text = [
     `Bonjour ${name},`,
     "",
-    "Merci pour votre message — il est bien arrivé. Je le lis avec attention et je reviens vers vous dès que possible, en général sous quelques jours.",
+    "Merci pour votre message. Je l'ai bien reçu.",
     "",
-    "Si vous avez oublié un détail — une date, un lieu, ce que vous imaginez pour votre séance —, répondez simplement à cet e-mail : votre réponse me parviendra directement.",
+    "Je prendrai le temps de le lire et je vous répondrai dès que possible.",
     "",
-    "À très bientôt,",
+    "Si vous souhaitez ajouter une précision concernant votre séance, vous pouvez simplement répondre à cet e-mail.",
+    "",
+    "À bientôt,",
     "Irina",
+    "",
     `${BRAND} · ${BRAND_TAGLINE}`,
+    "Vous recevez cet e-mail car vous avez utilisé le formulaire de contact du site.",
   ].join("\n");
 
   const eName = escapeHtml(name);
@@ -222,17 +226,18 @@ export function buildVisitorConfirmation(data: ValidContact): EmailContent {
               <td style="padding:24px 36px 0;">
                 <hr style="border:none;border-top:1px solid ${COLOR.line};margin:0 0 22px;">
                 ${paragraph(`Bonjour ${eName},`)}
-                ${paragraph("Merci pour votre message — il est bien arrivé. Je le lis avec attention et je reviens vers vous dès que possible, en général sous quelques jours.")}
-                ${paragraph("Si vous avez oublié un détail — une date, un lieu, ce que vous imaginez pour votre séance —, répondez simplement à cet e-mail&nbsp;: votre réponse me parviendra directement.")}
-                <p style="margin:6px 0 0;font-size:15px;line-height:1.7;color:${COLOR.ink};">À très bientôt,<br><span style="font-family:${SERIF};font-size:17px;">Irina</span></p>
+                ${paragraph("Merci pour votre message. Je l'ai bien reçu.")}
+                ${paragraph("Je prendrai le temps de le lire et je vous répondrai dès que possible.")}
+                ${paragraph("Si vous souhaitez ajouter une précision concernant votre séance, vous pouvez simplement répondre à cet e-mail.")}
+                <p style="margin:6px 0 0;font-size:15px;line-height:1.7;color:${COLOR.ink};">À bientôt,<br><span style="font-family:${SERIF};font-size:17px;">Irina</span></p>
               </td>
             </tr>`;
 
   const html = renderShell({
-    preheader: "Votre message est bien arrivé — je vous réponds très vite.",
+    preheader: "Merci pour votre message. Je l'ai bien reçu.",
     heading: "Merci pour votre message",
     content,
-    footerNote: "Vous recevez cet e-mail car vous avez écrit via le formulaire du site.",
+    footerNote: "Vous recevez cet e-mail car vous avez utilisé le formulaire de contact du site.",
   });
 
   return { subject, text, html };
