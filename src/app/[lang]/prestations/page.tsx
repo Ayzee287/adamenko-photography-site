@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Reveal } from "@/components/motion/reveal";
-import { ButtonLink } from "@/components/ui/button-link";
+import { ButtonLink, CtaText } from "@/components/ui/button-link";
 import { FinalCta } from "@/components/home/final-cta";
 import { buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/dictionary";
@@ -88,15 +88,9 @@ export default async function PrestationsPage({
                   <p className="mt-4 text-sm text-muted">{s.idealFor}</p>
                   <Link
                     href={localizedPath(locale, `/galeries/${s.slug}`)}
-                    className="group mt-5 inline-flex items-center gap-2 text-sm text-ink hover:text-clay"
+                    className="group mt-5 inline-block text-sm text-ink hover:text-clay"
                   >
-                    {/* Underline only the text — the arrow glyph stays un-underlined. */}
-                    <span className="underline decoration-clay underline-offset-4">
-                      {t.ui.gallery.viewGallery}
-                    </span>
-                    <span aria-hidden className="cta-arrow">
-                      →
-                    </span>
+                    <CtaText>{t.ui.gallery.viewGallery}</CtaText>
                   </Link>
                 </article>
               ))}

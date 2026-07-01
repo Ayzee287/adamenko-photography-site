@@ -11,6 +11,12 @@ type ImageFigureProps = {
   priority?: boolean;
   className?: string;
   /**
+   * Encode quality (1–100; must be listed in `images.qualities`). Defaults to 82 —
+   * a measured step above next/image's default 75 that recovers fine detail
+   * (skin, hair, fabric) on these AVIF/WebP re-encodes without inflating bytes.
+   */
+  quality?: number;
+  /**
    * For cards inside a `group`: a slow scale within the frame once a real photo
    * is present. The one sanctioned transform-transition (vault motion-concept);
    * everything else uses the global interaction clock.
@@ -55,6 +61,7 @@ export function ImageFigure({
   sizes,
   priority,
   className,
+  quality = 82,
   interactive,
 }: ImageFigureProps) {
   const ratio = image.ratio ?? "aspect-[4/5]";
@@ -80,6 +87,7 @@ export function ImageFigure({
             sizes ?? "(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
           }
           priority={priority}
+          quality={quality}
           placeholder={blur ? "blur" : undefined}
           blurDataURL={blur}
           className={cn(

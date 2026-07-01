@@ -16,7 +16,10 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
   const heroImage = image ?? hero.image;
 
   return (
-    <section className="dark-surface relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-paper">
+    <section
+      data-header-tone="dark"
+      className="dark-surface relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-paper"
+    >
       <HeroMedia image={heroImage} hint={hero.imageHint} />
 
       {/* Cinematic scrim — weighted at the bottom-left where the caption lives. */}

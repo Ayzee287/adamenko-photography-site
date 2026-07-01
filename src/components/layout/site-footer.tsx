@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { SocialLinks } from "@/components/layout/social-links";
 import { getDictionary } from "@/lib/dictionary";
 import { getRequestLocale, localeHref } from "@/lib/request-locale";
 
@@ -27,6 +28,16 @@ export function SiteFooter() {
             <p className="mt-3 max-w-xs text-pretty text-muted">
               {copy.footer.tagline}
             </p>
+            {/* Persistent social — elegant icons rather than a heavy text item, so
+                every page carries the channels without cluttering the chrome. */}
+            <SocialLinks
+              instagram={site.social.instagram}
+              facebook={site.social.facebook}
+              instagramLabel={ui.nav.instagram}
+              facebookLabel={ui.nav.facebook}
+              size={19}
+              className="mt-5"
+            />
           </div>
 
           <nav
@@ -42,14 +53,6 @@ export function SiteFooter() {
                 {item.label}
               </Link>
             ))}
-            <a
-              href={site.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-clay"
-            >
-              {copy.footer.instagram}
-            </a>
           </nav>
         </div>
 

@@ -129,6 +129,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
           alt={current.alt}
           width={current.width}
           height={current.height}
+          quality={85}
           sizes="(min-width:1024px) 80vw, 100vw"
           placeholder={blur ? "blur" : undefined}
           blurDataURL={blur}

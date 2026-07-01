@@ -17,7 +17,7 @@ export function FinalCta() {
   const f = t.home.finalCta;
 
   return (
-    <section className="dark-surface bg-ink text-paper">
+    <section data-header-tone="dark" className="dark-surface bg-ink text-paper">
       <Container className="py-16 sm:py-24">
         <Reveal variant="rise-slow">
           <div className="grid gap-10 lg:grid-cols-[7fr_4fr] lg:items-end lg:gap-24">

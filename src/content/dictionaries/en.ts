@@ -208,6 +208,7 @@ export const en: DeepPartial<Dictionary> = {
       menu: "Menu",
       language: "Language",
       instagram: "Instagram",
+      facebook: "Facebook",
     },
     gallery: {
       enlarge: "Enlarge",

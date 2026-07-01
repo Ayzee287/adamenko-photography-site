@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/layout/container";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { SocialLinks } from "@/components/layout/social-links";
 import { ButtonLink } from "@/components/ui/button-link";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { ChromeStrings } from "./site-header";
@@ -241,15 +242,14 @@ export function MobileMenu({
           {chrome.contactCta}
         </ButtonLink>
         <div className="mt-4 flex items-center justify-between">
-          <a
-            href={chrome.instagramHref}
-            target="_blank"
-            rel="noopener noreferrer"
+          <SocialLinks
+            instagram={chrome.instagramHref}
+            facebook={chrome.facebookHref}
+            instagramLabel={chrome.ui.nav.instagram}
+            facebookLabel={chrome.ui.nav.facebook}
+            size={20}
             onClick={onClose}
-            className="text-sm text-muted hover:text-clay"
-          >
-            {chrome.ui.nav.instagram}
-          </a>
+          />
           <LanguageSwitcher label={chrome.ui.nav.language} />
         </div>
       </Container>

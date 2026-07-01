@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { ImageFigure } from "@/components/ui/image-figure";
+import { CtaText } from "@/components/ui/button-link";
 import { Reveal } from "@/components/motion/reveal";
 import { buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/dictionary";
@@ -67,12 +68,9 @@ export default async function GaleriesPage({
                   <p className="mt-2 max-w-md text-pretty text-sm text-muted">
                     {g.intro}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-2 text-sm text-ink group-hover:text-clay">
+                  <CtaText className="mt-3 text-sm text-ink group-hover:text-clay">
                     {c.view}
-                    <span aria-hidden className="cta-arrow">
-                      →
-                    </span>
-                  </span>
+                  </CtaText>
                 </Link>
               </Reveal>
             </li>

@@ -95,6 +95,7 @@ export default async function LangLayout({
   const chrome = {
     brand: site.brand,
     instagramHref: site.social.instagram,
+    facebookHref: site.social.facebook,
     nav: dict.site.nav,
     ui: dict.ui,
     contactCta: dict.copy.home.contactCta,
