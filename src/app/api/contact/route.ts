@@ -3,6 +3,7 @@ import { isBot, validateContact, type ContactInput } from "@/lib/contact";
 import { getEmailConfig } from "@/lib/email/config";
 import { buildOwnerNotification, buildVisitorConfirmation } from "@/lib/email/templates";
 import { sendEmail } from "@/lib/email/send";
+import { clientKey, createFixedWindowLimiter } from "@/lib/rate-limit";
 import { createLogger } from "@/lib/log";
 
 // Contact delivery endpoint. Production-ready and dependency-free: it posts to the
@@ -12,9 +13,13 @@ import { createLogger } from "@/lib/log";
 //   • lib/email/config — request-time env validation (safe when unconfigured)
 //   • lib/email/templates — owner notification + visitor confirmation (HTML + text)
 //   • lib/email/send   — the single Resend call (returns a result, never throws)
+//   • lib/rate-limit   — per-IP fixed window (in-memory floor; see its header)
 //   • lib/log          — structured JSON logging (no PII)
 //
 // Pipeline:
+//   0. rate limit (per IP)        → 429 + Retry-After; every POST counts, since an
+//                                   accepted one costs two provider emails (one to a
+//                                   visitor-supplied address) — quota burn is the risk
 //   1. parse JSON                 → 400 on a malformed body
 //   2. honeypot                   → pretend success, send nothing (don't tip bots)
 //   3. server-side validation     → 422 + the offending field names
@@ -32,7 +37,22 @@ export const runtime = "nodejs";
 
 const log = createLogger("contact");
 
+// 5 attempts per 10 minutes per IP — comfortably covers a human fixing validation
+// errors (the 422 path), far under any provider quota's burn rate.
+const limiter = createFixedWindowLimiter({ limit: 5, windowMs: 10 * 60_000 });
+
 export async function POST(req: Request) {
+  // 0 · Rate limit — the cheapest gate, before any parsing. The event is logged
+  //     without the IP (lib/log is PII-free by contract).
+  const verdict = limiter.check(clientKey(req));
+  if (!verdict.ok) {
+    log.warn("rate_limited");
+    return NextResponse.json(
+      { ok: false, error: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(verdict.retryAfterSeconds) } },
+    );
+  }
+
   let body: ContactInput;
   try {
     body = (await req.json()) as ContactInput;
