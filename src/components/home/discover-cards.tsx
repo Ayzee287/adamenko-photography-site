@@ -56,11 +56,13 @@ export function DiscoverCards() {
                   aria-label={`${card.label} : ${card.title}`}
                   className="discover-item group relative block lg:aspect-[2/3] lg:overflow-hidden"
                 >
-                  {/* Media — a square in flow on mobile; on lg it fills the card and
-                      GROWS (scales from a fixed top edge) on hover/focus, so the
-                      photograph itself expands into the paper margins. A real photograph
-                      (object-cover, never distorted by the scale) sits in the same frame;
-                      the warm radial field remains the fallback if a card has no image. */}
+                  {/* Media — a square in flow on mobile; on lg it fills the card,
+                      clipped to the inset print at rest (.discover-media). On
+                      hover/focus the CLIP opens (top locked, bottom most) so the
+                      print grows into the paper margins — the image itself never
+                      transforms (see the component header). A real photograph
+                      (object-cover) sits in the same frame; the warm radial field
+                      remains the fallback if a card has no image. */}
                   <span className="discover-media relative block aspect-square overflow-hidden lg:absolute lg:inset-0 lg:aspect-auto">
                     {card.image?.src ? (
                       <Image

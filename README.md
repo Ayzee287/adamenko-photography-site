@@ -26,24 +26,36 @@ Brand register is **premium without being exclusive** — never luxury-aloof.
 
 ```
 src/
-  app/                 App Router routes (French-primary)
-    page.tsx           Accueil (home)
-    galeries/          Work landing + /galeries/[genre] galleries
-    a-propos/          About
-    prestations/       Services (inquiry-only, no public prices)
-    contact/           Inquiry form
+  proxy.ts             Locale routing: FR unprefixed at "/", EN at /en (rewrite + 308)
+  app/
+    [lang]/            The bilingual route tree (FR + EN prerendered per locale)
+      page.tsx         Accueil (home)
+      galeries/        Work landing + /galeries/[genre] galleries
+      a-propos/        About
+      prestations/     Services (inquiry-only funnel) + FAQ
+      contact/         Inquiry form
+      mentions-legales/ · confidentialite/   Legal pages (LCEN + RGPD)
+      [...notfound]/   Localised, branded 404 catch-all
+      opengraph-image · twitter-image        Per-locale social cards
+    api/contact/       Inquiry delivery endpoint (rate limit → validate → Resend)
+    sitemap.ts · robots.ts
   components/
-    layout/            Container, SiteHeader, SiteFooter, PageHeader, LanguageSwitcher
+    layout/            Container, SiteHeader, MobileMenu, SiteFooter, PageHeader,
+                       LanguageSwitcher, SocialLinks
     home/              The homepage section components (the approved benchmark)
     gallery/           GalleryView (masonry), HorizontalGallery (reel), Lightbox
     motion/            Reveal, Parallax, reduced-motion hook
     ui/                ImageFigure, ButtonLink
     legal/ · seo/      Legal document renderer · JSON-LD injector
   content/             Typed content schema: identity, galleries, services, FAQ,
-                       legal, locations, i18n dictionaries (no CMS)
-  lib/                 site config, SEO helpers, structured data, i18n, og, blur map, utils
+                       legal, locations (no CMS)
+    dictionaries/      fr (canonical) · en (live) · ru/uk (drafts, inactive)
+  lib/                 i18n + request locale, SEO helpers, structured data, og,
+                       contact validation, email pipeline, rate limit, blur map
   styles/              globals.css (tokens + interaction clock), motion.css
   types/               Gallery types
+scripts/
+  gen-blur.mjs         Regenerates the blur-up map after adding photos (npm run gen:blur)
 public/
   galleries/<genre>/   Web-export gallery photographs (committed)
   home/ · about/       Hero + portrait
@@ -67,6 +79,7 @@ npm run build      # production build
 npm run start      # serve the production build
 npm run lint       # ESLint (eslint-config-next)
 npm run typecheck  # tsc --noEmit
+npm run gen:blur   # regenerate blur-up placeholders after adding/replacing photos
 ```
 
 > Requires Node 20+ (developed on Node 24).
