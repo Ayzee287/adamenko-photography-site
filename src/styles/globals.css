@@ -237,10 +237,27 @@
     }
   }
 
-  /* The interaction clock — one timing system, defined once. Components must
-     NOT set their own transition utilities (vault D009 / sibling rule). Enter a
-     hover quickly (200ms), release more slowly (300ms): state → transition →
-     state, never a blunt on/off. */
+  /* The interaction clock — one timing system, defined once. It owns the
+     colour/opacity hover-and-focus transitions of every interactive element
+     (a / button / summary). Enter a hover quickly (200ms), release more slowly
+     (300ms): state → transition → state, never a blunt on/off.
+
+     The real rule (C1 — the earlier absolute "components never set their own
+     transitions" had drifted from practice): components must never invent a
+     TIMING or an EASING — every transition rides the shared tokens — but where
+     the element or property sits outside this clock they declare their own
+     transition on those tokens. The sanctioned cases:
+       • overlay enter/exit fades (mobile menu, lightbox) — opacity on a
+         non-interactive root, 300ms --ease-arrive;
+       • the header's surface crossfade — colour on a non-interactive <header>,
+         300ms --ease-settle;
+       • photograph zooms inside a figure (650/800ms --ease-settle) — transform,
+         which the clock deliberately never animates;
+       • the mobile-menu link cascade (500ms --ease-arrive + stagger);
+       • a recolouring non-interactive element inside a Link (e.g. a gallery
+         cover title), which the clock's selector can't reach — 300ms
+         --ease-settle.
+     Anything else belongs on this clock or in motion.css. */
   a,
   button,
   summary {
