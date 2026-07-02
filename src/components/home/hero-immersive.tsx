@@ -41,7 +41,10 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
           The photograph carries the screen; the words just name the feeling. */}
       <Container className="relative mt-auto pb-16 sm:pb-20">
         <div className="max-w-2xl">
-          <p className="motion-rise text-[0.65rem] uppercase tracking-[0.36em] text-paper/45">
+          {/* /60, not the dark-band /55 tier: the kicker reads over a PHOTO through
+              the scrims, and the photo is swappable content — /60 keeps ≥4.5:1 (AA)
+              even against a bright patch, where /45 measured ~3.3–3.9:1 (A3). */}
+          <p className="motion-rise text-[0.65rem] uppercase tracking-[0.36em] text-paper/60">
             {hero.kicker}
           </p>
           <h1
@@ -55,7 +58,7 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
 
       {/* Scroll cue */}
       <div className="pointer-events-none absolute inset-x-0 bottom-7 flex justify-center">
-        <span className="hero-cue flex flex-col items-center gap-1.5 text-[0.6rem] uppercase tracking-[0.28em] text-paper/55">
+        <span className="hero-cue flex flex-col items-center gap-1.5 text-[0.6rem] uppercase tracking-caps text-paper/55">
           {hero.scrollCue}
           <span aria-hidden className="text-sm leading-none">
             ↓

@@ -11,7 +11,19 @@
 import type { DeepPartial } from "@/lib/dictionary";
 import type { Dictionary } from "./fr";
 import type { GenreSlug } from "@/types/gallery";
+import type { ContactOccasion } from "@/lib/contact";
 import { galleries as frGalleries, featured as frFeatured } from "@/content/galleries";
+
+// Contact-select labels, keyed by the CANONICAL submitted value (like galleryText
+// below, annotated with the full Record so a new occasion added to lib/contact
+// without an English label fails typecheck instead of silently showing French — B2).
+const occasionLabels: Record<ContactOccasion, string> = {
+  Famille: "Family",
+  Grossesse: "Maternity",
+  Couple: "Couple",
+  Portrait: "Portrait",
+  Mariage: "Wedding",
+};
 
 // ── Gallery text overlay (alts in the same order as content/galleries.ts) ──────────
 // Keyed by GenreSlug (not string) so a genre added to the French galleries without an
@@ -175,6 +187,7 @@ export const en: DeepPartial<Dictionary> = {
         name: "Your name",
         email: "Your email",
         occasion: "Type of session",
+        occasionLabels,
         message: "Your message",
         submit: "Send",
         sending: "Sending…",

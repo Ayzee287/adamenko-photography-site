@@ -57,7 +57,7 @@ export default async function PrestationsPage({
         {/* Service descriptions — de-boxed editorial blocks, each linking to its gallery. */}
         <Reveal variant="rise-slow" className="block">
           <section className="mt-12 sm:mt-16">
-            <p className="text-xs uppercase tracking-[0.22em] text-muted">
+            <p className="text-xs uppercase tracking-eyebrow text-muted">
               {services.eyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl text-ink sm:text-4xl">
@@ -101,7 +101,7 @@ export default async function PrestationsPage({
         {/* Investment — packages + what's included (P1). No figures until set (D012). */}
         <Reveal variant="rise-slow" className="block">
           <section className="mt-12 sm:mt-16">
-            <p className="text-xs uppercase tracking-[0.22em] text-muted">
+            <p className="text-xs uppercase tracking-eyebrow text-muted">
               {pricing.eyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl text-ink sm:text-4xl">
@@ -140,7 +140,7 @@ export default async function PrestationsPage({
         {/* Options — add-ons (P1). */}
         <Reveal variant="fade" className="block">
           <section className="mt-12 sm:mt-16">
-            <p className="text-xs uppercase tracking-[0.22em] text-muted">
+            <p className="text-xs uppercase tracking-eyebrow text-muted">
               {pricing.addons.eyebrow}
             </p>
             <h2 className="mt-3 font-serif text-3xl text-ink sm:text-4xl">

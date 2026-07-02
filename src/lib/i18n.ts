@@ -1,15 +1,16 @@
-// i18n CORE (real-content launch pass). Full architecture for four locales — French
-// canonical, then English, Russian, Ukrainian — WITHOUT shipping translations.
+// i18n CORE. Full architecture for four locales — French canonical (unprefixed at
+// "/"), English live at /en, Russian and Ukrainian prepared but not shipped.
 //
 // The system is driven by two lists:
 //   • `locales`        — every locale the architecture understands (types, dictionaries).
-//   • `activeLocales`  — locales with real, shipped content. French only, today.
+//   • `activeLocales`  — locales with real, shipped content: French + English today.
 //
-// Activating a language is a content+config change, not an architecture change: add
-// its dictionary (content/dictionaries/<locale>.ts), add the `app/[lang]` route tree
-// (see docs/localization-roadmap.md), and add the locale to `activeLocales`. From
-// that moment its hreflang, its switcher entry, and its localized metadata all turn
-// on automatically. Until then every non-French request falls back to French.
+// Activating a further language is a content+config change, not an architecture
+// change: translate its dictionary (content/dictionaries/<locale>.ts — the ru/uk
+// drafts are the starting point) and add the locale to `activeLocales`. From that
+// moment its routes prerender under `app/[lang]`, and its hreflang, switcher entry
+// and localized metadata all turn on automatically. Inactive locales 404
+// (`dynamicParams = false`), so hreflang never advertises a route that doesn't exist.
 
 export const locales = ["fr", "en", "ru", "uk"] as const;
 export type Locale = (typeof locales)[number];
@@ -18,9 +19,9 @@ export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "fr";
 
 /**
- * Locales with shipped content. KEEP French-only until a locale's dictionary is
- * translated and its route tree exists — advertising hreflang for a locale that 404s
- * is an SEO liability. Add "en" here to go live with English.
+ * Locales with shipped content — French and English are live. Add a locale here
+ * ONLY once its dictionary is fully translated: advertising hreflang for a locale
+ * that renders French fallback (or 404s) is an SEO liability.
  */
 export const activeLocales: readonly Locale[] = ["fr", "en"];
 

@@ -50,7 +50,7 @@ function Lede({ scene, onDark = false }: { scene: Scene; onDark?: boolean }) {
       </p>
       <span
         className={cn(
-          "mt-6 inline-block text-[0.7rem] uppercase tracking-[0.24em]",
+          "mt-6 inline-block text-[0.7rem] uppercase tracking-eyebrow",
           onDark ? "text-paper/70" : "text-muted group-hover:text-clay",
         )}
       >
@@ -105,7 +105,7 @@ function FullWidth({ scene }: { scene: Scene }) {
           </h3>
           <div className="sm:max-w-xs sm:text-right">
             <p className="text-pretty text-lg text-ink/85 sm:text-xl">{scene.caption}</p>
-            <span className="mt-3 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-muted group-hover:text-clay">
+            <span className="mt-3 inline-block text-[0.7rem] uppercase tracking-eyebrow text-muted group-hover:text-clay">
               {scene.cta}{" "}
               <span aria-hidden className="cta-arrow inline-block">
                 →
@@ -157,7 +157,7 @@ function FullBleed({ scene }: { scene: Scene }) {
             aria-hidden
             className="absolute right-5 top-6 flex max-w-[26ch] flex-col items-end gap-2 text-right sm:right-8 sm:top-8"
           >
-            <span className="text-[0.6rem] uppercase tracking-[0.28em] text-paper/35">
+            <span className="text-[0.6rem] uppercase tracking-caps text-paper/35">
               Paysage · 16:9
             </span>
             {scene.hint ? (
@@ -175,7 +175,7 @@ function FullBleed({ scene }: { scene: Scene }) {
         <p className="mt-5 max-w-md text-pretty text-lg text-paper/85 sm:text-xl">
           {scene.caption}
         </p>
-        <span className="mt-6 inline-block text-[0.7rem] uppercase tracking-[0.24em] text-paper/70">
+        <span className="mt-6 inline-block text-[0.7rem] uppercase tracking-eyebrow text-paper/70">
           {scene.cta}{" "}
           <span aria-hidden className="cta-arrow inline-block">
             →
@@ -194,7 +194,7 @@ export function ServicesShowcase() {
     <section className="py-10 sm:py-16">
       <Container>
         <Reveal variant="fade">
-          <p className="text-xs uppercase tracking-[0.24em] text-muted">
+          <p className="text-xs uppercase tracking-eyebrow text-muted">
             {seances.eyebrow}
           </p>
           <h2 className="mt-4 max-w-2xl text-balance font-serif text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">

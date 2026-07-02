@@ -31,7 +31,7 @@ export function AboutPreview({ portrait }: { portrait?: GalleryImage }) {
           <ImageFigure image={image} sizes="(min-width:1024px) 45vw, 100vw" />
         </Parallax>
         <Reveal variant="rise-left" className="lg:order-2">
-          <p className="text-xs uppercase tracking-[0.22em] text-muted">
+          <p className="text-xs uppercase tracking-eyebrow text-muted">
             {about.eyebrow}
           </p>
           <h2 className="mt-3 font-serif text-3xl text-ink sm:text-4xl">

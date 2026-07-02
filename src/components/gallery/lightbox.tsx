@@ -170,7 +170,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
           type="button"
           onClick={onClose}
           aria-label={t.close}
-          className="text-sm uppercase tracking-[0.16em] text-paper/80 hover:text-paper"
+          className="text-sm uppercase tracking-meta text-paper/80 hover:text-paper"
         >
           {t.closeLabel}
         </button>
@@ -213,7 +213,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
           ›
         </button>
       </div>
-      <p className="pt-3 text-center text-xs uppercase tracking-[0.16em] text-paper/60">
+      <p className="pt-3 text-center text-xs uppercase tracking-meta text-paper/60">
         {displayIndex + 1} / {count}
       </p>
       {/* Announce the current frame to screen readers as ‹/›/swipe change it. */}

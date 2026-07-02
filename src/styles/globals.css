@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "./motion.css";
 
+/* Docs quote class names when discussing them; without this, Tailwind's automatic
+   source detection compiles those quotes into the shipped CSS (found via two
+   ghost tracking utilities that had no component source — C2). */
+@source not "../../docs";
+
 /* ── Vertical rhythm tokens (v4) ───────────────────────────────────────────────
    ONE spacing system for all section + block rhythm. Five tokens, each a Tailwind
    numeric utility (base unit 0.25rem) so the system stays greppable with zero
@@ -40,10 +45,24 @@
   --color-muted: #6f655c; /* warm gray — secondary text (AA on paper + band) */
   --color-line: #e7ddd0; /* hairline */
   --color-clay: #b07159; /* the single warm accent */
+  /* Clay at text duty. The accent itself is 3.64:1 on paper — fine for marks,
+     underlines and borders (non-text, 3:1) but a WCAG AA failure for small
+     functional text (form errors, 4.5:1). Same warm hue, darkened until it passes
+     on BOTH warm surfaces (5.4:1 paper, 4.9:1 sand) — the muted precedent (A1). */
+  --color-clay-ink: #96543d;
   --color-sand: #f3ece1; /* warm band tint — a quiet 6th surface (was hardcoded twice) */
 
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* Letter-spacing scale (C2) — the three recurring caps tiers, named so they
+     can't drift (0.24em stragglers had crept in beside the 0.22em eyebrows).
+     Display one-offs stay local by design: the hero kicker (0.36em), the
+     hero-media placeholder (0.3em) and the reserved-frame serif label (0.14em)
+     are single, deliberate art decisions, not a tier. */
+  --tracking-eyebrow: 0.22em; /* section/page eyebrows + small caps link labels */
+  --tracking-caps: 0.28em; /* micro caps (0.6–0.65rem) on dark bands / captions */
+  --tracking-meta: 0.16em; /* meta rows: lightbox chrome, attribution lines */
 
   /* Two easings (one motion system). `settle` carries hover/focus; `arrive`
      carries run-once entrances in motion.css. Both decelerate — motion here
@@ -232,10 +251,27 @@
     }
   }
 
-  /* The interaction clock — one timing system, defined once. Components must
-     NOT set their own transition utilities (vault D009 / sibling rule). Enter a
-     hover quickly (200ms), release more slowly (300ms): state → transition →
-     state, never a blunt on/off. */
+  /* The interaction clock — one timing system, defined once. It owns the
+     colour/opacity hover-and-focus transitions of every interactive element
+     (a / button / summary). Enter a hover quickly (200ms), release more slowly
+     (300ms): state → transition → state, never a blunt on/off.
+
+     The real rule (C1 — the earlier absolute "components never set their own
+     transitions" had drifted from practice): components must never invent a
+     TIMING or an EASING — every transition rides the shared tokens — but where
+     the element or property sits outside this clock they declare their own
+     transition on those tokens. The sanctioned cases:
+       • overlay enter/exit fades (mobile menu, lightbox) — opacity on a
+         non-interactive root, 300ms --ease-arrive;
+       • the header's surface crossfade — colour on a non-interactive <header>,
+         300ms --ease-settle;
+       • photograph zooms inside a figure (650/800ms --ease-settle) — transform,
+         which the clock deliberately never animates;
+       • the mobile-menu link cascade (500ms --ease-arrive + stagger);
+       • a recolouring non-interactive element inside a Link (e.g. a gallery
+         cover title), which the clock's selector can't reach — 300ms
+         --ease-settle.
+     Anything else belongs on this clock or in motion.css. */
   a,
   button,
   summary {

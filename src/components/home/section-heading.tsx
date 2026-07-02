@@ -22,7 +22,7 @@ export function SectionHeading({
   return (
     <div className={cn(centered && "text-center", className)}>
       {eyebrow ? (
-        <p className="text-xs uppercase tracking-[0.22em] text-muted">{eyebrow}</p>
+        <p className="text-xs uppercase tracking-eyebrow text-muted">{eyebrow}</p>
       ) : null}
       <h2 className="mt-3 text-balance font-serif text-3xl leading-tight text-ink sm:text-4xl">
         {title}
