@@ -23,7 +23,7 @@ export function FinalCta() {
           <div className="grid gap-10 lg:grid-cols-[7fr_4fr] lg:items-end lg:gap-24">
             {/* Invitation — left, dominant. */}
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-paper/55">
+              <p className="text-xs uppercase tracking-caps text-paper/55">
                 {f.eyebrow}
               </p>
               <h2 className="mt-4 max-w-xl text-balance font-serif text-4xl leading-[1.03] text-paper sm:text-5xl lg:text-6xl">
@@ -46,7 +46,7 @@ export function FinalCta() {
 
             {/* Practical meta — offset right, baseline-aligned. */}
             <dl className="lg:text-right">
-              <dt className="text-[0.65rem] uppercase tracking-[0.28em] text-paper/55">
+              <dt className="text-[0.65rem] uppercase tracking-caps text-paper/55">
                 {f.locationLabel}
               </dt>
               <dd className="mt-1 font-serif text-lg text-paper/85">
@@ -54,7 +54,7 @@ export function FinalCta() {
               </dd>
               {/* Same rank as the location <dt> above → same paper/55 (AA 5.3:1;
                   /40 measured 3.5:1 — a miss when the first label was fixed, A2). */}
-              <dt className="mt-7 text-[0.65rem] uppercase tracking-[0.28em] text-paper/55">
+              <dt className="mt-7 text-[0.65rem] uppercase tracking-caps text-paper/55">
                 {f.availabilityLabel}
               </dt>
               <dd className="mt-1 max-w-[22ch] text-pretty text-paper/75 lg:ml-auto">

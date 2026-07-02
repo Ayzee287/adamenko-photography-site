@@ -51,7 +51,7 @@ export function Testimonials({ t }: { t: TestimonialStrings }) {
               <blockquote className="font-serif text-2xl leading-snug text-ink sm:text-3xl">
                 « {items[i].quote} »
               </blockquote>
-              <p className="mt-6 text-sm uppercase tracking-[0.16em] text-muted">
+              <p className="mt-6 text-sm uppercase tracking-meta text-muted">
                 {items[i].name}
                 {items[i].city ? ` · ${items[i].city}` : ""}
               </p>

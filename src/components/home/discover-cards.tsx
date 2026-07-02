@@ -104,7 +104,7 @@ export function DiscoverCards() {
                     aria-hidden
                     className="discover-caption mt-5 block text-center lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0 lg:flex lg:flex-col lg:items-center lg:px-4 lg:pb-5"
                   >
-                    <span className="relative block text-xs uppercase tracking-[0.22em] opacity-70">
+                    <span className="relative block text-xs uppercase tracking-eyebrow opacity-70">
                       {card.label}
                     </span>
                     <span className="relative mt-2 block font-serif text-2xl">

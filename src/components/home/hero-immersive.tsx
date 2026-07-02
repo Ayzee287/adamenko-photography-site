@@ -58,7 +58,7 @@ export function HeroImmersive({ image }: { image?: GalleryImage }) {
 
       {/* Scroll cue */}
       <div className="pointer-events-none absolute inset-x-0 bottom-7 flex justify-center">
-        <span className="hero-cue flex flex-col items-center gap-1.5 text-[0.6rem] uppercase tracking-[0.28em] text-paper/55">
+        <span className="hero-cue flex flex-col items-center gap-1.5 text-[0.6rem] uppercase tracking-caps text-paper/55">
           {hero.scrollCue}
           <span aria-hidden className="text-sm leading-none">
             ↓

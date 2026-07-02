@@ -102,7 +102,7 @@ export function ImageFigure({
           className="pointer-events-none absolute inset-0 flex flex-col p-5 sm:p-6"
         >
           {/* Top caption — orientation · ratio (left), plate index (right). */}
-          <span className="flex items-center justify-between text-[0.6rem] uppercase tracking-[0.28em] text-ink/40">
+          <span className="flex items-center justify-between text-[0.6rem] uppercase tracking-caps text-ink/40">
             <span>
               {frame ? `${frame.orientation} · ${frame.label}` : " "}
             </span>
