@@ -29,12 +29,12 @@ export function LegalDocumentView({ doc }: { doc: LegalDoc }) {
             <section key={section.heading}>
               <h2 className="font-serif text-2xl text-ink">{section.heading}</h2>
               {section.paragraphs?.map((p, i) => (
-                <p key={i} className="mt-3 text-pretty text-muted">
+                <p key={i} className="mt-3 text-pretty text-ink">
                   {p}
                 </p>
               ))}
               {section.bullets ? (
-                <ul className="mt-4 space-y-2.5 text-muted">
+                <ul className="mt-4 space-y-2.5 text-ink">
                   {section.bullets.map((b, i) => (
                     <li key={i} className="flex gap-3">
                       <span
