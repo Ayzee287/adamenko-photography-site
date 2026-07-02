@@ -27,8 +27,11 @@ export function Testimonials({ t }: { t: TestimonialStrings }) {
 
   const prev = () => setI((n) => (n - 1 + items.length) % items.length);
   const next = () => setI((n) => (n + 1) % items.length);
+  // Borderless, matching the site's other paging controls (lightbox arrows, reel
+  // chevrons) — a bordered circle borrowed the primary-CTA-pill's visual weight for
+  // a lightweight paging action (R9). Same tap target (h-11 w-11), same handlers.
   const arrow =
-    "flex h-11 w-11 items-center justify-center rounded-full border border-line text-xl text-ink hover:border-clay";
+    "flex h-11 w-11 items-center justify-center text-xl text-ink/70 hover:text-clay";
 
   // Tighter when empty (v3 QA): the no-testimonials state is no longer a lonely line
   // floating in a void — it's a short, confident statement of integrity (real words

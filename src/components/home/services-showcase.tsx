@@ -194,7 +194,7 @@ export function ServicesShowcase() {
     <section className="py-10 sm:py-16">
       <Container>
         <Reveal variant="fade">
-          <p className="text-xs uppercase tracking-[0.24em] text-muted">
+          <p className="text-xs uppercase tracking-[0.22em] text-muted">
             {seances.eyebrow}
           </p>
           <h2 className="mt-4 max-w-2xl text-balance font-serif text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">
