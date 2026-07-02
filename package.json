@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "gen:blur": "node scripts/gen-blur.mjs"
+    "gen:blur": "node scripts/gen-blur.mjs",
+    "sync:reviews": "node scripts/sync-reviews.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

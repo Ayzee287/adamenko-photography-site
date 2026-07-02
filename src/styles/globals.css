@@ -113,26 +113,27 @@
     outline-offset: -3px;
   }
 
-  /* Reel overlay chevrons (v4) — no chrome, semi-transparent, edge-anchored. On
-     pointer devices they are hidden until the wall is hovered/focused, then sit
-     quietly translucent and reach full strength only under the cursor — navigation
-     that never competes with the photographs. On touch (no hover) they stay gently
-     visible so the wall is obviously explorable. Opacity transition comes from the
-     global interaction clock (button). */
+  /* Reel overlay chevrons (v4) — no chrome, semi-transparent, edge-anchored. Gently
+     visible at rest on EVERY device so the wall is obviously explorable — the same
+     reasoning the touch state always carried (an invisible control can't be
+     discovered). On pointer devices, engaging the wall (hover / focus) lifts them,
+     and they reach full strength only under the cursor — navigation that never
+     competes with the photographs. Opacity transition comes from the global
+     interaction clock (button). */
   .reel-arrow {
     opacity: 0.5;
   }
   @media (hover: hover) {
-    .reel-arrow {
-      opacity: 0;
-    }
     .reel-wall:hover .reel-arrow,
     .reel-wall:focus-within .reel-arrow {
-      opacity: 0.55;
+      opacity: 0.7;
     }
   }
-  .reel-arrow:hover,
-  .reel-arrow:focus-visible {
+  /* Scoped under .reel-wall so this matches the wall-hover rule's specificity and
+     wins by source order — a bare .reel-arrow:hover loses that battle and the
+     chevron would never reach full strength under the cursor. */
+  .reel-wall .reel-arrow:hover,
+  .reel-wall .reel-arrow:focus-visible {
     opacity: 1;
   }
 

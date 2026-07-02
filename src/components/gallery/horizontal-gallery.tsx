@@ -17,7 +17,8 @@ import type { GalleryStrings } from "./lightbox";
  * placeholders, or real exports later) hung at one shared height, widths set by each
  * frame's natural aspect ratio. It loops forever with no visible seam and carries no
  * chrome of its own — no counter, no toolbar. The only controls are two chevrons
- * overlaid on the wall's edges; they stay out of the way until you reach for them.
+ * overlaid on the wall's edges; quietly present at rest, they strengthen as you
+ * reach for them (globals.css `.reel-arrow`).
  *
  *   - infinite loop — the list is hung three times and the scroll position is
  *     silently recentred at each copy boundary, so the wall never starts or ends;
@@ -130,6 +131,9 @@ export function HorizontalGallery({
   // ----- mouse drag + inertia -----
   const onPointerDown = (e: ReactPointerEvent) => {
     if (e.pointerType !== "mouse") return; // touch/pen use native momentum scroll
+    if (e.button !== 0) return; // primary button only — a right-click (context menu)
+    // or middle-click must never arm the drag state, or the next unpressed
+    // pointermove would scroll the wall on its own.
     const el = scrollerRef.current;
     if (!el) return;
     stopInertia();
@@ -216,6 +220,10 @@ export function HorizontalGallery({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onKeyDown={onKeyDown}
+        // The plates are <img>s — natively draggable. Cancelling dragstart keeps a
+        // mouse drag a SCROLL gesture: no browser ghost image, and the pointer
+        // stream is never cut short by a pointercancel mid-drag.
+        onDragStart={(e) => e.preventDefault()}
         className={cn(
           "reel-region flex h-[280px] cursor-grab items-stretch gap-4 overflow-x-auto overscroll-x-contain px-5 select-none active:cursor-grabbing sm:h-[360px] sm:px-8 lg:h-[400px]",
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
@@ -238,8 +246,8 @@ export function HorizontalGallery({
         ))}
       </div>
 
-      {/* Overlay chevrons — edge-anchored, vertically centred, no background. Hidden
-          until the wall is hovered on pointer devices; always present on touch. */}
+      {/* Overlay chevrons — edge-anchored, vertically centred, no background. Gently
+          visible at rest everywhere; they strengthen when the wall is engaged. */}
       <button
         type="button"
         onClick={() => nudge(-1)}

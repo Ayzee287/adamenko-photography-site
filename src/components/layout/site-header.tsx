@@ -169,7 +169,13 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
               </Link>
             );
           })}
-          <LanguageSwitcher onDark={onDark} label={chrome.ui.nav.language} />
+          {/* The switcher is a utility control, not a fifth destination: it steps
+              half a nav-gap further out so the group boundary reads at a glance. */}
+          <LanguageSwitcher
+            onDark={onDark}
+            label={chrome.ui.nav.language}
+            className="ml-4 lg:ml-5"
+          />
         </nav>
 
         <button
