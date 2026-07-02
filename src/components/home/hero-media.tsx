@@ -48,6 +48,7 @@ export function HeroMedia({
           alt={image.alt}
           fill
           priority
+          quality={82}
           sizes="100vw"
           placeholder={blurFor(image.src) ? "blur" : undefined}
           blurDataURL={blurFor(image.src)}

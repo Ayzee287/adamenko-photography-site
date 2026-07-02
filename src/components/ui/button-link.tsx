@@ -56,7 +56,7 @@ export function ButtonLink({
     variant === "primary" ? (
       <PrimaryInner>{children}</PrimaryInner>
     ) : (
-      <SecondaryInner onDark={onDark}>{children}</SecondaryInner>
+      <CtaText onDark={onDark}>{children}</CtaText>
     );
 
   const base =
@@ -97,35 +97,59 @@ function PrimaryInner({ children }: { children: ReactNode }) {
   );
 }
 
-function SecondaryInner({
+/**
+ * The single secondary-CTA signature, reused everywhere a text call-to-action
+ * appears — the standalone `ButtonLink variant="secondary"` AND inline CTAs that
+ * live inside a larger `<Link>` (gallery covers, the /prestations service links),
+ * which cannot nest a `ButtonLink` (an anchor inside an anchor). Rendering a
+ * `<span>` lets those reuse the exact same underline + arrow without an extra
+ * tab stop, so every text CTA reads as ONE handcrafted affordance.
+ *
+ * The contract this enforces (the "one system"):
+ *   • the underline sits on the TEXT ONLY — the arrow is a sibling, never underlined;
+ *   • identical 1px thickness, identical 4px offset (`pb-1` + `bottom-0`);
+ *   • identical resting hairline (`bg-current` @ 20%) → clay underline that wipes
+ *     IN from the left on hover/focus and retracts to the RIGHT on release
+ *     (`.link-draw`, globals.css), driven by the nearest `<a>/<button>` ancestor;
+ *   • identical `gap-2` between text and the kinetic `.cta-arrow` (the `.group`
+ *     ancestor advances it).
+ *
+ * Use inside an element that is BOTH a `.group` and an `<a>/<button>` so both the
+ * draw and the arrow animate (every call site is).
+ */
+export function CtaText({
   children,
-  onDark,
+  onDark = false,
+  className,
 }: {
   children: ReactNode;
-  onDark: boolean;
+  onDark?: boolean;
+  className?: string;
 }) {
   return (
     <span
       className={cn(
-        "relative inline-flex items-center gap-2 pb-1",
-        onDark ? "text-paper" : "text-ink",
+        "inline-flex items-center gap-2",
+        onDark ? "text-paper" : undefined,
+        className,
       )}
     >
-      <span>{children}</span>
+      {/* The underlined region — wraps the text alone, so the underline can never
+          extend under the arrow. */}
+      <span className="relative pb-1">
+        {children}
+        <span
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 h-px bg-current opacity-20"
+        />
+        <span
+          aria-hidden
+          className="link-draw absolute inset-x-0 bottom-0 h-px bg-clay"
+        />
+      </span>
       <span aria-hidden className="cta-arrow">
         →
       </span>
-      {/* Resting hairline + a clay underline that wipes IN from the left on
-          hover/focus and retracts to the RIGHT on release (directional, not a
-          symmetric grow/shrink). The motion lives on `.link-draw` in globals.css. */}
-      <span
-        aria-hidden
-        className="absolute bottom-0 left-0 h-px w-full bg-current opacity-20"
-      />
-      <span
-        aria-hidden
-        className="link-draw absolute bottom-0 left-0 h-px w-full bg-clay"
-      />
     </span>
   );
 }

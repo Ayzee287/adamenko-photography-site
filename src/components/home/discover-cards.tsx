@@ -67,6 +67,7 @@ export function DiscoverCards() {
                         src={card.image.src}
                         alt=""
                         fill
+                        quality={82}
                         sizes="(min-width:1024px) 33vw, 100vw"
                         placeholder={blurFor(card.image.src) ? "blur" : undefined}
                         blurDataURL={blurFor(card.image.src)}

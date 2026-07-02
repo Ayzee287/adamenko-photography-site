@@ -126,6 +126,7 @@ function FullBleed({ scene }: { scene: Scene }) {
   return (
     <Link
       href={localeHref(`/galeries/${scene.slug}`)}
+      data-header-tone="dark"
       className="dark-surface group relative block h-[72svh] w-full overflow-hidden sm:h-[80svh]"
     >
       {hasImage ? (
@@ -134,6 +135,7 @@ function FullBleed({ scene }: { scene: Scene }) {
             src={scene.src as string}
             alt={scene.alt ?? scene.title}
             fill
+            quality={82}
             sizes="100vw"
             placeholder={blurFor(scene.src) ? "blur" : undefined}
             blurDataURL={blurFor(scene.src)}

@@ -9,7 +9,7 @@ export function ExperienceSteps() {
   const { experience } = getDictionary(getRequestLocale()).home;
 
   return (
-    <section className="bg-sand py-10 sm:py-16">
+    <section data-header-tone="sand" className="bg-sand py-10 sm:py-16">
       <Container>
         <Reveal>
           <SectionHeading

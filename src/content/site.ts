@@ -29,6 +29,10 @@ export const site = {
   ],
   social: {
     instagram: photographer.contact.instagram,
+    // Persistent social channels surface as icons in the footer + mobile menu
+    // (D-UI-polish); each renders only when its href is set, so an unset channel
+    // never shows an empty link.
+    facebook: photographer.contact.facebook,
   },
   contact: {
     // Sourced from the identity model; empty until the operator sets a real inbox.

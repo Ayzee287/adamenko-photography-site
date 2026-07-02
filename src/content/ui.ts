@@ -16,6 +16,7 @@ export const ui = {
     menu: "Menu",
     language: "Choix de la langue",
     instagram: "Instagram",
+    facebook: "Facebook",
   },
   gallery: {
     /** Prefix for the grid thumbnail's accessible name: `${enlarge} : ${alt}`. */
