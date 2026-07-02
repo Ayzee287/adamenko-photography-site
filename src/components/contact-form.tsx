@@ -129,7 +129,7 @@ export function ContactForm({
           className={cn(inputBase, borderFor("name"))}
         />
         {hasError("name") ? (
-          <span id="name-error" className="text-xs text-clay">
+          <span id="name-error" className="text-xs text-clay-ink">
             {t.errors.name}
           </span>
         ) : null}
@@ -148,7 +148,7 @@ export function ContactForm({
           className={cn(inputBase, borderFor("email"))}
         />
         {hasError("email") ? (
-          <span id="email-error" className="text-xs text-clay">
+          <span id="email-error" className="text-xs text-clay-ink">
             {t.errors.email}
           </span>
         ) : null}
@@ -184,7 +184,7 @@ export function ContactForm({
           className={cn(inputBase, borderFor("message"))}
         />
         {hasError("message") ? (
-          <span id="message-error" className="text-xs text-clay">
+          <span id="message-error" className="text-xs text-clay-ink">
             {t.errors.message}
           </span>
         ) : null}
@@ -225,7 +225,7 @@ export function ContactForm({
           ref={errorRef}
           tabIndex={-1}
           role="alert"
-          className="text-sm text-clay outline-none"
+          className="text-sm text-clay-ink outline-none"
         >
           {t.error}{" "}
           {fallbackEmail ? (
