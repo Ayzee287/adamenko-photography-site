@@ -72,7 +72,7 @@ export default async function PrestationsPage({
                   <p className="mt-2 font-serif text-lg italic text-muted">
                     {s.tagline}
                   </p>
-                  <div className="mt-4 space-y-3 text-pretty text-sm text-muted">
+                  <div className="mt-4 space-y-3 text-pretty text-sm text-ink/85">
                     {s.description.map((p, i) => (
                       <p key={i}>{p}</p>
                     ))}
@@ -120,7 +120,7 @@ export default async function PrestationsPage({
                         : `${pricing.fromLabel} ${pkg.priceFrom} €`}
                     </span>
                   </div>
-                  <p className="mt-3 max-w-sm text-pretty text-sm text-muted">
+                  <p className="mt-3 max-w-sm text-pretty text-sm text-ink/85">
                     {pkg.summary}
                   </p>
                   <ul className="mt-6 space-y-2.5 text-sm text-ink">
@@ -151,7 +151,7 @@ export default async function PrestationsPage({
                 <li key={item.title}>
                   <span aria-hidden className="block h-px w-8 bg-clay/60" />
                   <h3 className="mt-4 font-serif text-lg text-ink">{item.title}</h3>
-                  <p className="mt-2 text-pretty text-sm text-muted">{item.body}</p>
+                  <p className="mt-2 text-pretty text-sm text-ink/85">{item.body}</p>
                 </li>
               ))}
             </ul>
@@ -175,7 +175,7 @@ export default async function PrestationsPage({
                       +
                     </span>
                   </summary>
-                  <p className="mt-3 max-w-2xl text-sm text-muted">{item.a}</p>
+                  <p className="mt-3 max-w-2xl text-sm text-ink/85">{item.a}</p>
                 </details>
               ))}
             </div>

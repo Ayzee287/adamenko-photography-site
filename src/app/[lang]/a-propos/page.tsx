@@ -47,7 +47,7 @@ export default async function AProposPage({
 
       <div className="mt-10 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-24">
         <Reveal variant="rise-left" className="order-2 lg:order-1">
-          <div className="space-y-4 text-pretty text-muted">
+          <div className="space-y-4 text-pretty text-ink">
             {photographer.biography.map((paragraph, i) => (
               <p key={i}>{paragraph}</p>
             ))}
