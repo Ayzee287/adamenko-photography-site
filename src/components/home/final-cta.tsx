@@ -52,7 +52,9 @@ export function FinalCta() {
               <dd className="mt-1 font-serif text-lg text-paper/85">
                 {f.location}
               </dd>
-              <dt className="mt-7 text-[0.65rem] uppercase tracking-[0.28em] text-paper/40">
+              {/* Same rank as the location <dt> above → same paper/55 (AA 5.3:1;
+                  /40 measured 3.5:1 — a miss when the first label was fixed, A2). */}
+              <dt className="mt-7 text-[0.65rem] uppercase tracking-[0.28em] text-paper/55">
                 {f.availabilityLabel}
               </dt>
               <dd className="mt-1 max-w-[22ch] text-pretty text-paper/75 lg:ml-auto">
