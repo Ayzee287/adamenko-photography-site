@@ -13,7 +13,6 @@ import { AboutPreview } from "@/components/home/about-preview";
 import { ExperienceSteps } from "@/components/home/experience-steps";
 import { FeaturedReel } from "@/components/home/featured-reel";
 import { ServicesShowcase } from "@/components/home/services-showcase";
-import { PricingInvestment } from "@/components/home/pricing-investment";
 import { DiscoverCards } from "@/components/home/discover-cards";
 import { Testimonials } from "@/components/home/testimonials";
 import { FinalCta } from "@/components/home/final-cta";
@@ -57,7 +56,10 @@ export default async function HomePage({
       <ExperienceSteps />
       <FeaturedReel />
       <ServicesShowcase />
-      <PricingInvestment />
+      {/* The Investissement teaser (PricingInvestment) is temporarily withheld — a
+          launch-scope product decision, not a removal: the homepage stays on one
+          story (work → trust → contact) while /prestations still evolves. Restore
+          by re-adding the import + element here once the pricing page is final. */}
       <DiscoverCards />
       <Testimonials t={testimonials} />
       <FinalCta />
