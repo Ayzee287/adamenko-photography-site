@@ -134,6 +134,20 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
       <Container className="flex h-16 items-center justify-between sm:h-20">
         <Link
           href={homePath}
+          // Already home → the logo means "back to the start": scroll instead of a
+          // same-URL navigation (whose scroll reset is erratic and adds nothing).
+          // Plain left-click/Enter only — modified clicks (new tab, etc.) fall
+          // through to the native link, and every other route navigates as before.
+          onClick={(e) => {
+            if (!isHome || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? "auto"
+                : "smooth",
+            });
+          }}
           className={cn(
             "font-serif text-lg sm:text-xl",
             onDark ? "text-paper" : "text-ink",
@@ -169,12 +183,13 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
               </Link>
             );
           })}
-          {/* The switcher is a utility control, not a fifth destination: it steps
-              half a nav-gap further out so the group boundary reads at a glance. */}
+          {/* The switcher is a utility control, not a fifth destination: it sits a
+              full nav-gap further out — twice the link spacing — so the group
+              boundary is unmistakable while the strip stays one quiet band. */}
           <LanguageSwitcher
             onDark={onDark}
             label={chrome.ui.nav.language}
-            className="ml-4 lg:ml-5"
+            className="ml-8 lg:ml-10"
           />
         </nav>
 

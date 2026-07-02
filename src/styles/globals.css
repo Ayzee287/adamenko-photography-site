@@ -121,12 +121,12 @@
      competes with the photographs. Opacity transition comes from the global
      interaction clock (button). */
   .reel-arrow {
-    opacity: 0.5;
+    opacity: 0.65;
   }
   @media (hover: hover) {
     .reel-wall:hover .reel-arrow,
     .reel-wall:focus-within .reel-arrow {
-      opacity: 0.7;
+      opacity: 0.85;
     }
   }
   /* Scoped under .reel-wall so this matches the wall-hover rule's specificity and
