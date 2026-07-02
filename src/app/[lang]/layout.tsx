@@ -23,11 +23,16 @@ import { setRequestLocale } from "@/lib/request-locale";
 import "@/styles/globals.css";
 
 // Display — a warm humanist serif (vault design-language). Fraunces reads soft and
-// friendly, not a high-contrast fashion serif.
+// friendly, not a high-contrast fashion serif. Weight 400 is the only weight ever
+// rendered (no font-medium/font-semibold utility exists in this codebase), so 500/600
+// were dead font files; italic is added because font-serif italic is already used
+// (e.g. the /prestations service taglines) and without a loaded italic face the
+// browser was faking it via synthetic oblique on the roman glyphs.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
