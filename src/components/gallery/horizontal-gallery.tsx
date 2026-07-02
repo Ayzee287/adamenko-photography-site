@@ -228,7 +228,12 @@ export function HorizontalGallery({
             key={n}
             image={img}
             className="h-full shrink-0"
-            sizes="(min-width:1024px) 40vw, (min-width:640px) 55vw, 80vw"
+            // Fixed px, not vw: each frame's rendered width is height × its own
+            // aspect ratio (the strip scrolls past the viewport), not a viewport
+            // fraction. A vw value under-declares for landscape frames and starves
+            // next/image's srcset pick — ceilings below cover up to 16:9 at each
+            // height breakpoint (280/360/400px, see the h-[…] classes above).
+            sizes="(min-width:1024px) 720px, (min-width:640px) 640px, 500px"
           />
         ))}
       </div>
