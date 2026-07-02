@@ -1,8 +1,16 @@
 // Testimonials are REAL ONLY — never fabricated (vault brand-voice / client-profile).
-// This array stays empty until the photographer supplies genuine words; the
-// Testimonials section renders a quiet reserved state while empty and real cards
-// the moment it isn't — no layout change either way. A future Google-reviews pull
-// would populate the same shape.
+// Two sources feed one shape:
+//
+//   1. `manual` — words the photographer collected herself (email / Instagram / the
+//      contact form; see docs/content-collection/testimonials-questionnaire.md);
+//   2. the Google Business reviews, synced verbatim into reviews.generated.ts by
+//      `npm run sync:reviews` (docs/google-reviews.md) and CURATED here — the data
+//      stays generated, the editorial policy stays hand-written and reviewable.
+//
+// The Testimonials section renders a quiet reserved state while this list is empty
+// and a manual carousel the moment it isn't — no layout change either way.
+
+import { googleReviews } from "./reviews.generated";
 
 export type Testimonial = {
   quote: string;
@@ -17,6 +25,31 @@ export type Testimonial = {
   source?: "email" | "instagram" | "google" | "form";
 };
 
-// Stays empty until the photographer supplies genuine words (see
-// docs/content-collection/testimonials-questionnaire.md for the collection flow).
-export const testimonials: Testimonial[] = [];
+// Hand-collected words — kept first: they were chosen, not synced.
+const manual: Testimonial[] = [];
+
+// Editorial policy for the synced Google reviews — adjust deliberately, never in
+// the generated file. Only full-star reviews with real words, short enough to sit
+// in the serif blockquote without dwarfing the section. Filtered-out reviews stay
+// in reviews.generated.ts (nothing is lost) — they simply don't render.
+const MIN_RATING = 5;
+const MAX_QUOTE_LENGTH = 300;
+/** Review ids (GoogleReview.id) the photographer chooses not to display. */
+const EXCLUDED: string[] = [];
+
+const fromGoogle: Testimonial[] = googleReviews
+  .filter(
+    (r) =>
+      r.rating >= MIN_RATING &&
+      r.text.length > 0 &&
+      r.text.length <= MAX_QUOTE_LENGTH &&
+      !EXCLUDED.includes(r.id),
+  )
+  .map((r) => ({
+    quote: r.text,
+    name: r.author,
+    date: r.publishTime.slice(0, 7),
+    source: "google" as const,
+  }));
+
+export const testimonials: Testimonial[] = [...manual, ...fromGoogle];
