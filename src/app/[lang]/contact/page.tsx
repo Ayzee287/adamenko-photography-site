@@ -38,9 +38,11 @@ export default async function ContactPage({
 
   // The select DISPLAYS localized labels but SUBMITS the canonical French value, so the
   // server enum (lib/contact) and the operator's inbox categorisation never change.
-  const occasions = CONTACT_OCCASIONS.map((value, i) => ({
+  // Labels resolve from the dictionary KEYED by the canonical value — reordering any
+  // content list can never pair a label with the wrong submitted value (B2).
+  const occasions = CONTACT_OCCASIONS.map((value) => ({
     value,
-    label: t.photographer.specialties[i] ?? value,
+    label: t.copy.contact.form.occasionLabels[value],
   }));
 
   const email = t.site.contact.email;

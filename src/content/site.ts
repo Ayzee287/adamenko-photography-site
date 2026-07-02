@@ -8,6 +8,22 @@
 // the single photographer identity model so a name/contact change is one edit.
 
 import { photographer } from "@/content/photographer";
+import type { ContactOccasion } from "@/lib/contact";
+
+/**
+ * Display labels for the contact select, KEYED by the canonical submitted value
+ * (lib/contact CONTACT_OCCASIONS) — never index-coupled to another list, so
+ * reordering `photographer.specialties` (or anything else) can never mislabel an
+ * inquiry, and a missing key is a type error, not a silent fallback (B2). The
+ * French labels are the canonical values themselves.
+ */
+const occasionLabels: Record<ContactOccasion, string> = {
+  Famille: "Famille",
+  Grossesse: "Grossesse",
+  Couple: "Couple",
+  Portrait: "Portrait",
+  Mariage: "Mariage",
+};
 
 export const site = {
   brand: photographer.brand,
@@ -96,6 +112,7 @@ export const copy = {
       name: "Votre nom",
       email: "Votre e-mail",
       occasion: "Type de séance",
+      occasionLabels,
       message: "Votre message",
       submit: "Envoyer",
       sending: "Envoi…",
