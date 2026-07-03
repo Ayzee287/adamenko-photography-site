@@ -61,7 +61,7 @@ export default async function HomePage({
           story (work → trust → contact) while /prestations still evolves. Restore
           by re-adding the import + element here once the pricing page is final. */}
       <DiscoverCards />
-      <Testimonials t={testimonials} />
+      <Testimonials t={testimonials} locale={locale} />
       <FinalCta />
     </>
   );

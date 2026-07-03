@@ -29,7 +29,8 @@ Design decisions:
   graph, statically rendered (SSG preserved, zero new client JS, zero CLS).
 - **Data vs policy split.** The generated file is verbatim and never hand-edited;
   which reviews *render* is decided in `testimonials.ts` (`MIN_RATING`,
-  `MAX_QUOTE_LENGTH`, `EXCLUDED`). Curation never loses data.
+  `EXCLUDED`). Curation never loses data. There is no length ceiling: long
+  reviews render complete, visually clamped by the card's "read more" toggle.
 - **Original words only.** The sync keeps each review's `originalText` (never
   Google's machine translation) — the same "real words only, verbatim" rule the
   testimonials section has always had. Reviews render identically in both locales,
@@ -69,7 +70,7 @@ git diff                  # read the new words — this is a content review
 ```
 
 - Want to hide a specific review? Add its `id` to `EXCLUDED` in
-  `src/content/testimonials.ts`. Want longer quotes? Raise `MAX_QUOTE_LENGTH`.
+  `src/content/testimonials.ts`.
 - Commit both files, push, deploy. Done — the build itself needs no credentials
   and cannot fail because of Google.
 

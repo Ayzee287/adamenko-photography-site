@@ -106,9 +106,10 @@
     border-radius: 2px;
   }
 
-  /* The reel is a focusable horizontal scroll region (keyboard ← / →). Its ring is
-     INSET so it reads clearly without drawing off the full-bleed edges. */
-  .reel-region:focus-visible {
+  /* Focusable horizontal scroll regions (keyboard ← / →): the reel and the review
+     wall. The ring is INSET so it reads clearly without drawing off the edges. */
+  .reel-region:focus-visible,
+  .reviews-region:focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: -3px;
   }

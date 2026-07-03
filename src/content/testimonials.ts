@@ -15,11 +15,14 @@ import { googleReviews } from "./reviews.generated";
 export type Testimonial = {
   quote: string;
   name: string;
+  /** Star rating 1–5 (Google reviews). Absent for hand-collected words — the
+   *  card then simply renders without a star row. */
+  rating?: number;
   /** City / context, e.g. "Lyon". */
   city?: string;
   /** Which kind of session it was — optional context. */
   service?: string;
-  /** ISO date (YYYY-MM) of the session — optional, for ordering. */
+  /** ISO date (YYYY-MM) of the session — optional, shown on the card. */
   date?: string;
   /** Where the words came from — for the operator's own tracking, not shown. */
   source?: "email" | "instagram" | "google" | "form";
@@ -29,25 +32,20 @@ export type Testimonial = {
 const manual: Testimonial[] = [];
 
 // Editorial policy for the synced Google reviews — adjust deliberately, never in
-// the generated file. Only full-star reviews with real words, short enough to sit
-// in the serif blockquote without dwarfing the section. Filtered-out reviews stay
-// in reviews.generated.ts (nothing is lost) — they simply don't render.
+// the generated file. Only full-star reviews with real words. No length ceiling:
+// the card truncates long reviews visually ("read more"), so the words stay
+// verbatim and complete. Filtered-out reviews stay in reviews.generated.ts
+// (nothing is lost) — they simply don't render.
 const MIN_RATING = 5;
-const MAX_QUOTE_LENGTH = 300;
 /** Review ids (GoogleReview.id) the photographer chooses not to display. */
 const EXCLUDED: string[] = [];
 
 const fromGoogle: Testimonial[] = googleReviews
-  .filter(
-    (r) =>
-      r.rating >= MIN_RATING &&
-      r.text.length > 0 &&
-      r.text.length <= MAX_QUOTE_LENGTH &&
-      !EXCLUDED.includes(r.id),
-  )
+  .filter((r) => r.rating >= MIN_RATING && r.text.length > 0 && !EXCLUDED.includes(r.id))
   .map((r) => ({
     quote: r.text,
     name: r.author,
+    rating: r.rating,
     date: r.publishTime.slice(0, 7),
     source: "google" as const,
   }));

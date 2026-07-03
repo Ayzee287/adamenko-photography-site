@@ -167,6 +167,13 @@ export const home = {
     title: "La confiance, avant tout.",
     // Reserved-by-choice (v3 QA): frames the absence as integrity, not "coming soon".
     empty: "Les avis de mes clientes apparaîtront ici. De vrais mots, jamais inventés.",
+    /** Accessible name of the review carousel (scroll region). */
+    carouselLabel: "Avis clients Google",
+    /** Card truncation toggle — shown only when a review is long enough to clamp. */
+    readMore: "Lire la suite",
+    readLess: "Réduire",
+    /** Aggregate line under the carousel; {rating} and {count} are replaced. */
+    summary: "Note Google {rating} / 5 · d'après {count} avis",
   },
 
   finalCta: {
