@@ -106,9 +106,10 @@
     border-radius: 2px;
   }
 
-  /* The reel is a focusable horizontal scroll region (keyboard ← / →). Its ring is
-     INSET so it reads clearly without drawing off the full-bleed edges. */
-  .reel-region:focus-visible {
+  /* Focusable horizontal scroll regions (keyboard ← / →): the reel and the review
+     wall. The ring is INSET so it reads clearly without drawing off the edges. */
+  .reel-region:focus-visible,
+  .reviews-region:focus-visible {
     outline: 2px solid var(--color-ink);
     outline-offset: -3px;
   }
@@ -121,12 +122,12 @@
      competes with the photographs. Opacity transition comes from the global
      interaction clock (button). */
   .reel-arrow {
-    opacity: 0.5;
+    opacity: 0.65;
   }
   @media (hover: hover) {
     .reel-wall:hover .reel-arrow,
     .reel-wall:focus-within .reel-arrow {
-      opacity: 0.7;
+      opacity: 0.85;
     }
   }
   /* Scoped under .reel-wall so this matches the wall-hover rule's specificity and

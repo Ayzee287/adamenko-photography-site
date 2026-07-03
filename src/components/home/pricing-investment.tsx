@@ -16,6 +16,12 @@ import { getRequestLocale, localeHref } from "@/lib/request-locale";
  * lone left-column link echoed the séances CTA directly above it — a stutter between
  * two heavyweight sections. On one axis it reads as a deliberate compact interlude;
  * the section rhythm (py-10 sm:py-16) and page order are untouched.
+ *
+ * CURRENTLY UNMOUNTED (launch-scope decision): the homepage withholds this teaser
+ * until /prestations reaches its final production form — the homepage tells one
+ * story (work → trust → contact) without opening the pricing conversation. Kept
+ * intact, with its content (pricing.overviewCta, both locales), so restoring it is
+ * one commit: re-add the import + <PricingInvestment /> in app/[lang]/page.tsx.
  */
 export function PricingInvestment() {
   const { pricing } = getDictionary(getRequestLocale());

@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
+import { useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { ImageFigure } from "@/components/ui/image-figure";
-import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced-motion";
+import { useDragScroll } from "@/components/gallery/use-drag-scroll";
 import { cn } from "@/lib/utils";
 import type { GalleryImage } from "@/types/gallery";
 import type { GalleryStrings } from "./lightbox";
@@ -22,10 +17,9 @@ import type { GalleryStrings } from "./lightbox";
  *
  *   - infinite loop — the list is hung three times and the scroll position is
  *     silently recentred at each copy boundary, so the wall never starts or ends;
- *   - mouse-drag with momentum/inertia on release;
+ *   - drag / inertia / horizontal wheel — the site's one drag-to-scroll physics,
+ *     shared via useDragScroll (the reviews carousel rides the same clock);
  *   - touch-swipe (native momentum) and trackpad;
- *   - horizontal wheel / trackpad → scroll (vertical wheel is left to the page, so
- *     the wall never traps it);
  *   - keyboard (← / →) and the two overlay chevrons advance one frame;
  *   - grab / grabbing cursor.
  *
@@ -40,7 +34,7 @@ export function HorizontalGallery({
   t: GalleryStrings;
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const reduced = usePrefersReducedMotion();
+  const { dragHandlers, stopInertia, reduced } = useDragScroll(scrollerRef);
 
   // The list, hung three times, so there is always a full copy of content on either
   // side of the viewport to scroll into before we recentre.
@@ -67,20 +61,6 @@ export function HorizontalGallery({
     if (!el || w <= 0) return;
     while (el.scrollLeft < w) el.scrollLeft += w;
     while (el.scrollLeft >= w * 2) el.scrollLeft -= w;
-  };
-
-  // Drag state (mouse) + last-sample velocity for inertia.
-  const drag = useRef<
-    | { x: number; left: number; moved: boolean; lastX: number; lastT: number; v: number }
-    | null
-  >(null);
-  const inertiaRaf = useRef(0);
-
-  const stopInertia = () => {
-    if (inertiaRaf.current) {
-      cancelAnimationFrame(inertiaRaf.current);
-      inertiaRaf.current = 0;
-    }
   };
 
   // Measure once mounted and start in the middle copy, then keep recentred on scroll
@@ -111,74 +91,6 @@ export function HorizontalGallery({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Wheel → horizontal, but only for HORIZONTAL intent (trackpad swipe / shift+wheel).
-  // A plain vertical wheel is left to the page, so an endless wall never traps scroll.
-  useEffect(() => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // vertical → let page scroll
-      if (e.deltaX === 0) return;
-      e.preventDefault();
-      stopInertia();
-      el.scrollLeft += e.deltaX;
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
-
-  // ----- mouse drag + inertia -----
-  const onPointerDown = (e: ReactPointerEvent) => {
-    if (e.pointerType !== "mouse") return; // touch/pen use native momentum scroll
-    if (e.button !== 0) return; // primary button only — a right-click (context menu)
-    // or middle-click must never arm the drag state, or the next unpressed
-    // pointermove would scroll the wall on its own.
-    const el = scrollerRef.current;
-    if (!el) return;
-    stopInertia();
-    drag.current = {
-      x: e.clientX,
-      left: el.scrollLeft,
-      moved: false,
-      lastX: e.clientX,
-      lastT: performance.now(),
-      v: 0,
-    };
-    el.setPointerCapture?.(e.pointerId);
-  };
-  const onPointerMove = (e: ReactPointerEvent) => {
-    const el = scrollerRef.current;
-    const d = drag.current;
-    if (!el || !d) return;
-    const dx = e.clientX - d.x;
-    if (Math.abs(dx) > 3) d.moved = true;
-    el.scrollLeft = d.left - dx;
-    const now = performance.now();
-    const dt = now - d.lastT;
-    if (dt > 0) d.v = (e.clientX - d.lastX) / dt; // px/ms
-    d.lastX = e.clientX;
-    d.lastT = now;
-  };
-  const onPointerUp = (e: ReactPointerEvent) => {
-    const el = scrollerRef.current;
-    const d = drag.current;
-    el?.releasePointerCapture?.(e.pointerId);
-    drag.current = null;
-    if (!el || !d || reduced) return;
-    let v = d.v * 16; // px/ms → ~px/frame
-    if (Math.abs(v) < 0.5) return;
-    const step = () => {
-      el.scrollLeft -= v; // recenter() (via scroll handler) keeps it seamless
-      v *= 0.92; // decay → natural stop
-      if (Math.abs(v) > 0.3) {
-        inertiaRaf.current = requestAnimationFrame(step);
-      } else {
-        inertiaRaf.current = 0;
-      }
-    };
-    inertiaRaf.current = requestAnimationFrame(step);
-  };
 
   // ----- arrows + keyboard: advance ~one frame -----
   const nudge = (dir: 1 | -1) => {
@@ -215,15 +127,8 @@ export function HorizontalGallery({
         role="region"
         aria-label={t.reel}
         tabIndex={0}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
+        {...dragHandlers}
         onKeyDown={onKeyDown}
-        // The plates are <img>s — natively draggable. Cancelling dragstart keeps a
-        // mouse drag a SCROLL gesture: no browser ghost image, and the pointer
-        // stream is never cut short by a pointercancel mid-drag.
-        onDragStart={(e) => e.preventDefault()}
         className={cn(
           "reel-region flex h-[280px] cursor-grab items-stretch gap-4 overflow-x-auto overscroll-x-contain px-5 select-none active:cursor-grabbing sm:h-[360px] sm:px-8 lg:h-[400px]",
           "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",

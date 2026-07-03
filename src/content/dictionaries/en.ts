@@ -389,6 +389,10 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "In their words",
       title: "Trust, above all.",
       empty: "My clients' words will appear here. Real ones, never invented.",
+      carouselLabel: "Google client reviews",
+      readMore: "Read more",
+      readLess: "Show less",
+      summary: "Google rating {rating} / 5 · based on {count} reviews",
     },
     finalCta: {
       eyebrow: "Contact",
