@@ -46,6 +46,12 @@ const CLAMP_CHARS = 180;
  * the Google aggregate line underneath. Long reviews clamp with a per-card
  * "read more" (expansion is user-initiated → CLS-exempt); the words themselves
  * stay verbatim and complete in the DOM either way.
+ *
+ * CURRENTLY UNMOUNTED (launch-scope decision): the homepage withholds this section
+ * until the production Google Reviews integration is operational (Place-ID
+ * discovery + first real sync). Everything is kept intact — component, sync
+ * pipeline, types, strings — so restoring is one commit: re-add the import, the
+ * strings object and <Testimonials t={…} locale={locale} /> in app/[lang]/page.tsx.
  */
 export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Locale }) {
   const items = testimonials;

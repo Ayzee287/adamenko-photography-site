@@ -6,7 +6,6 @@ import {
   type Locale,
 } from "@/lib/i18n";
 import { setRequestLocale } from "@/lib/request-locale";
-import { getDictionary } from "@/lib/dictionary";
 import { HeroImmersive } from "@/components/home/hero-immersive";
 import { SignatureLine } from "@/components/home/signature-line";
 import { AboutPreview } from "@/components/home/about-preview";
@@ -14,7 +13,6 @@ import { ExperienceSteps } from "@/components/home/experience-steps";
 import { FeaturedReel } from "@/components/home/featured-reel";
 import { ServicesShowcase } from "@/components/home/services-showcase";
 import { DiscoverCards } from "@/components/home/discover-cards";
-import { Testimonials } from "@/components/home/testimonials";
 import { FinalCta } from "@/components/home/final-cta";
 
 export async function generateMetadata({
@@ -39,15 +37,6 @@ export default async function HomePage({
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : defaultLocale;
   setRequestLocale(locale);
-  const dict = getDictionary(locale);
-  // Testimonials is a client island (manual carousel) → it can't read the request
-  // locale; pass its strings as props. Every other section is a server component that
-  // resolves its own slice from the request locale.
-  const testimonials = {
-    ...dict.home.testimonials,
-    prevLabel: dict.ui.testimonials.prev,
-    nextLabel: dict.ui.testimonials.next,
-  };
   return (
     <>
       <HeroImmersive />
@@ -61,7 +50,12 @@ export default async function HomePage({
           story (work → trust → contact) while /prestations still evolves. Restore
           by re-adding the import + element here once the pricing page is final. */}
       <DiscoverCards />
-      <Testimonials t={testimonials} locale={locale} />
+      {/* Testimonials is temporarily unmounted pending the production Google
+          Reviews integration (real data source not yet operational). The component,
+          review carousel, sync pipeline, types and translations are all kept
+          intact — restore by re-adding the import, its strings object
+          (dict.home.testimonials + ui.testimonials prev/next → props) and
+          <Testimonials t={…} locale={locale} /> here. */}
       <FinalCta />
     </>
   );
