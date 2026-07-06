@@ -38,25 +38,40 @@ Design decisions:
 - **No timestamps in the output** — identical input produces an identical file, so
   diffs are honest and git history is the sync log.
 
-## Credentials (one-time setup)
+## Credentials (one-time setup — done)
 
 The script needs two values, read from the environment or `.env.local`
 (script-only — the Next runtime never reads them, so they are **not** needed on
 Vercel):
 
-| Variable | What it is |
-| --- | --- |
-| `GOOGLE_PLACES_API_KEY` | A Google Maps Platform API key with **Places API (New)** enabled |
-| `GOOGLE_PLACE_ID` | The business's Place ID |
+| Variable | What it is | This project |
+| --- | --- | --- |
+| `GOOGLE_PLACES_API_KEY` | A Google Maps Platform API key with **Places API (New)** enabled | Reuses the existing key **"Maps Platform API Key"** in the Google Cloud project `adamenko-photography` (API-restricted to the Maps APIs, which include Places API (New)). |
+| `GOOGLE_PLACE_ID` | The business's Place ID | `ChIJf1b8fdnMDiMRSk52HrLiTVw` |
+
+Both are set in `.env.local` (git-ignored). To reproduce from scratch:
 
 1. In [Google Cloud Console](https://console.cloud.google.com/): create (or pick) a
    project → *APIs & Services* → enable **Places API (New)** → *Credentials* →
-   create an **API key**. Restrict the key to the Places API (New) only. Places
+   create (or reuse) an **API key**. Restrict it to the Maps/Places APIs. Enabling
+   Places API (New) requires the project to have **billing** attached; Places
    Details calls are billed per request, but one request per sync is far inside the
    monthly free tier.
-2. Find the Place ID with Google's
+2. **Find the Place ID.** Adamenko Photography is a **Service Area Business** — it
+   has no public storefront address, so it does **not** appear in the JavaScript
    [Place ID Finder](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder)
-   (search for the business by name).
+   (that widget only surfaces places with an address). Discover it instead with a
+   **Places API (New) Text Search** using the SAB opt-in flag:
+
+   ```
+   curl -s -X POST 'https://places.googleapis.com/v1/places:searchText' \
+     -H "X-Goog-Api-Key: $GOOGLE_PLACES_API_KEY" \
+     -H "X-Goog-FieldMask: places.id,places.displayName,places.pureServiceAreaBusiness" \
+     -H 'Content-Type: application/json' \
+     -d '{"textQuery":"Adamenko Photography Lyon","includePureServiceAreaBusinesses":true}'
+   ```
+
+   The matching result has `pureServiceAreaBusiness: true`; take its `id`.
 3. Put both in `.env.local` (already git-ignored).
 
 ## Update workflow

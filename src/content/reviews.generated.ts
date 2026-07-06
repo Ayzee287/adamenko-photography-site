@@ -7,7 +7,47 @@
 import type { GoogleReview, GoogleRatingSummary } from "@/types/reviews";
 
 /** Aggregate profile rating at the last sync, or null before the first sync. */
-export const googleRating: GoogleRatingSummary | null = null;
+export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 5 };
 
 /** All reviews returned by the last sync, newest first — real words only. */
-export const googleReviews: GoogleReview[] = [];
+export const googleReviews: GoogleReview[] = [
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2xkV0xVbHlSWEZ1Ym5GZllVdzNUVkk1WHpBeWIxRRAB",
+    author: "Jane Hannah",
+    rating: 5,
+    text: "Au-delà d'être quelqu'un d'une grande gentillesse, Irina est très talentueuse ! Elle a su capturer notre mariage exactement comme je l'espérais : poétique, émouvant, élégant. C'était un mariage à la maison et les photos sont magnifiques malgré un décor parfois peu esthétique pour un mariage. Merci Irina pour ces très belles photos. Tu es une très belle rencontre et je suis très heureuse de t'avoir choisie pour mon mariage.",
+    language: "fr",
+    publishTime: "2026-07-01T07:36:36.003075555Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2tkc2VqaHBjVmRCU0VGYVNrcHhTMTlNVjNWdmFWRRAB",
+    author: "Алёна Кислица",
+    rating: 5,
+    text: "Ирочка, счастливы знакомству. От сердца благодарим за роскошные фото нашего торжества. Работать с тобой одно удовольствие ❤️ Процветания и преуспевания тебе,  дорогая!\nСтрогая рекомендация: Ира всего одна, а желающих много. Бронируйте свою съёмку заранее.",
+    language: "ru",
+    publishTime: "2026-07-01T06:21:07.347355139Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT21ST2RuWmlPVmRKVmtWUmFrRmtlWE5MV1UxbU9YYxAB",
+    author: "Taïna F",
+    rating: 5,
+    text: "Irina a photographié notre mariage des préparatifs jusqu’au dîner. Les clichés qu’elle nous a livrés sont juste sublimes, elle a su capter les émotions clés de cette journée exceptionnelle pour nous. Elle a été discrète et très professionnelle tout au long de la journée, a su nous suggérer des idées de poses pendant le shooting de couple et nous rappeler le timing quand c’était nécessaire. Merci encore à toi Irina pour ton travail 🥰",
+    language: "fr",
+    publishTime: "2026-06-30T23:15:32.241236298Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2t4a016ZFhkR2d6T1U1WVYyTkZaekIzVVVZNWNHYxAB",
+    author: "B Laura",
+    rating: 5,
+    text: "La séance photo avec Irina était tout simplement exceptionnelle ! Elle a su nous mettre à l’aise et nous guider. Les photos sont sublimes. Nous la recommandons +++. Merci pour tout",
+    language: "fr",
+    publishTime: "2026-06-30T21:38:07.908150483Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2pWdVFYSXlTa1ZCZUUxWGQxazBiSHB2TnpsTlltYxAB",
+    author: "Sergey Adamenko",
+    rating: 5,
+    text: "",
+    publishTime: "2026-06-30T21:10:52.554073186Z",
+  },
+];

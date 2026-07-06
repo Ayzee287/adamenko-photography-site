@@ -47,11 +47,11 @@ const CLAMP_CHARS = 180;
  * "read more" (expansion is user-initiated → CLS-exempt); the words themselves
  * stay verbatim and complete in the DOM either way.
  *
- * CURRENTLY UNMOUNTED (launch-scope decision): the homepage withholds this section
- * until the production Google Reviews integration is operational (Place-ID
- * discovery + first real sync). Everything is kept intact — component, sync
- * pipeline, types, strings — so restoring is one commit: re-add the import, the
- * strings object and <Testimonials t={…} locale={locale} /> in app/[lang]/page.tsx.
+ * Mounted on the homepage: the production Google Reviews integration is live —
+ * the Place ID (a pure Service Area Business, discovered via Places API (New)
+ * Text Search) is pinned in .env.local and `npm run sync:reviews` fills
+ * content/reviews.generated.ts, curated in content/testimonials.ts. See
+ * docs/google-reviews.md.
  */
 export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Locale }) {
   const items = testimonials;
