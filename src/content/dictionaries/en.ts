@@ -393,6 +393,9 @@ export const en: DeepPartial<Dictionary> = {
       readMore: "Read more",
       readLess: "Show less",
       summary: "Google rating {rating} / 5 · based on {count} reviews",
+      attribution: "Google Reviews",
+      viewOriginal: "View original",
+      viewTranslation: "View translation",
     },
     finalCta: {
       eyebrow: "Contact",

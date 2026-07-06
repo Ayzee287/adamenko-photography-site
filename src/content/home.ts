@@ -174,6 +174,12 @@ export const home = {
     readLess: "Réduire",
     /** Aggregate line under the carousel; {rating} and {count} are replaced. */
     summary: "Note Google {rating} / 5 · d'après {count} avis",
+    /** Per-card source attribution — quiet, next to the rating. */
+    attribution: "Avis Google",
+    /** Translation toggle (shown only when the review was written in another
+     *  language and Google provides a translation). */
+    viewOriginal: "Voir l'original",
+    viewTranslation: "Voir la traduction",
   },
 
   finalCta: {

@@ -9,10 +9,11 @@ committed.
 
 ```
 Google Business profile
-        │  (Places API (New) — GET place, fieldmask: rating,userRatingCount,reviews)
+        │  (Places API (New) — GET place?languageCode=<loc>, once per active locale,
+        │   fieldmask: rating,userRatingCount,reviews)
         ▼
 scripts/sync-reviews.mjs          ← run on demand: npm run sync:reviews
-        │  maps to the typed shape, newest first, original language kept
+        │  merges the per-locale responses by review id → original + translations
         ▼
 src/content/reviews.generated.ts  ← AUTO-GENERATED, committed (data)
         │  import
@@ -20,21 +21,32 @@ src/content/reviews.generated.ts  ← AUTO-GENERATED, committed (data)
 src/content/testimonials.ts       ← hand-written editorial policy (curation)
         │  import
         ▼
-components/home/testimonials.tsx  ← untouched — renders whatever the list holds
+components/home/testimonials.tsx  ← renders the list; per-card Google attribution
+                                     + "view original / view translation" toggle
 ```
 
 Design decisions:
 
 - **No runtime fetching, no iframe, no widget.** Reviews are data in the content
-  graph, statically rendered (SSG preserved, zero new client JS, zero CLS).
+  graph, statically rendered (SSG preserved, zero new client JS beyond the existing
+  island, zero CLS on load).
 - **Data vs policy split.** The generated file is verbatim and never hand-edited;
   which reviews *render* is decided in `testimonials.ts` (`MIN_RATING`,
   `EXCLUDED`). Curation never loses data. There is no length ceiling: long
   reviews render complete, visually clamped by the card's "read more" toggle.
-- **Original words only.** The sync keeps each review's `originalText` (never
-  Google's machine translation) — the same "real words only, verbatim" rule the
-  testimonials section has always had. Reviews render identically in both locales,
-  in the language they were written in.
+- **Original preserved, translation offered (Google-Maps behaviour).** The sync
+  keeps each review's `originalText` verbatim **and** Google's machine translation
+  into every active site locale where the original differs (`translations`, keyed by
+  locale). The card shows the translation in the visitor's language by default with
+  a **"view original"** toggle back to the exact words the client wrote; the swap is
+  client-only (both strings ship in the props — no network, no reload) and the body
+  height eases between the two lengths (reduced-motion → instant). A review already
+  in the visitor's language shows its original and hides the toggle. Nothing is ever
+  discarded, and the toggle always falls back to `originalText`.
+- **Per-card source attribution.** Each Google card carries a quiet "Avis Google" /
+  "Google Reviews" line under the stars (the small official Google mark + localized
+  wording, in the site's own meta type) so a visitor sees these are real Google
+  reviews — understated, not a badge.
 - **No timestamps in the output** — identical input produces an identical file, so
   diffs are honest and git history is the sync log.
 
@@ -103,8 +115,9 @@ Failure handling (all verified):
 
 - **Places API (New) returns at most the 5 "most relevant" reviews** for a place,
   not the full list, and the selection is Google's. For a quiet testimonial
-  carousel this is a good trade: simple key auth, no approval process, one request
-  per sync. Reviews cannot be answered/managed through this API.
+  carousel this is a good trade: simple key auth, no approval process, a couple of
+  requests per sync (one per active locale, for the translations). Reviews cannot be
+  answered/managed through this API.
 - If the profile grows and the *full* review list is wanted, the upgrade is the
   **Google Business Profile API** (`mybusiness.googleapis.com` v4 reviews list):
   full pagination and replies, but it requires OAuth as the profile owner *and*
@@ -112,8 +125,7 @@ Failure handling (all verified):
   pipeline is already shaped for it — only `fetchPlace()`/the mapping inside
   `sync-reviews.mjs` would change; the typed model, the curation layer and the
   component stay as they are.
-- **Attribution:** each quote renders with the reviewer's published name, which is
-  the substance of Google's author-attribution guidance. If the owner ever wants
-  an explicit "avis Google" source label near the section title, that is a copy
-  decision for a later pass — the `source: "google"` field is already tracked per
-  testimonial.
+- **Attribution:** each card renders the reviewer's published name (the substance of
+  Google's author-attribution guidance) **and** a per-card "Avis Google" /
+  "Google Reviews" line with the official Google mark, driven by the `source:
+  "google"` field. The aggregate rating line under the carousel names Google too.

@@ -12,6 +12,13 @@
 //   GOOGLE_PLACES_API_KEY  — Maps Platform key with "Places API (New)" enabled
 //   GOOGLE_PLACE_ID        — the business's Place ID
 //
+// Each review is preserved in its ORIGINAL language (verbatim), PLUS Google's
+// machine translation into each site locale where the original differs. The card
+// shows the translation in the visitor's language with a "view original" toggle
+// (Google-Maps behaviour), and nothing is ever lost. To collect the translations
+// this fetches the place once per active locale (LOCALES below) — a couple of
+// requests per sync, far inside the free tier.
+//
 // Offline verification (no network, same mapping + emit path):
 //
 //   node scripts/sync-reviews.mjs --fixture <places-response.json>
@@ -28,6 +35,11 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const OUT_FILE = path.join(ROOT, "src", "content", "reviews.generated.ts");
+
+// The site's active locales, in priority order — MUST mirror `activeLocales` in
+// src/lib/i18n.ts. The first is the base (canonical) fetch used for the aggregate
+// rating and the review roster; every locale is fetched to collect its translation.
+const LOCALES = ["fr", "en"];
 
 function fail(msg) {
   console.error(`sync-reviews: ${msg}`);
@@ -46,17 +58,20 @@ function loadEnvLocal() {
   }
 }
 
-/** The Places API (New) place payload — from the fixture or the live API. */
-async function fetchPlace() {
-  const fixtureAt = process.argv.indexOf("--fixture");
-  if (fixtureAt !== -1) {
-    const file = process.argv[fixtureAt + 1];
+const FIXTURE_AT = process.argv.indexOf("--fixture");
+const IS_FIXTURE = FIXTURE_AT !== -1;
+
+/** The Places API (New) place payload for one locale — from the fixture or the
+ *  live API. `languageCode` asks Google to translate each review's `text` into
+ *  that locale (its `originalText` is always returned unchanged). */
+async function fetchPlace(languageCode) {
+  if (IS_FIXTURE) {
+    const file = process.argv[FIXTURE_AT + 1];
     if (!file) fail("--fixture needs a path to a canned Places API response (JSON).");
     console.log(`sync-reviews: reading fixture ${file} (no network)`);
     return JSON.parse(await readFile(file, "utf8"));
   }
 
-  loadEnvLocal();
   const key = process.env.GOOGLE_PLACES_API_KEY;
   const placeId = process.env.GOOGLE_PLACE_ID;
   if (!key || !placeId) {
@@ -67,7 +82,7 @@ async function fetchPlace() {
   }
 
   const res = await fetch(
-    `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`,
+    `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=${languageCode}`,
     {
       headers: {
         "X-Goog-Api-Key": key,
@@ -82,24 +97,64 @@ async function fetchPlace() {
   return res.json();
 }
 
-const place = await fetchPlace();
-if (typeof place !== "object" || place === null || Array.isArray(place)) {
-  fail("unexpected payload — not a Places API place object.");
-}
-if (place.reviews !== undefined && !Array.isArray(place.reviews)) {
-  fail("unexpected payload — `reviews` is not an array.");
+loadEnvLocal();
+
+// Fetch the place once per active locale. In fixture mode there is only one canned
+// response, so only the base locale is "fetched" (translations still derive from
+// its per-review originalText/text pair).
+const fetchLocales = IS_FIXTURE ? [LOCALES[0]] : LOCALES;
+const places = {};
+for (const loc of fetchLocales) {
+  const place = await fetchPlace(loc);
+  if (typeof place !== "object" || place === null || Array.isArray(place)) {
+    fail(`unexpected payload for ${loc} — not a Places API place object.`);
+  }
+  if (place.reviews !== undefined && !Array.isArray(place.reviews)) {
+    fail(`unexpected payload for ${loc} — \`reviews\` is not an array.`);
+  }
+  places[loc] = place;
 }
 
-// Map to the typed shape (src/types/reviews.ts). The ORIGINAL text is kept —
-// testimonials are real words only, never machine-translated.
-const reviews = (place.reviews ?? [])
+const basePlace = places[fetchLocales[0]];
+
+// Merge the per-locale responses by review id (src/types/reviews.ts). Each review
+// keeps its ORIGINAL words verbatim; a locale's translation is stored ONLY when the
+// original is in a different language (i.e. Google actually translated it).
+const byId = new Map();
+for (const loc of fetchLocales) {
+  for (const r of places[loc].reviews ?? []) {
+    const id = r.name ?? "";
+    if (!id) continue;
+    if (!byId.has(id)) {
+      byId.set(id, {
+        id,
+        author: r.authorAttribution?.displayName ?? "",
+        rating: typeof r.rating === "number" ? r.rating : 0,
+        originalText: (r.originalText?.text ?? r.text?.text ?? "").trim(),
+        originalLanguage: r.originalText?.languageCode ?? r.text?.languageCode ?? undefined,
+        publishTime: r.publishTime ?? "",
+        translations: {},
+      });
+    }
+    const rec = byId.get(id);
+    // `r.text` is the review rendered in `loc`; when the original is a different
+    // language this is Google's machine translation into `loc`.
+    const translated = (r.text?.text ?? "").trim();
+    if (
+      rec.originalLanguage &&
+      rec.originalLanguage !== loc &&
+      translated &&
+      translated !== rec.originalText
+    ) {
+      rec.translations[loc] = translated;
+    }
+  }
+}
+
+const reviews = [...byId.values()]
   .map((r) => ({
-    id: r.name ?? "",
-    author: r.authorAttribution?.displayName ?? "",
-    rating: typeof r.rating === "number" ? r.rating : 0,
-    text: (r.originalText?.text ?? r.text?.text ?? "").trim(),
-    language: r.originalText?.languageCode ?? r.text?.languageCode ?? undefined,
-    publishTime: r.publishTime ?? "",
+    ...r,
+    translations: Object.keys(r.translations).length ? r.translations : undefined,
   }))
   .filter((r) => r.id && r.author && r.rating > 0)
   .sort((a, b) => (a.publishTime < b.publishTime ? 1 : -1));
@@ -115,6 +170,8 @@ if (reviews.length === 0 && !process.argv.includes("--allow-empty")) {
   }
 }
 
+const place = basePlace;
+
 const summary =
   typeof place.rating === "number" && typeof place.userRatingCount === "number"
     ? `{ rating: ${place.rating}, count: ${place.userRatingCount} }`
@@ -129,8 +186,9 @@ const entries = reviews.map((r) =>
     `    id: ${lit(r.id)},`,
     `    author: ${lit(r.author)},`,
     `    rating: ${r.rating},`,
-    `    text: ${lit(r.text)},`,
-    ...(r.language ? [`    language: ${lit(r.language)},`] : []),
+    `    originalText: ${lit(r.originalText)},`,
+    ...(r.originalLanguage ? [`    originalLanguage: ${lit(r.originalLanguage)},`] : []),
+    ...(r.translations ? [`    translations: ${lit(r.translations)},`] : []),
     `    publishTime: ${lit(r.publishTime)},`,
     "  },",
   ].join("\n"),
