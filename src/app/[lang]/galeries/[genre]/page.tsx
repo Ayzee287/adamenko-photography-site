@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/container";
 import { PageHeader } from "@/components/layout/page-header";
 import { Reveal } from "@/components/motion/reveal";
 import { GalleryView } from "@/components/gallery/gallery-view";
+import { FinalCta } from "@/components/home/final-cta";
 import { genreSlugs } from "@/content/galleries";
 import { buildMetadata } from "@/lib/seo";
 import { getDictionary } from "@/lib/dictionary";
@@ -42,17 +43,24 @@ export default async function GenrePage({ params }: PageProps) {
   if (!gallery) notFound();
 
   return (
-    <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
-      <Reveal>
-        <PageHeader
-          eyebrow={t.copy.galleries.title}
-          title={gallery.title}
-          intro={gallery.intro}
-        />
-      </Reveal>
-      <div className="mt-10 sm:mt-16">
-        <GalleryView images={gallery.images} t={t.ui.gallery} />
-      </div>
-    </Container>
+    <>
+      <Container className="pt-14 pb-10 sm:pt-20 sm:pb-16">
+        <Reveal>
+          <PageHeader
+            eyebrow={t.copy.galleries.title}
+            title={gallery.title}
+            intro={gallery.intro}
+          />
+        </Reveal>
+        <div className="mt-10 sm:mt-16">
+          <GalleryView images={gallery.images} t={t.ui.gallery} />
+        </div>
+      </Container>
+
+      {/* Closing invitation — the /prestations precedent (H1). A visitor who has
+          just viewed a complete series is the warmest lead on the site; without
+          this band the page handed them the footer (audit 05). */}
+      <FinalCta />
+    </>
   );
 }
