@@ -158,10 +158,12 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
               ))}
             </div>
 
-            {/* Aggregate + paging — one quiet row under the wall. The rating line
-                renders only from real synced values (never fabricated), and links
-                to the real Google profile so a visitor can verify it. */}
-            <div className="mt-8 flex items-center justify-between gap-6">
+            {/* Footer of the wall — a top-down cluster: the aggregate rating (social
+                proof, linking to the real profile to verify), then the "view all
+                reviews" CTA (the site's secondary text link — clay underline-draw +
+                arrow) with the carousel paging on the right. The rating sits on its
+                own line so it never wraps against the arrows on narrow viewports. */}
+            <div className="mt-8">
               {googleRating ? (
                 googleProfile ? (
                   <a
@@ -175,43 +177,46 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
                 ) : (
                   <p className="text-sm text-muted">{summaryText}</p>
                 )
-              ) : (
-                <span />
-              )}
-              {items.length > 1 ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => nudge(-1)}
-                    disabled={!can.left}
-                    aria-label={t.prevLabel}
-                    className={arrow}
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => nudge(1)}
-                    disabled={!can.right}
-                    aria-label={t.nextLabel}
-                    className={arrow}
-                  >
-                    ›
-                  </button>
+              ) : null}
+              {googleProfile || items.length > 1 ? (
+                <div
+                  className={cn(
+                    "flex items-center justify-between gap-6",
+                    googleRating && "mt-3",
+                  )}
+                >
+                  {googleProfile ? (
+                    <ButtonLink href={googleProfile.reviewsUri} variant="secondary">
+                      {t.viewAllOnGoogle}
+                    </ButtonLink>
+                  ) : (
+                    <span />
+                  )}
+                  {items.length > 1 ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => nudge(-1)}
+                        disabled={!can.left}
+                        aria-label={t.prevLabel}
+                        className={arrow}
+                      >
+                        ‹
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => nudge(1)}
+                        disabled={!can.right}
+                        aria-label={t.nextLabel}
+                        className={arrow}
+                      >
+                        ›
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </div>
-
-            {/* Verify / leave-a-review CTA — the site's own secondary text link
-                (clay underline draw + kinetic arrow), opening the Google profile in
-                a new tab. Never a Google-styled button. */}
-            {googleProfile ? (
-              <div className="mt-3">
-                <ButtonLink href={googleProfile.reviewsUri} variant="secondary">
-                  {t.viewAllOnGoogle}
-                </ButtonLink>
-              </div>
-            ) : null}
           </div>
         ) : (
           // Reserved-by-choice empty state (v3 QA) — unchanged: a short, confident
@@ -341,25 +346,40 @@ function ReviewCard({
         {body}
       </blockquote>
 
-      {hasTranslation || long ? (
-        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-          {hasTranslation ? (
-            <button
-              type="button"
-              onClick={toggleTranslation}
-              className="text-xs uppercase tracking-meta text-muted hover:text-clay"
-            >
-              {showingTranslation ? t.viewOriginal : t.viewTranslation}
-            </button>
-          ) : null}
+      {/* Action hierarchy (interaction-design pass): "read more" is the primary
+          reading action — the site's clay underline-draw, in ink — and sits first.
+          "view original" is a subordinate LANGUAGE utility: quieter (muted, no
+          underline, a step smaller) and stacked beneath, so the two never read as
+          equal-weight twins. Order = importance; treatment = role. */}
+      {long || hasTranslation ? (
+        <div className="mt-3 flex flex-col items-start gap-1.5">
           {long ? (
             <button
               type="button"
               aria-expanded={expanded}
               onClick={() => setExpanded((v) => !v)}
-              className="text-xs uppercase tracking-meta text-muted hover:text-clay"
+              className="group py-0.5 text-xs uppercase tracking-meta text-ink/75"
             >
-              {expanded ? t.readLess : t.readMore}
+              <span className="relative pb-0.5">
+                {expanded ? t.readLess : t.readMore}
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-px bg-current opacity-20"
+                />
+                <span
+                  aria-hidden
+                  className="link-draw absolute inset-x-0 bottom-0 h-px bg-clay"
+                />
+              </span>
+            </button>
+          ) : null}
+          {hasTranslation ? (
+            <button
+              type="button"
+              onClick={toggleTranslation}
+              className="py-0.5 text-[0.7rem] uppercase tracking-meta text-muted hover:text-clay"
+            >
+              {showingTranslation ? t.viewOriginal : t.viewTranslation}
             </button>
           ) : null}
         </div>
