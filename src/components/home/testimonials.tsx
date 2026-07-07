@@ -11,9 +11,10 @@ import { Container } from "@/components/layout/container";
 import { SectionHeading } from "./section-heading";
 import { useDragScroll } from "@/components/gallery/use-drag-scroll";
 import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced-motion";
+import { ButtonLink } from "@/components/ui/button-link";
 import { cn } from "@/lib/utils";
 import { testimonials, type Testimonial } from "@/content/testimonials";
-import { googleRating } from "@/content/reviews.generated";
+import { googleRating, googleProfile } from "@/content/reviews.generated";
 import type { Locale } from "@/lib/i18n";
 
 // Measuring the review body before/after a translation swap has to happen before
@@ -23,7 +24,6 @@ const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffec
 
 /** Locale-resolved strings, passed from the server home page (this is a client island). */
 export type TestimonialStrings = {
-  eyebrow: string;
   title: string;
   empty: string;
   prevLabel: string;
@@ -39,6 +39,8 @@ export type TestimonialStrings = {
    *  another language and Google supplies a translation. */
   viewOriginal: string;
   viewTranslation: string;
+  /** Secondary CTA under the aggregate line → the Google profile. */
+  viewAllOnGoogle: string;
 };
 
 // A quote longer than this gets clamped with a "read more" toggle. Chosen so a
@@ -117,10 +119,26 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
   const arrow =
     "flex h-11 w-11 items-center justify-center text-xl text-ink/70 hover:text-clay disabled:pointer-events-none disabled:opacity-25";
 
+  // The aggregate line, formatted once so it can serve as the link text too.
+  const summaryText = googleRating
+    ? t.summary
+        .replace(
+          "{rating}",
+          new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-GB", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          }).format(googleRating.rating),
+        )
+        .replace("{count}", String(googleRating.count))
+    : "";
+
   return (
     <section className="py-10 sm:py-16">
       <Container>
-        <SectionHeading eyebrow={t.eyebrow} title={t.title} align="center" />
+        {/* Eyebrow intentionally omitted — the heading carries the section on its
+            own; the trust cue now lives in the per-card Google attribution and the
+            aggregate + "view all reviews" links to the real profile. */}
+        <SectionHeading title={t.title} align="center" />
         {items.length > 0 ? (
           <div className="mt-10 sm:mt-16">
             <div
@@ -141,20 +159,22 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
             </div>
 
             {/* Aggregate + paging — one quiet row under the wall. The rating line
-                renders only from real synced values (never fabricated). */}
+                renders only from real synced values (never fabricated), and links
+                to the real Google profile so a visitor can verify it. */}
             <div className="mt-8 flex items-center justify-between gap-6">
               {googleRating ? (
-                <p className="text-sm text-muted">
-                  {t.summary
-                    .replace(
-                      "{rating}",
-                      new Intl.NumberFormat(locale === "fr" ? "fr-FR" : "en-GB", {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1,
-                      }).format(googleRating.rating),
-                    )
-                    .replace("{count}", String(googleRating.count))}
-                </p>
+                googleProfile ? (
+                  <a
+                    href={googleProfile.profileUri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted hover:text-clay"
+                  >
+                    {summaryText}
+                  </a>
+                ) : (
+                  <p className="text-sm text-muted">{summaryText}</p>
+                )
               ) : (
                 <span />
               )}
@@ -181,6 +201,17 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
                 </div>
               ) : null}
             </div>
+
+            {/* Verify / leave-a-review CTA — the site's own secondary text link
+                (clay underline draw + kinetic arrow), opening the Google profile in
+                a new tab. Never a Google-styled button. */}
+            {googleProfile ? (
+              <div className="mt-3">
+                <ButtonLink href={googleProfile.reviewsUri} variant="secondary">
+                  {t.viewAllOnGoogle}
+                </ButtonLink>
+              </div>
+            ) : null}
           </div>
         ) : (
           // Reserved-by-choice empty state (v3 QA) — unchanged: a short, confident

@@ -386,7 +386,6 @@ export const en: DeepPartial<Dictionary> = {
       ],
     },
     testimonials: {
-      eyebrow: "In their words",
       title: "Trust, above all.",
       empty: "My clients' words will appear here. Real ones, never invented.",
       carouselLabel: "Google client reviews",
@@ -396,6 +395,7 @@ export const en: DeepPartial<Dictionary> = {
       attribution: "Google Reviews",
       viewOriginal: "View original",
       viewTranslation: "View translation",
+      viewAllOnGoogle: "View all reviews on Google",
     },
     finalCta: {
       eyebrow: "Contact",

@@ -35,3 +35,15 @@ export type GoogleRatingSummary = {
   /** Total number of published reviews. */
   count: number;
 };
+
+/** Official Google Maps deep-links for the business, captured at sync time from the
+ *  Places API `googleMapsLinks` field (locale-independent). Let a visitor open the
+ *  real profile to verify the reviews — or leave one of their own. */
+export type GoogleProfileLinks = {
+  /** The business's Google Maps profile (rating + reviews). */
+  profileUri: string;
+  /** Straight to the reviews list — where a visitor can also write one. */
+  reviewsUri: string;
+  /** Opens Google's "write a review" flow directly. */
+  writeReviewUri: string;
+};

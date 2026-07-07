@@ -4,10 +4,17 @@
 // reviews actually render — lives in src/content/testimonials.ts, so nothing is
 // ever lost by curation. Workflow + credentials: docs/google-reviews.md.
 
-import type { GoogleReview, GoogleRatingSummary } from "@/types/reviews";
+import type { GoogleReview, GoogleRatingSummary, GoogleProfileLinks } from "@/types/reviews";
 
 /** Aggregate profile rating at the last sync, or null before the first sync. */
 export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 5 };
+
+/** Official Google Maps deep-links for the profile, or null before the first sync. */
+export const googleProfile: GoogleProfileLinks | null = {
+  profileUri: "https://maps.google.com/?cid=6651221479339216458&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+  reviewsUri: "https://www.google.com/maps/place//data=!4m4!3m3!1s0x230eccd97dfc567f:0x5c4de2b21e764e4a!9m1!1b1?g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+  writeReviewUri: "https://www.google.com/maps/place//data=!4m3!3m2!1s0x230eccd97dfc567f:0x5c4de2b21e764e4a!12e1?g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+};
 
 /** All reviews returned by the last sync, newest first — real words only. */
 export const googleReviews: GoogleReview[] = [

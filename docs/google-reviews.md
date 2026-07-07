@@ -47,6 +47,13 @@ Design decisions:
   "Google Reviews" line under the stars (the small official Google mark + localized
   wording, in the site's own meta type) so a visitor sees these are real Google
   reviews — understated, not a badge.
+- **Verify on Google.** The sync also captures the official Google Maps deep-links
+  (`googleProfile`, from the Places API `googleMapsLinks` field): the aggregate rating
+  line links to the profile and a secondary text CTA ("Voir tous les avis sur Google" /
+  "View all reviews on Google", the site's own clay-underline + arrow) opens the reviews
+  list — where a visitor can verify authenticity or leave their own review — in a new tab.
+  No section eyebrow: the heading stands on its own, with trust carried by the attribution
+  and these links.
 - **No timestamps in the output** — identical input produces an identical file, so
   diffs are honest and git history is the sync log.
 
