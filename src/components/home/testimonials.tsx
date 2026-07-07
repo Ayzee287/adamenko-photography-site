@@ -99,11 +99,17 @@ export function Testimonials({ t, locale }: { t: TestimonialStrings; locale: Loc
     if (!el) return;
     stopInertia();
     const kids = Array.from(el.children) as HTMLElement[];
+    // offsetLeft is measured from the positioned ancestor OUTSIDE this scroller, so
+    // raw values carry the page gutter (32px at sm) — comparing them to scrollLeft
+    // made the first press a 32px no-op and clipped every snap by the same amount.
+    // Normalising to the first card yields true scroll-content coordinates.
+    const base = kids[0]?.offsetLeft ?? 0;
+    const lefts = kids.map((k) => k.offsetLeft - base);
     const cur = el.scrollLeft;
     const target =
       dir > 0
-        ? (kids.find((k) => k.offsetLeft > cur + 4)?.offsetLeft ?? cur + el.clientWidth)
-        : ([...kids].reverse().find((k) => k.offsetLeft < cur - 4)?.offsetLeft ?? 0);
+        ? (lefts.find((x) => x > cur + 4) ?? cur + el.clientWidth)
+        : ([...lefts].reverse().find((x) => x < cur - 4) ?? 0);
     el.scrollTo({ left: target, behavior: reduced ? "auto" : "smooth" });
   };
   const onKeyDown = (e: ReactKeyboardEvent) => {

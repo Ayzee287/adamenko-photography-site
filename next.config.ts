@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 82, 85],
+    /* Browser/edge TTL for optimized images (31 days). The default inherits the
+       source's `max-age=0, must-revalidate` (measured on production 2026-07-07),
+       so every return visit revalidated all ~40 gallery images. The photographs
+       are immutable in practice — a new export gets a new `<genre>-NN.jpg` name
+       (and a new blur entry), so a stale-after-swap window never arises. */
+    minimumCacheTTL: 2678400,
   },
 };
 

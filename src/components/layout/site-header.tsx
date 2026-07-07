@@ -35,13 +35,24 @@ type HeaderTone = "dark" | "paper" | "sand";
  * cross-fade, on the shared `--ease-settle` clock — no layout shift, no glass, no
  * flashy motion.
  *
- * SSR/hydration: the initial tone is computed purely from the route (home opens over
- * the dark hero, every other route over paper), so the server and first client render
- * agree; the observer only refines it after mount, and the hero (the LCP) is never
- * touched. On the homepage the bar is `fixed` and floats over the hero; on every other
- * route it is a sticky solid bar. Locale-aware: internal links are prefixed for the
- * active locale and the strings are passed in (the content graph never enters the
- * client bundle). Mobile (D038): a full-screen editorial overlay (`MobileMenu`).
+ * Tone ownership: the rendered tone is DERIVED every render — a route base tone
+ * (home opens over the dark hero, every other route over paper; a pure function of
+ * the pathname) refined by the marker measurement, which is TAGGED with the pathname
+ * it was measured on and ignored on any other route. It is never a bare stored value
+ * that a navigation must remember to reset: the outgoing page's scroll subscription
+ * stays live until the new page commits, and React may replay or drop competing
+ * `setState`s across a suspended App Router transition (observed on Next 16 /
+ * React 19.2: a render-phase reset committed, then a follow-up pass reverted it,
+ * leaving white nav text on a paper page). Deriving from (pathname, tagged
+ * measurement) makes any stale or dropped write inert by construction.
+ *
+ * SSR/hydration: with no measurement yet, the base tone is what renders, so the
+ * server and first client render agree; the measurement only refines it after
+ * mount, and the hero (the LCP) is never touched. On the homepage the bar is
+ * `fixed` and floats over the hero; on every other route it is a sticky solid bar.
+ * Locale-aware: internal links are prefixed for the active locale and the strings
+ * are passed in (the content graph never enters the client bundle). Mobile (D038):
+ * a full-screen editorial overlay (`MobileMenu`).
  */
 export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrings }) {
   const pathname = usePathname();
@@ -52,27 +63,38 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
   const homePath = localizedPath(lang, "/");
   const isHome = path === "/";
 
-  const [tone, setTone] = useState<HeaderTone>(isHome ? "dark" : "paper");
+  // The route's own base tone — what renders before (and unless) a measurement for
+  // THIS route says otherwise. Derived from the pathname, never stored.
+  const routeTone: HeaderTone = isHome ? "dark" : "paper";
+
+  // The tone measured from the markers, tagged with the pathname it was measured on.
+  // The tag is load-bearing: a measurement taken on route A can commit after the
+  // navigation to route B (A's subscription lives until B's effects run), so the
+  // render below ignores any measurement whose tag isn't the current route instead
+  // of trusting update order.
+  const [measured, setMeasured] = useState<{
+    path: string;
+    tone: HeaderTone;
+  } | null>(null);
+  const tone =
+    measured !== null && measured.path === pathname ? measured.tone : routeTone;
+
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
-  // Close the overlay AND reset the tone whenever the route changes (React's "adjust
-  // state during render"): the layout persists across navigations, so a new page must
-  // not inherit the previous page's tone before the observer re-runs.
+  // Close the overlay whenever the route changes (React's "adjust state during
+  // render"): the layout persists across navigations, so the menu must not stay open
+  // over a new page. (The tone needs no such reset — its route tag invalidates it.)
   const [prevPath, setPrevPath] = useState(pathname);
   if (pathname !== prevPath) {
     setPrevPath(pathname);
     setMenuOpen(false);
-    setTone(isHome ? "dark" : "paper");
   }
 
   useEffect(() => {
     const marks = Array.from(
       document.querySelectorAll<HTMLElement>("[data-header-tone]"),
     );
-    // No markers on this route (e.g. an inner page) → the tone stays the base
-    // `paper` already set by the route-change reset; nothing to track.
-    if (marks.length === 0) return;
     // The tone of the marked region the header strip currently sits over: the one
     // whose box straddles the header's bottom edge. Paper (the base surface) when
     // none does. Driven by the ONE shared, rAF-throttled scroll source (no extra
@@ -90,10 +112,19 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
           next = (el.dataset.headerTone as HeaderTone) ?? "paper";
         }
       }
-      setTone(next);
+      // Referentially stable when unchanged so the per-tick write bails out of
+      // re-rendering on quiet stretches.
+      setMeasured((prev) =>
+        prev !== null && prev.path === pathname && prev.tone === next
+          ? prev
+          : { path: pathname, tone: next },
+      );
     };
-    // subscribeScroll runs `update` once immediately (correct initial tone) and on
-    // every scroll/resize, batched in the shared rAF.
+    // subscribeScroll runs `update` once immediately — the commit-time measurement
+    // for the route just navigated to — and on every scroll/resize, batched in the
+    // shared rAF. Subscribed on EVERY route, marker-less ones included (they simply
+    // keep confirming "paper"), so the live subscription always belongs to the
+    // current route and no route can be left showing a stale tone.
     return subscribeScroll(update);
   }, [pathname]);
 
