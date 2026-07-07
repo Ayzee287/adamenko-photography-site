@@ -53,6 +53,15 @@ type HeaderTone = "dark" | "paper" | "sand";
  * Locale-aware: internal links are prefixed for the active locale and the strings
  * are passed in (the content graph never enters the client bundle). Mobile (D038):
  * a full-screen editorial overlay (`MobileMenu`).
+ *
+ * Breakpoints (audit finding 02, MEASURED on production): the desktop strip needs
+ * ~748px in French (serif brand + four FR labels at gap-8 + the double-spaced
+ * switcher), so mounting it at sm/640 wrapped both the brand and the nav onto two
+ * lines everywhere in 640–~775px — including iPad portrait at exactly 768. The
+ * desktop nav therefore mounts at md/768, and the brand holds its mobile text-lg
+ * until lg (text-xl at 768 measures 229.6px and re-breaks the 768 window by 3px;
+ * text-lg measures 206.7px and leaves ~20px of slack). ≥1024 is pixel-identical
+ * to the previous design.
  */
 export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrings }) {
   const pathname = usePathname();
@@ -162,7 +171,7 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-ink/50 to-transparent"
         />
       ) : null}
-      <Container className="flex h-16 items-center justify-between sm:h-20">
+      <Container className="flex h-16 items-center justify-between md:h-20">
         <Link
           href={homePath}
           // Already home → the logo means "back to the start": scroll instead of a
@@ -180,7 +189,7 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
             });
           }}
           className={cn(
-            "font-serif text-lg sm:text-xl",
+            "whitespace-nowrap font-serif text-lg lg:text-xl",
             onDark ? "text-paper" : "text-ink",
           )}
         >
@@ -189,7 +198,7 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
 
         <nav
           aria-label={chrome.ui.nav.primary}
-          className="hidden items-center gap-8 sm:flex lg:gap-10"
+          className="hidden items-center gap-8 md:flex lg:gap-10"
         >
           {chrome.nav.map((item) => {
             const active = isActive(item.href);
@@ -232,7 +241,7 @@ export function SiteHeader({ lang, chrome }: { lang: Locale; chrome: ChromeStrin
           aria-label={chrome.ui.nav.openMenu}
           onClick={() => setMenuOpen(true)}
           className={cn(
-            "-mr-2 flex h-12 items-center px-2 text-[0.95rem] hover:text-clay sm:hidden",
+            "-mr-2 flex h-12 items-center px-2 text-[0.95rem] hover:text-clay md:hidden",
             onDark ? "text-paper" : "text-ink",
           )}
         >
