@@ -99,15 +99,18 @@ export function HorizontalGallery({
     stopInertia();
     recenter(); // snap into the middle copy first, so the smooth move can't hit a seam
     const kids = Array.from(el.children) as HTMLElement[];
+    // offsetLeft is measured from the positioned `.reel-wall` wrapper, so raw values
+    // carry the scroller's own px-5/px-8 gutter; comparing them to scrollLeft parked
+    // each frame flush to the edge instead of on the gutter. Normalising to the first
+    // frame yields true scroll-content coordinates (measure() already differences
+    // two offsetLefts, so it was immune).
+    const base = kids[0]?.offsetLeft ?? 0;
+    const lefts = kids.map((k) => k.offsetLeft - base);
     const cur = el.scrollLeft;
-    let target: number;
-    if (dir > 0) {
-      const next = kids.find((k) => k.offsetLeft > cur + 4);
-      target = next ? next.offsetLeft : cur + el.clientWidth;
-    } else {
-      const prev = [...kids].reverse().find((k) => k.offsetLeft < cur - 4);
-      target = prev ? prev.offsetLeft : cur - el.clientWidth;
-    }
+    const target =
+      dir > 0
+        ? (lefts.find((x) => x > cur + 4) ?? cur + el.clientWidth)
+        : ([...lefts].reverse().find((x) => x < cur - 4) ?? cur - el.clientWidth);
     el.scrollTo({ left: target, behavior: reduced ? "auto" : "smooth" });
   };
   const onKeyDown = (e: ReactKeyboardEvent) => {
