@@ -154,13 +154,17 @@ export function HorizontalGallery({
         ))}
       </div>
 
-      {/* Overlay chevrons — edge-anchored, vertically centred, no background. Gently
-          visible at rest everywhere; they strengthen when the wall is engaged. */}
+      {/* Overlay chevrons — edge-anchored, vertically centred. Gently visible at
+          rest everywhere; they strengthen when the wall is engaged. p-1.5 grows the
+          hit area to 46px (04) with the edge offsets compensated so the glyph sits
+          exactly where it did; the quiet paper disc under the ink glyph keeps the
+          control ≥3:1 against any frame — over the dark B&W prints the bare glyph
+          disappeared entirely (08, WCAG 1.4.11). */}
       <button
         type="button"
         onClick={() => nudge(-1)}
         aria-label={t.prevImage}
-        className="reel-arrow absolute left-2 top-1/2 z-10 -translate-y-1/2 text-ink sm:left-4"
+        className="reel-arrow absolute left-0.5 top-1/2 z-10 -translate-y-1/2 rounded-full bg-paper/80 p-1.5 text-ink sm:left-2.5"
       >
         <Chevron dir="left" />
       </button>
@@ -168,7 +172,7 @@ export function HorizontalGallery({
         type="button"
         onClick={() => nudge(1)}
         aria-label={t.nextImage}
-        className="reel-arrow absolute right-2 top-1/2 z-10 -translate-y-1/2 text-ink sm:right-4"
+        className="reel-arrow absolute right-0.5 top-1/2 z-10 -translate-y-1/2 rounded-full bg-paper/80 p-1.5 text-ink sm:right-2.5"
       >
         <Chevron dir="right" />
       </button>

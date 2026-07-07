@@ -187,6 +187,7 @@ export const en: DeepPartial<Dictionary> = {
         name: "Your name",
         email: "Your email",
         occasion: "Type of session",
+        occasionPlaceholder: "Choose…",
         occasionLabels,
         message: "Your message",
         submit: "Send",
@@ -738,7 +739,7 @@ export const en: DeepPartial<Dictionary> = {
           paragraphs: ["Only two kinds of processing take place on this site:"],
           bullets: [
             "Contact form: your name, your email address, the type of session and the message you send. Purpose: to answer your enquiry and prepare a possible booking. Legal basis: your consent and the pre-contractual steps taken at your request.",
-            "Audience measurement: anonymised traffic statistics via Vercel Web Analytics, with no cookie and no personal identification. Purpose: to understand how the site is used. Legal basis: the publisher's legitimate interest.",
+            "Audience and performance measurement: anonymised traffic statistics and technical performance metrics via Vercel Web Analytics and Vercel Speed Insights, with no cookie and no personal identification. Purpose: to understand how the site is used and keep it fast. Legal basis: the publisher's legitimate interest.",
           ],
         },
         {
@@ -747,7 +748,7 @@ export const en: DeepPartial<Dictionary> = {
             "Your data is never sold. It is accessible only to Adamenko Photography and to the technical providers strictly necessary for the site to work:",
           ],
           bullets: [
-            "Vercel Inc.: site hosting and audience measurement.",
+            "Vercel Inc.: site hosting, audience and performance measurement.",
             "Resend (Plus Five Five, Inc.): delivery of the emails sent through the contact form.",
           ],
         },

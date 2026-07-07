@@ -110,7 +110,7 @@ export const confidentialite: LegalDocument = {
       paragraphs: ["Deux traitements seulement ont lieu sur ce site :"],
       bullets: [
         "Formulaire de contact : votre nom, votre adresse e-mail, le type de séance et le message que vous envoyez. Finalité : répondre à votre demande et préparer une éventuelle prestation. Base légale : votre consentement et les mesures précontractuelles prises à votre demande.",
-        "Mesure d'audience : des statistiques de fréquentation anonymisées via Vercel Web Analytics, sans cookie et sans identification personnelle. Finalité : comprendre l'usage du site. Base légale : l'intérêt légitime de l'éditeur.",
+        "Mesure d'audience et de performance : des statistiques de fréquentation et des mesures techniques de performance anonymisées via Vercel Web Analytics et Vercel Speed Insights, sans cookie et sans identification personnelle. Finalité : comprendre l'usage du site et veiller à sa rapidité. Base légale : l'intérêt légitime de l'éditeur.",
       ],
     },
     {
@@ -119,7 +119,7 @@ export const confidentialite: LegalDocument = {
         `Vos données ne sont jamais vendues. Elles sont accessibles uniquement à ${brand} et aux prestataires techniques strictement nécessaires au fonctionnement du site :`,
       ],
       bullets: [
-        "Vercel Inc. : hébergement du site et mesure d'audience.",
+        "Vercel Inc. : hébergement du site, mesure d'audience et de performance.",
         "Resend (Plus Five Five, Inc.) : acheminement des e-mails envoyés via le formulaire de contact.",
       ],
     },

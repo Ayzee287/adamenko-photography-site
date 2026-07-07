@@ -13,8 +13,11 @@ import {
 // the sitemap cannot drift from the routable set. Each path is emitted once per ACTIVE
 // locale (French at the unprefixed root, English under /en), and every entry carries
 // the full hreflang alternates + x-default, so search engines see the locale pairs.
+// No `lastModified`: the only honest value available at build time is the build
+// timestamp, which claims every URL changed on every deploy — a signal crawlers
+// learn to discount (14). Omitting it is valid; real per-page content dates can be
+// added if the content model ever tracks them.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
   const paths = [
     ...INDEXABLE_PATHS,
     ...genreSlugs.map((slug) => `/galeries/${slug}`),
@@ -32,7 +35,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return activeLocales.flatMap((locale) =>
     paths.map((path) => ({
       url: absoluteUrl(localizedPath(locale, path)),
-      lastModified,
       changeFrequency: "monthly" as const,
       priority: path === "/" ? 1 : 0.7,
       alternates: { languages: languagesFor(path) },

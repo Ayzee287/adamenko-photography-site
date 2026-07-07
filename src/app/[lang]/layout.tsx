@@ -36,10 +36,14 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-// Body — clean humanist sans.
+// Body — clean humanist sans. Cyrillic is loaded because Google-review content
+// renders in the visitor-facing sans (an author name is always visible on the
+// homepage, and the "view original" toggle reveals full Cyrillic bodies) — without
+// the subset those strings fell back to the OS font, a visible seam in the type
+// system (10). Fraunces stays latin-only: no serif surface renders Cyrillic.
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 

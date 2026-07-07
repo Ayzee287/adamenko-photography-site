@@ -161,7 +161,7 @@ export function MobileMenu({
         if (e.target === panelRef.current && !open) setMounted(false);
       }}
       className={cn(
-        "fixed inset-0 z-[60] flex flex-col bg-paper transition-opacity duration-300 ease-[var(--ease-arrive)] sm:hidden",
+        "fixed inset-0 z-[60] flex flex-col bg-paper transition-opacity duration-300 ease-[var(--ease-arrive)] md:hidden",
         shown ? "opacity-100" : "opacity-0",
       )}
     >

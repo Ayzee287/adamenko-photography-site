@@ -3,8 +3,9 @@
  * NEXT_PUBLIC_SITE_URL (set in Vercel) so canonical/OpenGraph URLs resolve
  * against the real production origin; it falls back to localhost in dev.
  *
- * At launch this will be the Vercel subdomain; a custom domain is deferred
- * (vault D009) — change the env var, not the code, when it arrives.
+ * In production this is https://www.adamenko-photography.com (the custom domain,
+ * live since 2026-06-29; apex and /fr both 308 to it). Changing domains is an
+ * env-var edit, never a code change.
  */
 export const siteUrl = new URL(
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",

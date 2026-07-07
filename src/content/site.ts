@@ -112,6 +112,9 @@ export const copy = {
       name: "Votre nom",
       email: "Votre e-mail",
       occasion: "Type de séance",
+      // Disabled placeholder for the select — an explicit choice is required, so a
+      // wedding lead can never be silently delivered as the first enum value (07).
+      occasionPlaceholder: "Choisissez…",
       occasionLabels,
       message: "Votre message",
       submit: "Envoyer",
