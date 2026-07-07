@@ -45,8 +45,11 @@ export function ContactForm({
   const hasError = (f: ContactErrorField) => fieldErrors.includes(f);
   const describedBy = (f: ContactErrorField) => (hasError(f) ? `${f}-error` : undefined);
 
+  // No `outline-none`: fields ride the same global 2px :focus-visible ring as every
+  // other control (globals.css), with the clay border as the secondary focus cue —
+  // the weakest indicator on the page has no business guarding the conversion (03).
   const inputBase =
-    "border bg-paper px-3 py-2 text-base text-ink outline-none focus:border-clay";
+    "border bg-paper px-3 py-2 text-base text-ink focus:border-clay";
   const borderFor = (f: ContactErrorField) =>
     hasError(f) ? "border-clay" : "border-line";
 
@@ -156,20 +159,33 @@ export function ContactForm({
 
       <label className="flex flex-col gap-2 text-sm text-ink" htmlFor="occasion">
         {t.occasion}
+        {/* Starts on a disabled placeholder, not the first enum value: a visitor who
+            never touches the select must NOT be submitted (and confirmed) as a
+            "Famille" inquiry (07). An empty value fails the server's enum check →
+            the existing inline occasion error + focus handling take over. */}
         <select
           id="occasion"
           name="occasion"
+          required
           aria-invalid={hasError("occasion")}
           aria-describedby={describedBy("occasion")}
           className={cn(inputBase, borderFor("occasion"))}
-          defaultValue={occasions[0]?.value}
+          defaultValue=""
         >
+          <option value="" disabled>
+            {t.occasionPlaceholder}
+          </option>
           {occasions.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
           ))}
         </select>
+        {hasError("occasion") ? (
+          <span id="occasion-error" className="text-xs text-clay-ink">
+            {t.errors.occasion}
+          </span>
+        ) : null}
       </label>
 
       <label className="flex flex-col gap-2 text-sm text-ink" htmlFor="message">
