@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type TouchEvent } from "react";
+import { createPortal } from "react-dom";
 import Image, { getImageProps } from "next/image";
 import { cn } from "@/lib/utils";
 import { blurFor } from "@/lib/image-blur";
@@ -59,6 +60,22 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
       cancelAnimationFrame(raf);
       clearTimeout(timer);
     };
+  }, [isOpen]);
+
+  // Take the page behind the dialog out of the a11y tree and interaction while it is
+  // open — the mobile menu's belt-and-braces with aria-modal, applied to the second
+  // dialog (06). Possible only because the dialog PORTALS to <body> (below): rendered
+  // in place it lives inside <main>, and inert-ing main would inert the dialog itself.
+  // Keyed on isOpen (not mounted) and declared BEFORE the focus effect, so on close
+  // this cleanup un-inerts main first and the focus restore below can land on the
+  // opener — .focus() on an element inside an inert subtree is silently ignored.
+  useEffect(() => {
+    if (!isOpen) return;
+    const background = ["main", "header", "footer"].map((sel) =>
+      document.querySelector(sel),
+    );
+    background.forEach((el) => el?.setAttribute("inert", ""));
+    return () => background.forEach((el) => el?.removeAttribute("inert"));
   }, [isOpen]);
 
   useEffect(() => {
@@ -145,7 +162,9 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
     touchX.current = null;
   };
 
-  return (
+  // Portalled to <body>: the dialog must be a SIBLING of main/header/footer for the
+  // inert treatment above (and mounts only after a click, so document exists).
+  return createPortal(
     <div
       ref={dialogRef}
       role="dialog"
@@ -165,12 +184,14 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
         <link key={key} rel="preload" as="image" imageSrcSet={srcSet} imageSizes={sizes} />
       ))}
       <div className="flex justify-end">
+        {/* Invisible -m/p pairs pad the text to a ≥44px hit area without moving a
+            pixel — the header trigger / social-links pattern (04). */}
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label={t.close}
-          className="text-sm uppercase tracking-meta text-paper/80 hover:text-paper"
+          className="-m-3 p-3 text-sm uppercase tracking-meta text-paper/80 hover:text-paper"
         >
           {t.closeLabel}
         </button>
@@ -181,11 +202,13 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
+        {/* 44px paddles (04): an explicit h-11/w-11 box, glyph centred — the visual
+            weight is unchanged, only the hit area grows. */}
         <button
           type="button"
           onClick={onPrev}
           aria-label={t.prevPhoto}
-          className="shrink-0 px-2 text-3xl text-paper/70 hover:text-paper"
+          className="flex h-11 w-11 shrink-0 items-center justify-center text-3xl text-paper/70 hover:text-paper"
         >
           ‹
         </button>
@@ -208,7 +231,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
           type="button"
           onClick={onNext}
           aria-label={t.nextPhoto}
-          className="shrink-0 px-2 text-3xl text-paper/70 hover:text-paper"
+          className="flex h-11 w-11 shrink-0 items-center justify-center text-3xl text-paper/70 hover:text-paper"
         >
           ›
         </button>
@@ -220,6 +243,7 @@ export function Lightbox({ images, index, onClose, onPrev, onNext, t }: Lightbox
       <p role="status" aria-live="polite" className="sr-only">
         {current.alt} · {t.photograph} {displayIndex + 1} {t.of} {count}
       </p>
-    </div>
+    </div>,
+    document.body,
   );
 }
