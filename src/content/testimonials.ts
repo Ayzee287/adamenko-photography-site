@@ -11,9 +11,20 @@
 // and a manual carousel the moment it isn't — no layout change either way.
 
 import { googleReviews } from "./reviews.generated";
+import type { Locale } from "@/lib/i18n";
 
 export type Testimonial = {
+  /** The words in their ORIGINAL language — the verbatim fallback, and what the
+   *  "view original" toggle reveals. */
   quote: string;
+  /** BCP-47 language of `quote` (Google reviews), e.g. "ru" — sets the correct
+   *  `lang` attribute and drives the translation toggle. Absent for hand-collected
+   *  words (already in the site's language). */
+  language?: Locale | string;
+  /** Google's per-locale machine translations of `quote`. When the active locale
+   *  has an entry, the card shows it by default with a "view original" toggle;
+   *  with no entry it shows `quote` verbatim and hides the toggle. */
+  translations?: Partial<Record<Locale, string>>;
   name: string;
   /** Star rating 1–5 (Google reviews). Absent for hand-collected words — the
    *  card then simply renders without a star row. */
@@ -41,9 +52,11 @@ const MIN_RATING = 5;
 const EXCLUDED: string[] = [];
 
 const fromGoogle: Testimonial[] = googleReviews
-  .filter((r) => r.rating >= MIN_RATING && r.text.length > 0 && !EXCLUDED.includes(r.id))
+  .filter((r) => r.rating >= MIN_RATING && r.originalText.length > 0 && !EXCLUDED.includes(r.id))
   .map((r) => ({
-    quote: r.text,
+    quote: r.originalText,
+    language: r.originalLanguage,
+    translations: r.translations,
     name: r.author,
     rating: r.rating,
     date: r.publishTime.slice(0, 7),

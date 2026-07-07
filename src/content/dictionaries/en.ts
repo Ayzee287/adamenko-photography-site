@@ -386,13 +386,16 @@ export const en: DeepPartial<Dictionary> = {
       ],
     },
     testimonials: {
-      eyebrow: "In their words",
       title: "Trust, above all.",
       empty: "My clients' words will appear here. Real ones, never invented.",
       carouselLabel: "Google client reviews",
       readMore: "Read more",
       readLess: "Show less",
       summary: "Google rating {rating} / 5 · based on {count} reviews",
+      attribution: "Google Reviews",
+      viewOriginal: "View original",
+      viewTranslation: "View translation",
+      viewAllOnGoogle: "View all reviews on Google",
     },
     finalCta: {
       eyebrow: "Contact",

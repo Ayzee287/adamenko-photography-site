@@ -4,10 +4,61 @@
 // reviews actually render — lives in src/content/testimonials.ts, so nothing is
 // ever lost by curation. Workflow + credentials: docs/google-reviews.md.
 
-import type { GoogleReview, GoogleRatingSummary } from "@/types/reviews";
+import type { GoogleReview, GoogleRatingSummary, GoogleProfileLinks } from "@/types/reviews";
 
 /** Aggregate profile rating at the last sync, or null before the first sync. */
-export const googleRating: GoogleRatingSummary | null = null;
+export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 5 };
+
+/** Official Google Maps deep-links for the profile, or null before the first sync. */
+export const googleProfile: GoogleProfileLinks | null = {
+  profileUri: "https://maps.google.com/?cid=6651221479339216458&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+  reviewsUri: "https://www.google.com/maps/place//data=!4m4!3m3!1s0x230eccd97dfc567f:0x5c4de2b21e764e4a!9m1!1b1?g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+  writeReviewUri: "https://www.google.com/maps/place//data=!4m3!3m2!1s0x230eccd97dfc567f:0x5c4de2b21e764e4a!12e1?g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAIYBCAA",
+};
 
 /** All reviews returned by the last sync, newest first — real words only. */
-export const googleReviews: GoogleReview[] = [];
+export const googleReviews: GoogleReview[] = [
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2xkV0xVbHlSWEZ1Ym5GZllVdzNUVkk1WHpBeWIxRRAB",
+    author: "Jane Hannah",
+    rating: 5,
+    originalText: "Au-delà d'être quelqu'un d'une grande gentillesse, Irina est très talentueuse ! Elle a su capturer notre mariage exactement comme je l'espérais : poétique, émouvant, élégant. C'était un mariage à la maison et les photos sont magnifiques malgré un décor parfois peu esthétique pour un mariage. Merci Irina pour ces très belles photos. Tu es une très belle rencontre et je suis très heureuse de t'avoir choisie pour mon mariage.",
+    originalLanguage: "fr",
+    translations: {"en":"Beyond being incredibly kind, Irina is very talented! She captured our wedding exactly as I had hoped: poetic, moving, and elegant. It was a home wedding, and the photos are magnificent despite the sometimes less-than-ideal setting for a wedding. Thank you, Irina, for these beautiful photos. You were a wonderful person to meet, and I'm so glad I chose you for my wedding."},
+    publishTime: "2026-07-01T07:36:36.003075555Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2tkc2VqaHBjVmRCU0VGYVNrcHhTMTlNVjNWdmFWRRAB",
+    author: "Алёна Кислица",
+    rating: 5,
+    originalText: "Ирочка, счастливы знакомству. От сердца благодарим за роскошные фото нашего торжества. Работать с тобой одно удовольствие ❤️ Процветания и преуспевания тебе,  дорогая!\nСтрогая рекомендация: Ира всего одна, а желающих много. Бронируйте свою съёмку заранее.",
+    originalLanguage: "ru",
+    translations: {"fr":"Irochka, nous sommes ravis de faire votre connaissance. Un immense merci pour les magnifiques photos de notre fête. C'est un vrai plaisir de travailler avec vous ❤️ Tous nos vœux de réussite et de bonheur !\n\nUn conseil : Irochka est unique, mais la demande est forte. Réservez votre séance photo à l'avance.","en":"Irochka, we're so happy to meet you. Thank you from the bottom of our hearts for the gorgeous photos of our celebration. It's a pleasure working with you ❤️ Wishing you prosperity and success, my dear!\nA strong recommendation: there's only one Irochka, but there are many interested parties. Book your shoot in advance."},
+    publishTime: "2026-07-01T06:21:07.347355139Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT21ST2RuWmlPVmRKVmtWUmFrRmtlWE5MV1UxbU9YYxAB",
+    author: "Taïna F",
+    rating: 5,
+    originalText: "Irina a photographié notre mariage des préparatifs jusqu’au dîner. Les clichés qu’elle nous a livrés sont juste sublimes, elle a su capter les émotions clés de cette journée exceptionnelle pour nous. Elle a été discrète et très professionnelle tout au long de la journée, a su nous suggérer des idées de poses pendant le shooting de couple et nous rappeler le timing quand c’était nécessaire. Merci encore à toi Irina pour ton travail 🥰",
+    originalLanguage: "fr",
+    translations: {"en":"Irina photographed our wedding from the preparations until dinner. The photos she delivered are simply stunning; she captured the key emotions of this exceptional day for us. She was discreet and very professional throughout the day, suggesting pose ideas during our couple's shoot and reminding us of the timing when needed. Thank you again, Irina, for your work! 🥰"},
+    publishTime: "2026-06-30T23:15:32.241236298Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2t4a016ZFhkR2d6T1U1WVYyTkZaekIzVVVZNWNHYxAB",
+    author: "B Laura",
+    rating: 5,
+    originalText: "La séance photo avec Irina était tout simplement exceptionnelle ! Elle a su nous mettre à l’aise et nous guider. Les photos sont sublimes. Nous la recommandons +++. Merci pour tout",
+    originalLanguage: "fr",
+    translations: {"en":"The photoshoot with Irina was simply exceptional! She made us feel comfortable and guided us perfectly. The photos are stunning. We highly recommend her. Thank you so much!"},
+    publishTime: "2026-06-30T21:38:07.908150483Z",
+  },
+  {
+    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2pWdVFYSXlTa1ZCZUUxWGQxazBiSHB2TnpsTlltYxAB",
+    author: "Sergey Adamenko",
+    rating: 5,
+    originalText: "",
+    publishTime: "2026-06-30T21:10:52.554073186Z",
+  },
+];

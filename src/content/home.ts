@@ -163,7 +163,6 @@ export const home = {
   },
 
   testimonials: {
-    eyebrow: "Elles en parlent",
     title: "La confiance, avant tout.",
     // Reserved-by-choice (v3 QA): frames the absence as integrity, not "coming soon".
     empty: "Les avis de mes clientes apparaîtront ici. De vrais mots, jamais inventés.",
@@ -174,6 +173,15 @@ export const home = {
     readLess: "Réduire",
     /** Aggregate line under the carousel; {rating} and {count} are replaced. */
     summary: "Note Google {rating} / 5 · d'après {count} avis",
+    /** Per-card source attribution — quiet, next to the rating. */
+    attribution: "Avis Google",
+    /** Translation toggle (shown only when the review was written in another
+     *  language and Google provides a translation). */
+    viewOriginal: "Voir l'original",
+    viewTranslation: "Voir la traduction",
+    /** Secondary CTA under the aggregate line → the Google profile (the arrow is
+     *  supplied by the CTA component, so it is not part of the string). */
+    viewAllOnGoogle: "Voir tous les avis sur Google",
   },
 
   finalCta: {
