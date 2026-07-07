@@ -6,7 +6,6 @@ type Sub = () => void;
 
 const subs = new Set<Sub>();
 let ticking = false;
-let y = 0;
 
 function flush() {
   ticking = false;
@@ -14,7 +13,6 @@ function flush() {
 }
 
 function onScroll() {
-  y = window.scrollY;
   if (!ticking) {
     ticking = true;
     requestAnimationFrame(flush);
@@ -28,7 +26,6 @@ export function subscribeScroll(fn: Sub): () => void {
     window.addEventListener("resize", onScroll, { passive: true });
   }
   subs.add(fn);
-  y = window.scrollY;
   fn();
   return () => {
     subs.delete(fn);
@@ -37,9 +34,4 @@ export function subscribeScroll(fn: Sub): () => void {
       window.removeEventListener("resize", onScroll);
     }
   };
-}
-
-/** Last sampled scrollY (updated by the shared listener). */
-export function getScrollY(): number {
-  return y;
 }

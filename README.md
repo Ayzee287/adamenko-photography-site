@@ -19,8 +19,8 @@ Brand register is **premium without being exclusive** — never luxury-aloof.
 | Styling | [Tailwind CSS 4](https://tailwindcss.com) (CSS-first `@theme`, no config file) |
 | Images | `next/image` — AVIF/WebP, responsive `srcset`, blur placeholders |
 | Fonts | Fraunces (display) · Inter (body) via `next/font` |
-| Analytics | `@vercel/analytics` |
-| Hosting | [Vercel](https://vercel.com) (subdomain at launch; custom domain deferred) |
+| Analytics | `@vercel/analytics` · `@vercel/speed-insights` |
+| Hosting | [Vercel](https://vercel.com) — live at [www.adamenko-photography.com](https://www.adamenko-photography.com) |
 
 ## Project structure
 
@@ -48,7 +48,8 @@ src/
     ui/                ImageFigure, ButtonLink
     legal/ · seo/      Legal document renderer · JSON-LD injector
   content/             Typed content schema: identity, galleries, services, FAQ,
-                       legal, locations (no CMS)
+                       legal, locations, testimonials (no CMS)
+    reviews.generated.ts  Google reviews data — written by the sync, never by hand
     dictionaries/      fr (canonical) · en (live) · ru/uk (drafts, inactive)
   lib/                 i18n + request locale, SEO helpers, structured data, og,
                        contact validation, email pipeline, rate limit, blur map
@@ -56,6 +57,8 @@ src/
   types/               Gallery types
 scripts/
   gen-blur.mjs         Regenerates the blur-up map after adding photos (npm run gen:blur)
+  sync-reviews.mjs     Rewrites content/reviews.generated.ts from the Google Places API
+                       (npm run sync:reviews — run daily by .github/workflows/sync-reviews.yml)
 public/
   galleries/<genre>/   Web-export gallery photographs (committed)
   home/ · about/       Hero + portrait
@@ -79,7 +82,8 @@ npm run build      # production build
 npm run start      # serve the production build
 npm run lint       # ESLint (eslint-config-next)
 npm run typecheck  # tsc --noEmit
-npm run gen:blur   # regenerate blur-up placeholders after adding/replacing photos
+npm run gen:blur      # regenerate blur-up placeholders after adding/replacing photos
+npm run sync:reviews  # refresh Google reviews data (needs the GOOGLE_* env vars)
 ```
 
 > Requires Node 20+ (developed on Node 24).
@@ -88,30 +92,28 @@ npm run gen:blur   # regenerate blur-up placeholders after adding/replacing phot
 
 Hosted on **Vercel** with Git integration:
 
-- Every push to a branch creates a **preview deployment**.
-- Merges to `main` deploy to **production** automatically.
-- Launch target is a Vercel **subdomain**; a custom domain will be added later.
+- Production is live at **https://www.adamenko-photography.com** (FR at `/`, EN at `/en`).
+- Every push to a branch creates a **preview deployment**; merges to `main` deploy to
+  **production** automatically.
 - `robots.ts` disallows indexing of non-production deployments so previews never
   compete in search.
-
-**Going live?** Follow [`docs/launch-checklist.md`](./docs/launch-checklist.md) — the single
-production-launch checklist (engineering ✅ verified; remaining items are the Vercel import,
-environment variables, and Resend setup). The contact-email pipeline (architecture, required
-DNS records, env vars, the ≈5-minute Resend connect, and troubleshooting) is documented in
-[`docs/email-architecture.md`](./docs/email-architecture.md).
+- Environment variables are documented in [`.env.example`](./.env.example); the
+  contact-email pipeline (architecture, DNS records, troubleshooting) in
+  [`docs/email-architecture.md`](./docs/email-architecture.md); the Google reviews
+  sync in [`docs/google-reviews.md`](./docs/google-reviews.md).
 
 ## Status
 
-The site is **code-complete**. Remaining work is owner content + deployment ops, not engineering:
+The site is **live in production** (launched 2026-06-29):
 
 - [x] Strategy, brand direction, information architecture (in vault)
 - [x] Design system, layout shell, gallery components, all routes
 - [x] Real galleries + hero + portrait (curated, optimised, registered)
-- [x] Content: home, about (bio + portrait), services, FAQ, contact, legal pages
+- [x] Content: home, about (bio + portrait), services, FAQ, contact, legal pages (FR + EN)
 - [x] Inquiry form wired to delivery (Resend REST + honeypot + server validation)
-- [x] SEO: LocalBusiness/Person JSON-LD, photo-backed OpenGraph, sitemap, robots, hreflang scaffold
-- [ ] Owner: confirm bio/pricing, real testimonials, legal facts — see `docs/owner-todo.md`
-- [ ] Ops: Resend account + verified domain, Vercel import + env vars, launch on subdomain
+- [x] SEO: LocalBusiness/Person JSON-LD, photo-backed OpenGraph, sitemap, robots, hreflang
+- [x] Google reviews on the homepage, refreshed daily by a scheduled GitHub Action
+- [ ] Owner content passes (bio wording, pricing confirmation) — see `docs/owner-todo.md`
 
 ## License
 
