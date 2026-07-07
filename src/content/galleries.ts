@@ -127,8 +127,3 @@ export const featured: GalleryImage[] = [
 
 /** Ordered slugs for nav / static params. */
 export const genreSlugs = galleries.map((g) => g.slug) as GenreSlug[];
-
-/** Look up one gallery by slug. */
-export function getGallery(slug: string): Gallery | undefined {
-  return galleries.find((g) => g.slug === slug);
-}
