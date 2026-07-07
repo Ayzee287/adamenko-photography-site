@@ -1,22 +1,29 @@
 # Google reviews → testimonials
 
 How the real Google Business reviews reach the homepage Testimonials section, and
-how to refresh them. The site stays **fully static**: the build never talks to
-Google; reviews are synced on demand, reviewed like any content change, and
-committed.
+how they stay fresh. The site stays **fully static**: the build never talks to
+Google. Reviews are synced **automatically** by a scheduled GitHub Action (no local
+machine, no "remember to run sync"); the sync's output is committed as plain data
+and Vercel redeploys. A manual sync is still available for anyone who wants it.
 
 ## Architecture
 
 ```
+        ┌─────────────────────  GitHub Actions (.github/workflows/sync-reviews.yml)
+        │                        cron: daily 05:23 UTC  ·  or manual (workflow_dispatch)
+        ▼
 Google Business profile
         │  (Places API (New) — GET place?languageCode=<loc>, once per active locale,
-        │   fieldmask: rating,userRatingCount,reviews)
+        │   fieldmask: rating,userRatingCount,reviews,googleMapsUri,googleMapsLinks)
         ▼
-scripts/sync-reviews.mjs          ← run on demand: npm run sync:reviews
+scripts/sync-reviews.mjs          ← runs in CI (or locally: npm run sync:reviews)
         │  merges the per-locale responses by review id → original + translations
+        │  + aggregate rating + official profile links; NO timestamps (deterministic)
         ▼
-src/content/reviews.generated.ts  ← AUTO-GENERATED, committed (data)
-        │  import
+src/content/reviews.generated.ts  ← AUTO-GENERATED data
+        │
+        │  the workflow: if this file changed → commit ONLY it, push to the default
+        │  branch → Vercel redeploys. If nothing changed → no commit, no deploy.
         ▼
 src/content/testimonials.ts       ← hand-written editorial policy (curation)
         │  import
@@ -91,32 +98,99 @@ Both are set in `.env.local` (git-ignored). To reproduce from scratch:
    ```
 
    The matching result has `pureServiceAreaBusiness: true`; take its `id`.
-3. Put both in `.env.local` (already git-ignored).
+3. Put both in `.env.local` (already git-ignored) for local runs.
+4. **For the automatic sync, add the same two values as GitHub repository secrets**
+   so the scheduled Action can use them: GitHub → the repo → *Settings* → *Secrets
+   and variables* → *Actions* → *New repository secret*, twice:
 
-## Update workflow
+   | Secret name | Value |
+   | --- | --- |
+   | `GOOGLE_PLACES_API_KEY` | the Maps Platform API key (same value as `.env.local`) |
+   | `GOOGLE_PLACE_ID` | `ChIJf1b8fdnMDiMRSk52HrLiTVw` |
 
-Whenever new reviews should appear on the site (a monthly pass is plenty, and also
-keeps the display within Google's content-freshness expectations):
+   The names must match exactly — the workflow reads `secrets.GOOGLE_PLACES_API_KEY`
+   and `secrets.GOOGLE_PLACE_ID`. Secrets are write-only in the UI and never printed
+   in logs. (The Next runtime still never reads these — they are sync-only.)
+
+## Automatic sync (production)
+
+Reviews stay fresh with **no manual work**. The workflow
+`.github/workflows/sync-reviews.yml` runs on a schedule, regenerates
+`reviews.generated.ts`, and — only if something changed — commits that one file and
+pushes, which triggers a Vercel redeploy.
+
+**Schedule:** daily at **05:23 UTC** (early morning in Lyon, so a review left
+overnight is live by the owner's morning). The odd minute dodges GitHub's
+top-of-hour scheduler backlog. Daily (rather than weekly) is the default because
+reviews are conversion-critical social proof and the cost is negligible (below); to
+go weekly instead, change the cron to `"23 5 * * 1"`. A scheduled workflow only runs
+from the file on the **default branch**, so this activates once the workflow is
+merged to `main`.
+
+**What the workflow does, step by step:**
+
+1. Checks out the default branch (with push credentials from the built-in
+   `GITHUB_TOKEN`, scoped to `contents: write`).
+2. Sets up Node 20. It does **not** `npm install` — the sync script uses only Node
+   built-ins (`node:fs`, `node:path`, global `fetch`), so there's nothing to install.
+3. Runs `npm run sync:reviews` with the two secrets as env vars.
+4. If `git diff` shows `reviews.generated.ts` changed, it stages **only** that file,
+   commits it (`chore(reviews): sync Google reviews from Places API`) and pushes. If
+   nothing changed, it exits cleanly with **no commit and no deploy**.
+
+**Why push straight to `main` (not a PR):** the goal is zero manual intervention, and
+a PR would need a human to merge. Direct push is safe here because (a) the payload is
+a single machine-generated data file, (b) the sync is deterministic and guards
+against wiping real words with an empty response, (c) the workflow stages only that
+one path, so a commit can never include anything else, and (d) it re-checks the file
+still looks well-formed before committing. *If you ever protect `main` so the Actions
+bot cannot push directly, either grant that bot an exception or switch the last step
+to open a PR — but then merging becomes manual.*
+
+**No infinite loops / idempotent:** the workflow is triggered by `schedule` and
+`workflow_dispatch` only — **never by `push`** — so its own commit cannot re-trigger
+it. The commit message deliberately omits `[skip ci]` (Vercel skips such commits),
+so the deploy still happens. Because the sync emits no timestamps, an unchanged
+profile yields a byte-identical file → no diff → no commit; running twice in a row
+is a no-op.
+
+**Trigger a manual sync** (no local machine needed): GitHub → the repo → *Actions* →
+*Sync Google reviews* → *Run workflow*. It behaves exactly like a scheduled run
+(commits only if something changed). Locally you can still run:
 
 ```
 npm run sync:reviews      # rewrites src/content/reviews.generated.ts
-git diff                  # read the new words — this is a content review
+git diff                  # read the new words, then commit that file
 ```
 
-- Want to hide a specific review? Add its `id` to `EXCLUDED` in
-  `src/content/testimonials.ts`.
-- Commit both files, push, deploy. Done — the build itself needs no credentials
-  and cannot fail because of Google.
+**Curation:** to hide a specific review, add its `id` to `EXCLUDED` in
+`src/content/testimonials.ts` (hand-written; the sync never touches it).
 
-Failure handling (all verified):
+### Failure handling & recovery (all verified)
 
-- Missing credentials, HTTP error, malformed payload → the script exits non-zero
-  **without touching the generated file**; the last-known-good reviews keep
-  shipping.
-- A response with zero reviews refuses to overwrite a non-empty file unless
-  `--allow-empty` is passed — a Google-side glitch can't silently wipe real words.
-- Offline dry-run: `node scripts/sync-reviews.mjs --fixture <response.json>` runs
-  the exact mapping + emit path against a canned Places API response.
+- **Google unavailable / bad credentials / malformed payload** → the sync exits
+  non-zero **without touching the generated file**. The workflow step fails, so the
+  commit steps never run and the repository is left exactly as it was; the site keeps
+  serving the last-known-good reviews. The **next scheduled run recovers
+  automatically** (or trigger a manual run). Nothing to clean up.
+- **Zero-reviews glitch** → the script refuses to overwrite a non-empty file unless
+  `--allow-empty` is passed, so a transient Google glitch can't silently wipe real
+  words.
+- **A rejected push** (e.g. `main` advanced mid-run) fails the job cleanly and
+  self-heals on the next run (the sync is deterministic). A `concurrency` group also
+  prevents two syncs from racing.
+- **Offline dry-run** of the mapping/emit path (no network, no creds):
+  `node scripts/sync-reviews.mjs --fixture <response.json>`.
+
+### Cost (Places API)
+
+Each sync makes **one Place Details request per active locale**. With `fr` + `en`
+that is **2 requests per sync**. Daily → **~60 requests/month** (weekly → ~8/month).
+These use the Places API (New) *Place Details* SKU that includes the reviews field;
+at ~60 calls/month the cost is a few cents and sits **comfortably inside the free
+monthly usage** (the Google Maps Platform free tier alone covers many thousands of
+such calls per month). Enabling a slightly higher cadence would still be trivial —
+this pipeline is nowhere near any quota.
 
 ## Known limits & upgrade path
 

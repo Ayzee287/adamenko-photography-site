@@ -1,0 +1,85 @@
+name: Sync Google reviews
+
+# Fully automatic Google-reviews sync (see docs/google-reviews.md).
+#
+# On a schedule it runs `npm run sync:reviews`, which rewrites the single
+# generated data file src/content/reviews.generated.ts from the live Google
+# Places API — verbatim originals + every locale's translation + the aggregate
+# rating and the official profile links. If that file changed, the job commits
+# ONLY that file and pushes to the default branch, which triggers Vercel to
+# redeploy. If nothing changed it exits cleanly with no commit.
+#
+# Idempotent by construction: the sync emits no timestamps, so identical Google
+# data produces a byte-identical file ⇒ no diff ⇒ no commit. This workflow is
+# NOT triggered by `push`, so its own commit can never re-trigger it (no loop);
+# the commit message is deliberately free of `[skip ci]` so Vercel still deploys.
+
+on:
+  schedule:
+    # Daily at 05:23 UTC (~06:23–07:23 Europe/Paris — early morning in Lyon, so a
+    # review left overnight is live by the owner's morning). The odd minute avoids
+    # GitHub's top-of-hour scheduling backlog. Reviews are conversion-critical
+    # social proof and the cost is negligible (see the cost note in the docs), so a
+    # daily refresh beats weekly. To go weekly instead, use e.g. "23 5 * * 1".
+    - cron: "23 5 * * *"
+  # Manual run from the Actions tab — lets the owner force a sync any time.
+  workflow_dispatch: {}
+
+# Least privilege: the job's only write is committing the regenerated data file.
+permissions:
+  contents: write
+
+# Never let two syncs race on the commit/push.
+concurrency:
+  group: sync-reviews
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (default branch, with push credentials)
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # No `npm ci`: scripts/sync-reviews.mjs uses only Node built-ins
+      # (node:fs, node:path, global fetch), so installing dependencies would add
+      # time and a failure surface for nothing. If Google is unavailable the
+      # script exits non-zero WITHOUT touching the file, this step fails, and the
+      # later commit steps never run — the repo is left exactly as it was.
+      - name: Sync reviews from Google Places
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+          GOOGLE_PLACE_ID: ${{ secrets.GOOGLE_PLACE_ID }}
+        run: npm run sync:reviews
+
+      - name: Commit & push only if the generated data changed
+        run: |
+          set -euo pipefail
+          FILE="src/content/reviews.generated.ts"
+
+          # Idempotency gate: identical Google data ⇒ byte-identical file ⇒ no diff.
+          if git diff --quiet -- "$FILE"; then
+            echo "No review changes — exiting without a commit."
+            exit 0
+          fi
+
+          # Defensive: never commit a truncated or malformed file.
+          if ! grep -q "export const googleReviews" "$FILE"; then
+            echo "::error::$FILE looks malformed — refusing to commit."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage ONLY the generated artifact and commit only what is staged, so a
+          # commit can never contain anything but the review data.
+          git add -- "$FILE"
+          git commit -m "chore(reviews): sync Google reviews from Places API"
+          git push
+          echo "Pushed updated reviews — Vercel will redeploy the site."
