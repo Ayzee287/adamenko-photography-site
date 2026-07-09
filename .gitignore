@@ -22,6 +22,9 @@ Thumbs.db
 # QA artifacts — regenerable via the local screenshot rig; never shipped
 /docs/screenshots/
 
+# graphify knowledge graph — regenerable via `graphify update .` (no API cost); not shipped
+/graphify-out/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
