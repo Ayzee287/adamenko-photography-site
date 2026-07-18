@@ -64,6 +64,11 @@
   --size-header: 64px;
   /* Icon glyph frame (Foundations icons: 20px) */
   --size-icon: 20px;
+  /* Media component values (frozen specs): opening height instance-default,
+     lightbox stage bounds (≤90vw / ≤85vh). */
+  --size-opening: 90svh;
+  --size-lightbox-w: 90vw;
+  --size-lightbox-h: 85vh;
 }
 
 @media (width >= 768px) {
