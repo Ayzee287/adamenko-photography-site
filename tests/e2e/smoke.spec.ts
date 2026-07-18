@@ -68,6 +68,7 @@ test("404 carries the spec copy, its own title, and the real status", async ({
   expect(response?.status()).toBe(404);
   await expect(page.locator("h1")).toContainText("Cette page n'existe pas.");
   await expect(page).toHaveTitle(/404 · Adamenko Photography/);
-  const home = page.getByRole("link");
-  await expect(home.first()).toHaveAttribute("href", "/");
+  await expect(
+    page.locator("main").getByRole("link", { name: /Retour à l'accueil/ }),
+  ).toHaveAttribute("href", "/");
 });

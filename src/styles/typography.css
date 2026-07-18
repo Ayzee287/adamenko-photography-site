@@ -91,6 +91,16 @@
   }
 }
 
+/* Chrome wordmark — a COMPONENT value from the frozen Header spec (serif 20,
+   live text), not a content role. The 13-role law governs content typography;
+   this utility exists solely so the wordmark needs no arbitrary value. */
+@utility text-wordmark {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
 /* ── Sans roles — the fact voice (Inter 400/500) ─────────────────────────── */
 
 @utility text-body {

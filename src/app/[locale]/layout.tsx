@@ -11,8 +11,16 @@ import { activeLocales, htmlLang, isLocale, type Locale } from "@/lib/i18n";
 import { setRequestLocale } from "@/lib/request-locale";
 import { buildBaseMetadata } from "@/lib/seo/metadata";
 import { fontVariables } from "@/lib/fonts";
+import { getDictionary } from "@/lib/dictionary";
+import { SkipLink } from "@/components/chrome/skip-link";
+import { Header } from "@/components/chrome/header";
+import { Footer } from "@/components/chrome/footer";
 import { notFound } from "next/navigation";
 import "@/styles/tokens.css";
+
+// Séances is gated on ≥3 published stories (frozen nav law). The stories
+// collection arrives in P15 — until then the gate is closed by constant.
+const showSeances = false;
 
 export const dynamicParams = false;
 
@@ -38,13 +46,34 @@ export default async function RootLayout({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  setRequestLocale(locale as Locale);
+  const active = locale as Locale;
+  setRequestLocale(active);
+  const dict = getDictionary(active);
   return (
-    <html lang={htmlLang[locale as Locale]} className={fontVariables}>
-      <body className="text-body">
-        {/* chrome slot: skip-link + header (P7) */}
-        <main id="main">{children}</main>
-        {/* chrome slot: footer (P7) */}
+    <html lang={htmlLang[active]} className={fontVariables}>
+      <body className="flex min-h-dvh flex-col text-body">
+        <SkipLink />
+        <Header
+          locale={active}
+          tone="paper"
+          showSeances={showSeances}
+          chrome={{
+            brand: dict.site.brand,
+            primary: dict.ui.nav.primary,
+            language: dict.ui.nav.language,
+            menu: dict.ui.nav.menu,
+            openMenu: dict.ui.nav.openMenu,
+            closeMenu: dict.ui.nav.closeMenu,
+            contactCta: dict.copy.home.contactCta,
+            instagram: dict.ui.nav.instagram,
+            facebook: dict.ui.nav.facebook,
+          }}
+          socials={dict.site.social}
+        />
+        <main id="main" tabIndex={-1} className="flex-1">
+          {children}
+        </main>
+        <Footer showSeances={showSeances} />
         {/* analytics slot (P20) */}
       </body>
     </html>

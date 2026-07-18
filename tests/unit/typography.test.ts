@@ -51,9 +51,15 @@ const table: Record<
 };
 
 describe("typography.css — the 13 frozen roles", () => {
-  it("defines exactly the 13 roles, nothing more", () => {
+  it("defines exactly the 13 roles + the wordmark component value", () => {
     const names = [...css.matchAll(/@utility (text-[\w-]+)/g)].map((m) => m[1]);
-    expect(names.sort()).toEqual(Object.keys(table).sort());
+    expect(names.sort()).toEqual(
+      [...Object.keys(table), "text-wordmark"].sort(),
+    );
+    // The wordmark is chrome, not typography: serif 20, no responsive pair.
+    const wm = role("text-wordmark");
+    expect(wm).toContain("font-size: 20px");
+    expect(wm).not.toContain("@media");
   });
 
   for (const [name, [serif, weight, mb, dt, lh]] of Object.entries(table)) {

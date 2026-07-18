@@ -59,6 +59,17 @@
   --size-target-min: 44px;
   --size-control-pill: 52px;
   --size-control-field: 56px;
+  /* Chrome component value (frozen Header spec: 64 mb / 72 dt) — recorded as
+     a component token; not part of the Figma 5-size collection. */
+  --size-header: 64px;
+  /* Icon glyph frame (Foundations icons: 20px) */
+  --size-icon: 20px;
+}
+
+@media (width >= 768px) {
+  :root {
+    --size-header: 72px;
+  }
 }
 
 /* Dark is a place: close band + lightbox containers only. Never `<html>`. */

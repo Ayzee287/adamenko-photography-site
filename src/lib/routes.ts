@@ -115,3 +115,58 @@ export const navInventory: ReadonlyArray<{
 
 export const allServiceParams = Object.keys(serviceSlugs) as ServiceSlug[];
 export const allGenreParams = Object.keys(genreSlugs) as GenreSlug[];
+
+/* ── Reverse lookup — pathname → PageRef ─────────────────────────────────────
+   Required by the frozen language switch ("preserves the current page"): the
+   switch's hrefs are getAlternates(refFromPathname(pathname)). Matches both
+   FR-shaped paths (today's reality on /en/* before the P14 rewrites) AND the
+   EN public aliases (after them) — one function, both eras. */
+
+function invert(map: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(Object.entries(map).map(([k, v]) => [v, k]));
+}
+const serviceFromEn = invert(serviceSlugs);
+const genreFromEn = invert(genreSlugs);
+
+export function refFromPathname(pathname: string): PageRef | null {
+  let path = pathname.replace(/\/+$/, "") || "/";
+  // Strip the locale prefix — including "/fr": the proxy serves FR unprefixed
+  // by REWRITING to /fr/*, and usePathname reports the rewritten form.
+  for (const prefix of ["/en", "/fr"]) {
+    if (path === prefix || path.startsWith(`${prefix}/`)) {
+      path = path.slice(prefix.length) || "/";
+      break;
+    }
+  }
+  const segments = path.split("/").filter(Boolean);
+
+  if (segments.length === 0) return { page: "home" };
+
+  if (segments.length === 1) {
+    const hit = (Object.entries(staticPages) as Array<[StaticPageId, { fr: string; en: string }]>).find(
+      ([, p]) => p.fr === `/${segments[0]}` || p.en === `/${segments[0]}`,
+    );
+    return hit ? { page: hit[0] } : null;
+  }
+
+  if (segments.length === 2) {
+    const [head, tail] = segments;
+    if (head === "prestations" || head === "services") {
+      const service = (serviceSlugs[tail as ServiceSlug] ? tail : serviceFromEn[tail]) as
+        | ServiceSlug
+        | undefined;
+      return service ? { page: "service", service } : null;
+    }
+    if (head === "galeries" || head === "galleries") {
+      const genre = (genreSlugs[tail as GenreSlug] ? tail : genreFromEn[tail]) as
+        | GenreSlug
+        | undefined;
+      return genre ? { page: "genre", genre } : null;
+    }
+    if (head === "seances" || head === "stories") {
+      return { page: "story", slug: tail };
+    }
+  }
+
+  return null;
+}
