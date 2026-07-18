@@ -6,7 +6,11 @@
 // no-IO behaviors.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, cleanup, render, renderHook, waitFor } from "@testing-library/react";
+
+// No vitest globals → no RTL auto-cleanup: without this, revealed probes from
+// earlier tests survive in the shared jsdom document and poison queries.
+afterEach(() => cleanup());
 import {
   HIDE_TRAVEL,
   REVEAL_TRAVEL,
@@ -140,33 +144,33 @@ describe("useReveal — once-only, reduced-motion, no-IO", () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  function renderWithElement() {
-    const rendered = renderHook(() => useReveal<HTMLDivElement>());
-    const el = document.createElement("div");
-    // Attach the element and re-run the effect cycle:
-    (rendered.result.current.ref as { current: HTMLDivElement | null }).current = el;
-    rendered.rerender();
-    return rendered;
+  // A real probe component: JSX attaches the ref BEFORE effects run — exactly
+  // how consumers use the hook (a detached-ref harness never fires the effect).
+  function Probe() {
+    const { ref, revealed } = useReveal<HTMLDivElement>();
+    return <div ref={ref} data-testid="probe" data-revealed={String(revealed)} />;
   }
+  const revealed = () =>
+    document.querySelector('[data-testid="probe"]')!.getAttribute("data-revealed");
 
   it("reveals on first intersection and NEVER un-reveals", async () => {
-    const { result } = renderWithElement();
-    expect(result.current.revealed).toBe(false);
+    render(<Probe />);
+    expect(revealed()).toBe("false");
     const io = MockIO.instances.at(-1)!;
 
     act(() => io.cb([{ isIntersecting: true }]));
-    await waitFor(() => expect(result.current.revealed).toBe(true));
+    await waitFor(() => expect(revealed()).toBe("true"));
     expect(io.disconnected).toBe(true);
 
     act(() => io.cb([{ isIntersecting: false }]));
-    expect(result.current.revealed).toBe(true); // permanent
+    expect(revealed()).toBe("true"); // permanent
   });
 
   it("ignores non-intersecting entries", () => {
-    const { result } = renderWithElement();
+    render(<Probe />);
     const io = MockIO.instances.at(-1)!;
     act(() => io.cb([{ isIntersecting: false }]));
-    expect(result.current.revealed).toBe(false);
+    expect(revealed()).toBe("false");
   });
 
   it("prefers-reduced-motion reveals immediately without an observer", async () => {
@@ -174,14 +178,14 @@ describe("useReveal — once-only, reduced-motion, no-IO", () => {
       "matchMedia",
       vi.fn().mockReturnValue({ matches: true }),
     );
-    const { result } = renderWithElement();
-    await waitFor(() => expect(result.current.revealed).toBe(true));
+    render(<Probe />);
+    await waitFor(() => expect(revealed()).toBe("true"));
     expect(MockIO.instances).toHaveLength(0);
   });
 
   it("missing IntersectionObserver reveals immediately (content never hostage)", async () => {
     vi.stubGlobal("IntersectionObserver", undefined);
-    const { result } = renderWithElement();
-    await waitFor(() => expect(result.current.revealed).toBe(true));
+    render(<Probe />);
+    await waitFor(() => expect(revealed()).toBe("true"));
   });
 });

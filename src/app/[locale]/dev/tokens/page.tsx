@@ -27,7 +27,7 @@ function Swatches() {
 export default function TokensDemo() {
   if (process.env.NODE_ENV === "production") notFound();
   return (
-    <main id="main" className="p-8">
+    <div className="p-8">
       <h1>Tokens — Foundations v1.0.0</h1>
 
       <h2>Surfaces & content (paper mode)</h2>
@@ -71,6 +71,6 @@ export default function TokensDemo() {
         press 80 · fast 150 · standard 200 · lightbox 250 · decode 300 · settle
         400 · ease cubic-bezier(0.2, 0, 0, 1)
       </p>
-    </main>
+    </div>
   );
 }

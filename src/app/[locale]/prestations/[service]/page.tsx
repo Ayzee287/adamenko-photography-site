@@ -18,9 +18,9 @@ export default async function Page({
 }) {
   const { locale, service } = await params;
   return (
-    <main id="main">
+    <>
       <h1>service : {service}</h1>
       <p>{locale}</p>
-    </main>
+    </>
   );
 }

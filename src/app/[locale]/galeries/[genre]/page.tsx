@@ -17,9 +17,9 @@ export default async function Page({
 }) {
   const { locale, genre } = await params;
   return (
-    <main id="main">
+    <>
       <h1>galerie : {genre}</h1>
       <p>{locale}</p>
-    </main>
+    </>
   );
 }

@@ -24,7 +24,7 @@ const roles = [
 export default function TypeSpecimen() {
   if (process.env.NODE_ENV === "production") notFound();
   return (
-    <main id="main" className="p-8 max-w-measure">
+    <div className="p-8 max-w-measure">
       <h1 className="text-h2">Type — Foundations v1.0.0</h1>
 
       {roles.map(({ cls, name }) => (
@@ -70,6 +70,6 @@ export default function TypeSpecimen() {
         <p className="text-body">{frPunctuation("Une autre question ? Écrivez-moi !")}</p>
         <p className="text-body">{frPunctuation("« La confiance, avant tout »")}</p>
       </section>
-    </main>
+    </div>
   );
 }

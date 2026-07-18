@@ -6,9 +6,9 @@ export default async function Page({
 }) {
   const { locale } = await params;
   return (
-    <main id="main">
+    <>
       <h1>mentions-legales</h1>
       <p>{locale}</p>
-    </main>
+    </>
   );
 }

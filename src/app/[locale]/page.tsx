@@ -17,8 +17,8 @@ export default async function PlaceholderPage({
   const { locale } = await params;
   const { line } = copy[locale as Locale] ?? copy.fr;
   return (
-    <main id="main">
+    <>
       <p>{line}</p>
-    </main>
+    </>
   );
 }

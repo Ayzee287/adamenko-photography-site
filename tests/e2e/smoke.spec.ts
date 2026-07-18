@@ -52,3 +52,22 @@ test("stub pages render for both locales through the proxy", async ({
   await page.goto("/en/galeries/mariages");
   await expect(page.locator("h1")).toContainText("mariages");
 });
+
+test("the layout owns exactly one main#main landmark", async ({ page }) => {
+  for (const path of ["/", "/tarifs", "/en/contact"]) {
+    await page.goto(path);
+    await expect(page.locator("main"), path).toHaveCount(1);
+    await expect(page.locator("main#main"), path).toHaveCount(1);
+  }
+});
+
+test("404 carries the spec copy, its own title, and the real status", async ({
+  page,
+}) => {
+  const response = await page.goto("/page-inexistante");
+  expect(response?.status()).toBe(404);
+  await expect(page.locator("h1")).toContainText("Cette page n'existe pas.");
+  await expect(page).toHaveTitle(/404 · Adamenko Photography/);
+  const home = page.getByRole("link");
+  await expect(home.first()).toHaveAttribute("href", "/");
+});
