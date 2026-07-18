@@ -25,6 +25,11 @@ import { Availability } from "@/components/content/availability";
 import { FaqItem } from "@/components/content/faq-item";
 import { ContactReassurance } from "@/components/content/contact-reassurance";
 import { InquiryForm } from "@/components/forms/inquiry-form";
+import { CloseBand } from "@/components/assemblies/close-band";
+import { PriceChapter } from "@/components/assemblies/price-chapter";
+import { Arc } from "@/components/assemblies/arc";
+import { CrossLinks } from "@/components/assemblies/cross-links";
+import { SilenceSpacer } from "@/components/assemblies/silence-spacer";
 import { submitInquiry } from "@/lib/forms/submit-inquiry";
 
 function Section(props: { title: string; children: React.ReactNode }) {
@@ -368,6 +373,68 @@ export default function ComponentsGallery() {
             mailtoHref="mailto:adamenkoiu@gmail.com"
           />
         </div>
+      </Section>
+
+      <Section title="ARC (numbered beats)">
+        <Arc
+          kicker="L'expérience"
+          heading="Simple, du premier message aux images."
+          support="Chaque étape est simple et vous ressemble."
+          beats={[
+            { title: "On se rencontre", body: "On échange sur votre projet, vos envies." },
+            { title: "On prépare ensemble", body: "Les dix premières minutes sont toujours un peu raides — c'est normal, ça passe." },
+            { title: "La séance", body: "Je vous laisse vivre et je photographie ce qui arrive vraiment." },
+            { title: "La livraison", body: "Une galerie privée d'images retouchées." },
+          ]}
+        />
+      </Section>
+
+      <Section title="PRICE-CHAPTER (silence → heirloom → block → review → silence)">
+        <PriceChapter
+          heirloom="Ce que vous achetez, au fond, c'est l'objet que vos enfants se disputeront pour le garder."
+          blocks={[
+            <PricingBlock
+              key="s"
+              name="Séance"
+              priceIntro="à partir de"
+              priceFrom={290}
+              locale="fr"
+              description="Famille, grossesse, couple ou portrait."
+              inclusions={["1 à 2 heures, un lieu", "Galerie privée en ligne", "Photographies retouchées"]}
+            />,
+          ]}
+          review={
+            <ReviewCard
+              compact
+              text="Les photos sont sublimes. Nous la recommandons +++."
+              name="B Laura"
+              date="juin 2026"
+              readMoreLabel="Lire la suite"
+            />
+          }
+        />
+      </Section>
+
+      <Section title="CROSS-LINKS + SILENCE">
+        <CrossLinks
+          ariaLabel="Séances proches"
+          links={[
+            { href: link("fr", { page: "service", service: "famille" }), label: "Famille" },
+            { href: link("fr", { page: "service", service: "couple" }), label: "Couple" },
+          ]}
+        />
+        <p className="text-small text-ink-secondary">— silence below (≥30vh, floored) —</p>
+        <SilenceSpacer />
+      </Section>
+
+      <Section title="CLOSE-BAND (dark scope, availability on)">
+        <CloseBand
+          kicker="Contact"
+          heading="Travaillons ensemble."
+          cta={{ href: link("fr", { page: "contact" }), label: "Écrivez-moi" }}
+          promise="Je réponds sous 48 h."
+          availability="Il reste deux week-ends en octobre."
+        />
       </Section>
     </div>
   );

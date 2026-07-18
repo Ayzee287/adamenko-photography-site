@@ -79,6 +79,17 @@
   }
 }
 
+/* The Silence (PBS law): ≥30% viewport height, never below the floor —
+   space/10 (128) mobile, space/11 (192) desktop. A recorded assembly value. */
+:root {
+  --size-silence: max(30vh, 128px);
+}
+@media (width >= 768px) {
+  :root {
+    --size-silence: max(30vh, 192px);
+  }
+}
+
 /* Dark is a place: close band + lightbox containers only. Never `<html>`. */
 .surface-dark {
   --surface-base: #221d17; /* brown-900 */
