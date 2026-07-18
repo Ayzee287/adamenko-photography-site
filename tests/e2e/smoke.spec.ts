@@ -32,3 +32,23 @@ test("inactive locale 404s", async ({ page }) => {
   const response = await page.goto("/ru");
   expect(response?.status()).toBe(404);
 });
+
+test("unknown dynamic slugs 404 (dynamicParams=false)", async ({ page }) => {
+  for (const path of [
+    "/prestations/inexistant",
+    "/galeries/inexistant",
+    "/seances/inexistant",
+  ]) {
+    const response = await page.goto(path);
+    expect(response?.status(), path).toBe(404);
+  }
+});
+
+test("stub pages render for both locales through the proxy", async ({
+  page,
+}) => {
+  await page.goto("/prestations/famille");
+  await expect(page.locator("h1")).toContainText("famille");
+  await page.goto("/en/galeries/mariages");
+  await expect(page.locator("h1")).toContainText("mariages");
+});

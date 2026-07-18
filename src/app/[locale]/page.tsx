@@ -12,10 +12,10 @@ const copy: Record<string, { line: string }> = {
 export default async function PlaceholderPage({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { lang } = await params;
-  const { line } = copy[lang as Locale] ?? copy.fr;
+  const { locale } = await params;
+  const { line } = copy[locale as Locale] ?? copy.fr;
   return (
     <main id="main">
       <p>{line}</p>

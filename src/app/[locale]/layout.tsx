@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return activeLocales.map((lang) => ({ lang }));
+  return activeLocales.map((locale) => ({ locale }));
 }
 
 export const metadata: Metadata = {
@@ -23,12 +23,12 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: string }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { lang } = await params;
-  if (!isLocale(lang)) notFound();
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
   return (
-    <html lang={htmlLang[lang as Locale]}>
+    <html lang={htmlLang[locale as Locale]}>
       <body>{children}</body>
     </html>
   );
