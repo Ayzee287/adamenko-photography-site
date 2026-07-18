@@ -15,6 +15,15 @@ import { IconLink } from "@/components/actions/icon-link";
 import { ImageFrame } from "@/components/media/image-frame";
 import { OpeningImage } from "@/components/media/opening-image";
 import { GalleryDemo } from "./gallery-demo";
+import { Hero } from "@/components/content/hero";
+import { Door } from "@/components/content/door";
+import { StoryPreview } from "@/components/content/story-preview";
+import { ReviewCard } from "@/components/content/review-card";
+import { ReviewGroup } from "@/components/content/review-group";
+import { PricingBlock } from "@/components/content/pricing-block";
+import { Availability } from "@/components/content/availability";
+import { FaqItem } from "@/components/content/faq-item";
+import { ContactReassurance } from "@/components/content/contact-reassurance";
 
 function Section(props: { title: string; children: React.ReactNode }) {
   return (
@@ -152,6 +161,162 @@ export default function ComponentsGallery() {
 
       <Section title="GALLERY-GRID + PAIR + LIGHTBOX (interactive)">
         <GalleryDemo />
+      </Section>
+
+      <Section title="HERO (paper + image/skeleton)">
+        <Hero
+          media="paper"
+          kicker="Prendre contact"
+          heading="Contact"
+          support="Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez."
+        />
+        <Hero
+          media="image"
+          image={{
+            src: "/home/hero.jpg",
+            alt: "Des mariés, bras levés face aux collines.",
+          }}
+          kicker="Photographe · Lyon"
+          heading="Vous attendez un enfant."
+          skeleton={{
+            facts: ["Séance grossesse à Lyon", "1–2 h", "à partir de 290 €"],
+            link: { href: link("fr", { page: "tarifs" }), label: "tout savoir" },
+          }}
+        />
+      </Section>
+
+      <Section title="DOOR + STORY-PREVIEW">
+        <div className="grid gap-8 md:grid-cols-2">
+          <Door
+            href={link("fr", { page: "service", service: "grossesse" })}
+            image={{
+              src: "/galleries/grossesse/grossesse-05.jpg",
+              alt: "Future maman en lumière naturelle.",
+              ratio: "4:5",
+            }}
+            noun="Grossesse"
+            line="Les semaines douces avant l'arrivée du bébé."
+            fact="1–2 h · à partir de 290 €"
+          />
+          <StoryPreview
+            href={link("fr", { page: "seances" })}
+            image={{
+              src: "/galleries/familles/familles-02.jpg",
+              alt: "Une famille à la maison.",
+              ratio: "3:2",
+            }}
+            season="Automne 2026"
+            title="Le dernier dimanche calme avant Jonah."
+            context="Camille, 34 semaines. Une matinée à la maison."
+          />
+        </div>
+      </Section>
+
+      <Section title="REVIEW-CARD + REVIEW-GROUP (3 = snap row on mobile)">
+        <ReviewGroup
+          regionLabel="Avis clients Google"
+          rating={{
+            rating: 5,
+            count: 5,
+            href: "https://maps.google.com/?cid=6651221479339216458",
+            summary: "Note Google {rating} / 5 · d'après {count} avis",
+            linkLabel: "Voir tous les avis sur Google",
+            locale: "fr",
+          }}
+        >
+          {[
+            <ReviewCard
+              key="1"
+              text="Au-delà d'être quelqu'un d'une grande gentillesse, Irina est très talentueuse ! Elle a su capturer notre mariage exactement comme je l'espérais : poétique, émouvant, élégant. C'était un mariage à la maison et les photos sont magnifiques malgré un décor parfois peu esthétique pour un mariage. Merci Irina pour ces très belles photos."
+              name="Jane Hannah"
+              date="juillet 2026"
+              readMoreLabel="Lire la suite"
+            />,
+            <ReviewCard
+              key="2"
+              text="Version française de l'avis, affichée par défaut."
+              original={{
+                text: "Ирочка, мы рады знакомству. Огромное спасибо!",
+                toggleLabel: "Voir l'original",
+              }}
+              name="Алёна Кислица"
+              date="juillet 2026"
+              readMoreLabel="Lire la suite"
+            />,
+            <ReviewCard
+              key="3"
+              text="La séance photo avec Irina était tout simplement exceptionnelle !"
+              name="B Laura"
+              date="juin 2026"
+              readMoreLabel="Lire la suite"
+            />,
+          ]}
+        </ReviewGroup>
+      </Section>
+
+      <Section title="PRICING-BLOCK">
+        <div className="max-w-measure">
+          <PricingBlock
+            name="Séance"
+            priceIntro="à partir de"
+            priceFrom={290}
+            locale="fr"
+            description="Famille, grossesse, couple ou portrait, chez vous ou en extérieur."
+            inclusions={[
+              "1 à 2 heures, un lieu",
+              "Préparation et repérage ensemble",
+              "Galerie privée en ligne",
+              "Photographies retouchées en haute définition",
+            ]}
+          />
+        </div>
+      </Section>
+
+      <Section title="AVAILABILITY (paper + dark)">
+        <Availability
+          sentence="Il reste deux week-ends en octobre."
+          surface="paper"
+        />
+        <div className="surface-dark bg-paper p-5">
+          <Availability sentence="Il reste deux week-ends en octobre." />
+        </div>
+      </Section>
+
+      <Section title="FAQ-ITEM (native exclusive group)">
+        <div>
+          <FaqItem
+            group="dev-faq"
+            question="Comment réserver une séance ?"
+            answer="Écrivez-moi via le formulaire : on échange, puis on cale la date ensemble."
+          />
+          <FaqItem
+            group="dev-faq"
+            question="Et si on n'est pas à l'aise devant l'objectif ?"
+            answer="Les dix premières minutes sont toujours un peu raides — c'est normal, ça passe."
+          />
+        </div>
+      </Section>
+
+      <Section title="CONTACT-REASSURANCE (full slots)">
+        <ContactReassurance
+          heading="Ce qui se passe ensuite"
+          steps={[
+            "Une réponse sous 48 h.",
+            "Un échange sur votre projet — la date, le lieu, ce que vous imaginez.",
+            "Une proposition adaptée à votre séance, sans engagement.",
+          ]}
+          promise="Je réponds sous 48 h."
+          availability="Il reste deux week-ends en octobre."
+          review={
+            <ReviewCard
+              compact
+              text="Les photos sont sublimes. Nous la recommandons +++."
+              name="B Laura"
+              date="juin 2026"
+              readMoreLabel="Lire la suite"
+            />
+          }
+        />
       </Section>
     </div>
   );
