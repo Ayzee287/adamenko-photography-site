@@ -1,0 +1,158 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   V2 TYPOGRAPHY — the 13 frozen role classes, 1:1 with the Figma Type Styles
+   sheet (Foundations §3 / VLS §3). Roles are the ONLY type utilities: the
+   default text/leading/tracking/weight scales are killed below, so a size or
+   tracking outside this file cannot compile.
+
+   Responsiveness is INTERNAL to each role: mobile value below 768px, the
+   dt value at ≥768px (tablet uses dt styles — VLS §8). Call sites never
+   write `md:text-…`; one class per role, always.
+
+   Laws carried in CSS: serif has no bold; caps exist only in the kicker;
+   the single legal weight override is `font-medium` (FAQ questions —
+   a documented character override, not a style).
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Kill the default type system — roles are the only way to set type */
+  --text-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+  --font-weight-*: initial;
+  --font-*: initial;
+
+  /* The two voices (next/font variables from src/lib/fonts.ts) */
+  --font-serif: var(--font-fraunces), georgia, "times new roman", serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* The single sanctioned weight override (FAQ question register) */
+  --font-weight-medium: 500;
+}
+
+/* ── Serif roles — the feeling voice (Fraunces 400 only) ─────────────────── */
+
+@utility text-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.08;
+  @media (width >= 768px) {
+    font-size: 64px;
+  }
+}
+
+@utility text-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.15;
+  @media (width >= 768px) {
+    font-size: 40px;
+  }
+}
+
+@utility text-h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.25;
+  @media (width >= 768px) {
+    font-size: 26px;
+  }
+}
+
+@utility text-quote {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.45;
+  @media (width >= 768px) {
+    font-size: 26px;
+  }
+}
+
+@utility text-body-letter {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.6;
+  @media (width >= 768px) {
+    font-size: 19px;
+  }
+}
+
+@utility text-caption {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  @media (width >= 768px) {
+    font-size: 15px;
+  }
+}
+
+/* ── Sans roles — the fact voice (Inter 400/500) ─────────────────────────── */
+
+@utility text-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.55;
+  @media (width >= 768px) {
+    font-size: 17px;
+  }
+}
+
+@utility text-small {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  @media (width >= 768px) {
+    font-size: 14px;
+  }
+}
+
+@utility text-kicker {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.12em; /* the ONLY tracking in the product */
+  text-transform: uppercase; /* the ONLY caps register */
+  @media (width >= 768px) {
+    font-size: 13px;
+  }
+}
+
+@utility text-nav {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2; /* dt-only role: the mobile menu uses text-h2 */
+}
+
+@utility text-price {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  @media (width >= 768px) {
+    font-size: 24px;
+  }
+}
+
+@utility text-button {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+@utility text-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.3;
+}

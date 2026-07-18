@@ -13,6 +13,7 @@
 
 @import "tailwindcss";
 @import "./reset.css";
+@import "./typography.css";
 
 /* V1 lesson (C2): docs quote utility class names — never compile from them.
    graphify-out is generated analysis, same rule. */

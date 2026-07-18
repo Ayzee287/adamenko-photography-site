@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { activeLocales, htmlLang, isLocale, type Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
+import { fontVariables } from "@/lib/fonts";
 import "@/styles/tokens.css";
 
 // Phase 0 placeholder shell (V2 rebuild). The V1 tree was removed on this
@@ -29,8 +30,8 @@ export default async function RootLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   return (
-    <html lang={htmlLang[locale as Locale]}>
-      <body>{children}</body>
+    <html lang={htmlLang[locale as Locale]} className={fontVariables}>
+      <body className="text-body">{children}</body>
     </html>
   );
 }
