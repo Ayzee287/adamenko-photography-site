@@ -10,7 +10,13 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "gen:blur": "node scripts/gen-blur.mjs",
-    "sync:reviews": "node scripts/sync-reviews.mjs"
+    "sync:reviews": "node scripts/sync-reviews.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "validate:content": "node scripts/validate-content.mjs",
+    "lhci": "lhci autorun",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -20,14 +26,18 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.2.10",
+    "prettier": "^3.9.5",
     "sharp": "^0.35.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
