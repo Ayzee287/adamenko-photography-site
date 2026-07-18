@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   V2 DESIGN TOKENS — 1:1 with the published Foundations library v1.0.0.
+   The single imported stylesheet; V1's globals.css/motion.css are inert
+   (superseded, unimported) until removed.
+
+   Laws encoded here (VLS §4/§5, Foundations §1):
+   · dark is a PLACE, not a theme — `.surface-dark` scopes the close band and
+     lightbox only; there is no global toggle
+   · the default Tailwind palettes/scales are KILLED so off-scale values are
+     impossible, not merely discouraged
+   · shadows do not exist; the only gradients are the two scrim utilities
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@import "tailwindcss";
+@import "./reset.css";
+
+/* V1 lesson (C2): docs quote utility class names — never compile from them.
+   graphify-out is generated analysis, same rule. */
+@source not "../../docs";
+@source not "../../graphify-out";
+
+/* ── Semantic surface/content variables — the mode mechanism ─────────────────
+   Primitives (Figma `1-primitive/color`) appear ONLY here and in the static
+   @theme block below:
+   cream-50 #FAF6EF · cream-100 #F2EBE0 · cream-200 #F5EFE6
+   graphite-900 #262119 · graphite-600 #66615A · graphite-300 #A5A199
+   brown-900 #221D17 · stone-400 #B3ABA0 · bronze-600 #8A6A4C · clay-700 #8C4A3F */
+
+:root {
+  --surface-base: #faf6ef; /* cream-50  — paper */
+  --surface-deep: #f2ebe0; /* cream-100 — paper-deep */
+  --content-primary: #262119; /* graphite-900 — ink */
+  --content-secondary: #66615a; /* graphite-600 — pre-flattened 70% */
+  --content-disabled: #a5a199; /* graphite-300 — pre-flattened 40% */
+  --border-hairline: color-mix(in srgb, #262119 15%, transparent);
+  --border-focus: #262119;
+  --state-selection: color-mix(in srgb, #8a6a4c 16%, transparent);
+
+  /* Layer tokens (`6-layer`) — the only legal z-indexes (see @utility below) */
+  --layer-base: 0;
+  --layer-header: 100;
+  --layer-skip: 110;
+  --layer-dialog: 900;
+  --layer-lightbox: 1000;
+
+  /* Motion tokens (`7-motion`) — consumed by the four moves (P18) */
+  --duration-press: 80ms;
+  --duration-fast: 150ms;
+  --duration-standard: 200ms;
+  --duration-lightbox: 250ms;
+  --duration-decode: 300ms;
+  --duration-settle: 400ms;
+  --distance-settle: 12px;
+  --distance-nudge: 4px;
+  --opacity-press: 0.9;
+
+  /* Size tokens (`5-size`) — control + container dimensions */
+  --size-target-min: 44px;
+  --size-control-pill: 52px;
+  --size-control-field: 56px;
+}
+
+/* Dark is a place: close band + lightbox containers only. Never `<html>`. */
+.surface-dark {
+  --surface-base: #221d17; /* brown-900 */
+  --surface-deep: #221d17;
+  --content-primary: #f5efe6; /* cream-200 */
+  --content-secondary: #b3aba0; /* stone-400 */
+  --content-disabled: color-mix(in srgb, #f5efe6 40%, transparent);
+  --border-hairline: color-mix(in srgb, #f5efe6 15%, transparent);
+  --border-focus: #f5efe6;
+}
+
+/* ── Static theme: kills + frozen scales ──────────────────────────────────── */
+
+@theme {
+  /* Kill-switches — defaults are removed, not shadowed */
+  --color-*: initial;
+  --spacing: initial;
+  --spacing-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+  --blur-*: initial;
+  --breakpoint-*: initial;
+  --container-*: initial;
+
+  /* Spacing — the 12 frozen steps (`3-space`) */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 48px;
+  --spacing-8: 64px;
+  --spacing-9: 96px;
+  --spacing-10: 128px;
+  --spacing-11: 192px;
+  --spacing-12: 256px;
+
+  /* Radius trio (`4-radius`) — content sharp, touchable soft */
+  --radius-none: 0px;
+  --radius-field: 12px;
+  --radius-pill: 999px;
+
+  /* Breakpoints (Architecture §1.11) */
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+
+  /* Containers (`5-size`) — max-w-site / max-w-measure / max-w-image-col */
+  --container-site: 1280px;
+  --container-measure: 680px;
+  --container-image-col: 960px;
+
+  /* Easing — one curve moves everything; linear fades only */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-linear: linear;
+
+  /* Blur — image placeholder only (`blur/placeholder`) */
+  --blur-placeholder: 20px;
+
+  /* Mode-independent colors (bronze is never a fill, never on dark) */
+  --color-bronze: #8a6a4c; /* bronze-600 */
+  --color-error: #8c4a3f; /* clay-700 */
+}
+
+/* ── Mode-following color tokens (utilities react to .surface-dark) ────────── */
+
+@theme inline {
+  --color-paper: var(--surface-base);
+  --color-paper-deep: var(--surface-deep);
+  --color-ink: var(--content-primary);
+  --color-ink-secondary: var(--content-secondary);
+  --color-ink-disabled: var(--content-disabled);
+  --color-hairline: var(--border-hairline);
+  --color-focus: var(--border-focus);
+  --color-selection: var(--state-selection);
+}
+
+/* ── Layer utilities — the only legal z-indexes in the codebase ────────────── */
+
+@utility z-base {
+  z-index: var(--layer-base);
+}
+@utility z-header {
+  z-index: var(--layer-header);
+}
+@utility z-skip {
+  z-index: var(--layer-skip);
+}
+@utility z-dialog {
+  z-index: var(--layer-dialog);
+}
+@utility z-lightbox {
+  z-index: var(--layer-lightbox);
+}
+
+/* ── The two approved scrims — the ONLY gradients in the product ───────────── */
+
+@utility scrim-lightbox {
+  background-color: color-mix(in srgb, #221d17 92%, transparent);
+}
+@utility scrim-opening {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, #221d17 55%, transparent),
+    transparent
+  );
+}
+
+/* ── Reduced-motion dialect (Foundations §6/§7) ──────────────────────────────
+   Transforms are removed (settle becomes a plain fade, nudges vanish) and every
+   duration caps at `fast`. Components consume the duration/distance vars, so
+   the whole dialect lives in one place. */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-standard: 150ms;
+    --duration-lightbox: 150ms;
+    --duration-decode: 150ms;
+    --duration-settle: 150ms;
+    --distance-settle: 0px;
+    --distance-nudge: 0px;
+  }
+  *,
+  ::before,
+  ::after {
+    transition-property: opacity, color, background-color, border-color,
+      text-decoration-color !important;
+  }
+}

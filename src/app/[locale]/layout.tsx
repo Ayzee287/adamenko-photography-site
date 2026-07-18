@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { activeLocales, htmlLang, isLocale, type Locale } from "@/lib/i18n";
 import { notFound } from "next/navigation";
+import "@/styles/tokens.css";
 
 // Phase 0 placeholder shell (V2 rebuild). The V1 tree was removed on this
 // branch; real layouts arrive in Phase 6 of the implementation roadmap.
