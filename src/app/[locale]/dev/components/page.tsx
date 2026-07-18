@@ -24,6 +24,8 @@ import { PricingBlock } from "@/components/content/pricing-block";
 import { Availability } from "@/components/content/availability";
 import { FaqItem } from "@/components/content/faq-item";
 import { ContactReassurance } from "@/components/content/contact-reassurance";
+import { InquiryForm } from "@/components/forms/inquiry-form";
+import { submitInquiry } from "@/lib/forms/submit-inquiry";
 
 function Section(props: { title: string; children: React.ReactNode }) {
   return (
@@ -317,6 +319,55 @@ export default function ComponentsGallery() {
             />
           }
         />
+      </Section>
+
+      <Section title="INQUIRY-FORM (mock action — '[declencher-erreur]' in the message exercises the failure path)">
+        <div className="max-w-measure">
+          <InquiryForm
+            action={submitInquiry}
+            labels={{
+              name: "Votre nom",
+              email: "Votre e-mail",
+              sessionType: "Type de séance",
+              sessionTypePlaceholder: "Choisissez…",
+              period: "Période envisagée",
+              place: "Lieu",
+              message: "Votre message",
+              source: "Comment m'avez-vous trouvée ?",
+              sourcePlaceholder: "Choisissez…",
+              optionalSuffix: "(facultatif)",
+              honeypot: "Ne pas remplir",
+              submit: "Envoyer",
+              sending: "Envoi…",
+              errors: {
+                name: "Dites-moi votre nom.",
+                email: "Cet e-mail semble incomplet.",
+                sessionType: "Choisissez un type de séance.",
+                message: "Dites-m'en un peu plus.",
+              },
+              formError:
+                "L'envoi n'a pas fonctionné — ce n'est pas vous, c'est nous. Votre message est conservé.",
+              mailtoLabel: "M'écrire directement par e-mail",
+              success: {
+                heading: "Merci, votre message est bien parti.",
+                body: "Je vous réponds sous 48 h, promis.",
+              },
+              statusSent: "Message envoyé.",
+              statusError: "L'envoi a échoué. Votre message est conservé.",
+            }}
+            sessionTypes={[
+              { value: "famille", label: "Famille" },
+              { value: "grossesse", label: "Grossesse" },
+              { value: "couple", label: "Couple" },
+              { value: "mariage", label: "Mariage" },
+              { value: "portrait", label: "Portrait" },
+            ]}
+            prefilledSessionType="grossesse"
+            origin="/dev/components"
+            locale="fr"
+            mailtoHref="mailto:adamenkoiu@gmail.com"
+          />
+        </div>
       </Section>
     </div>
   );

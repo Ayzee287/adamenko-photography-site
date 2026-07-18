@@ -13,6 +13,7 @@ const pillClasses = cn(
   "text-button text-ink bg-transparent",
   "transition-colors duration-(--duration-standard) ease-(--ease-standard)",
   "hover:border-ink active:opacity-(--opacity-press)",
+  "disabled:border-hairline disabled:text-ink-disabled",
 );
 
 function Arrow() {
@@ -31,9 +32,21 @@ export function PillButton(props: {
   onClick?: () => void;
   type?: "button" | "submit";
   showArrow?: boolean;
+  /** The census disabled state (button rendering only). */
+  disabled?: boolean;
+  /** Sending-state a11y flag (frozen submit contract: aria-busy while pending). */
+  busy?: boolean;
   children: React.ReactNode;
 }) {
-  const { href, onClick, type = "button", showArrow = false, children } = props;
+  const {
+    href,
+    onClick,
+    type = "button",
+    showArrow = false,
+    disabled,
+    busy,
+    children,
+  } = props;
   if (href !== undefined) {
     return (
       <Link href={href} onClick={onClick} className={pillClasses}>
@@ -43,7 +56,13 @@ export function PillButton(props: {
     );
   }
   return (
-    <button type={type} onClick={onClick} className={pillClasses}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      aria-busy={busy || undefined}
+      className={pillClasses}
+    >
       {children}
       {showArrow && <Arrow />}
     </button>

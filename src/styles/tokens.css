@@ -64,6 +64,8 @@
   --size-header: 64px;
   /* Icon glyph frame (Foundations icons: 20px) */
   --size-icon: 20px;
+  /* Form component value (frozen spec: message area min 160px). */
+  --size-textarea-min: 160px;
   /* Media component values (frozen specs): opening height instance-default,
      lightbox stage bounds (≤90vw / ≤85vh). */
   --size-opening: 90svh;
