@@ -48,7 +48,12 @@ export function ReviewCard(props: {
   const shown = expanded ? active : cut;
 
   return (
-    <article className="border-y border-hairline py-5">
+    // `relative` is load-bearing: the star row's sr-only "5 / 5" span is absolutely
+    // positioned, so without a positioned ancestor its containing block is the page —
+    // in the ReviewGroup mobile snap-row it escapes the scroller's clipping and widens
+    // the document (real horizontal-scroll bug, surfaced by the first multi-card usage
+    // on the Accueil). Reconciled from V1's production ReviewCard, which carried it.
+    <article className="relative border-y border-hairline py-5">
       <div className="flex" aria-hidden>
         <Star />
         <Star />

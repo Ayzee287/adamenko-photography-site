@@ -45,7 +45,7 @@ export const faq = {
     {
       category: "seance",
       q: "Où ont lieu les séances ?",
-      a: "À Lyon et dans les environs, chez vous ou en extérieur. Je me déplace aussi en France, en Europe et à l'étranger pour les projets qui le demandent.",
+      a: "À Lyon et dans les environs, chez vous ou en extérieur, pour les séances famille et grossesse. Pour les mariages, je me déplace dans toute la France.",
     },
     {
       category: "seance",
@@ -60,12 +60,12 @@ export const faq = {
     {
       category: "livraison",
       q: "Sous quelle forme les photos sont-elles livrées ?",
-      a: "Dans une galerie privée en ligne, en haute définition et prêtes à imprimer. Des albums et des tirages d'art sont disponibles en option.",
+      a: "Dans une galerie privée en ligne, en haute définition. Vous téléchargez vos photos et les gardez pour toujours.",
     },
     {
       category: "deplacement",
-      q: "Travaillez-vous en dehors de la France ?",
-      a: "Oui. Je suis basée à Lyon et disponible partout en Europe ; les projets internationaux sont étudiés au cas par cas. Les frais de déplacement sont convenus ensemble, en toute transparence.",
+      q: "Vous déplacez-vous pour les mariages ?",
+      a: "Oui, dans toute la France. Je suis basée à Lyon ; pour les mariages, les frais de déplacement sont convenus ensemble, en toute transparence.",
     },
   ] satisfies FaqItem[],
 } as const;

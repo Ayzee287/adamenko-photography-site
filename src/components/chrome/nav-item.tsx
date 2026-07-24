@@ -8,6 +8,10 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 
+// nav-item — a floating-nav destination. Rest = ash; hover/focus draws a bone underline
+// in from the left; active = bone label with the underline held in ember. Motion is the
+// wayfinding (chambre.css .ch-navlink).
+
 export function NavItem(props: {
   href: string;
   label: string;
@@ -18,12 +22,7 @@ export function NavItem(props: {
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={cn(
-        "text-nav text-ink underline-offset-4 transition-colors duration-(--duration-standard) ease-(--ease-standard)",
-        active
-          ? "underline decoration-bronze decoration-1"
-          : "no-underline hover:underline hover:decoration-ink hover:decoration-1",
-      )}
+      className={cn("ch-navlink", active && "is-active")}
     >
       {label}
     </Link>

@@ -12,11 +12,14 @@ import { setRequestLocale } from "@/lib/request-locale";
 import { buildBaseMetadata } from "@/lib/seo/metadata";
 import { fontVariables } from "@/lib/fonts";
 import { getDictionary } from "@/lib/dictionary";
+import { localBusinessJsonLd } from "@/lib/structured-data";
+import { Ambient } from "@/components/chambre/ambient";
 import { SkipLink } from "@/components/chrome/skip-link";
 import { Header } from "@/components/chrome/header";
 import { Footer } from "@/components/chrome/footer";
 import { notFound } from "next/navigation";
 import "@/styles/tokens.css";
+import "@/styles/chambre.css";
 
 // Séances is gated on ≥3 published stories (frozen nav law). The stories
 // collection arrives in P15 — until then the gate is closed by constant.
@@ -52,6 +55,7 @@ export default async function RootLayout({
   return (
     <html lang={htmlLang[active]} className={fontVariables}>
       <body className="flex min-h-dvh flex-col text-body">
+        <Ambient />
         <SkipLink />
         <Header
           locale={active}
@@ -75,6 +79,14 @@ export default async function RootLayout({
         </main>
         <Footer showSeances={showSeances} />
         {/* analytics slot (P20) */}
+        <script
+          type="application/ld+json"
+          // Site-wide LocalBusiness graph (the photographer linked as founder), built
+          // from the typed content so it can never drift from the UI.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessJsonLd(active)),
+          }}
+        />
       </body>
     </html>
   );

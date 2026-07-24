@@ -24,8 +24,8 @@ export function headlineFor(locale: Locale = defaultLocale): string {
 export const INDEXABLE_PATHS = [
   "/",
   "/galeries",
+  "/tarifs",
   "/a-propos",
-  "/prestations",
   "/contact",
   "/mentions-legales",
   "/confidentialite",

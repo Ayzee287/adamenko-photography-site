@@ -19,20 +19,23 @@ export function Footer(props: { showSeances: boolean }) {
 
   return (
     <footer className="bg-paper-deep">
-      <div className="mx-auto max-w-site px-5 py-9 md:px-8">
-        <div className="flex flex-col gap-7 md:flex-row md:justify-between md:gap-8">
+      <div className="mx-auto max-w-site px-5 py-8 md:px-8 md:py-12">
+        <div className="flex flex-col gap-6 md:flex-row md:justify-between md:gap-8">
           {/* Group A — identity */}
           <div className="max-w-measure md:max-w-none md:basis-1/2">
             <Link href={link(locale, { page: "home" })} className="text-wordmark text-ink">
               {dict.site.brand}
             </Link>
-            <p className="mt-3 text-body text-ink-secondary">
+            <p className="mt-2.5 text-body text-ink-secondary">
               {dict.copy.footer.tagline}
             </p>
           </div>
 
-          {/* Group B — pages */}
-          <nav aria-label={ui.nav.footer} className="flex flex-col gap-2">
+          {/* Group B — pages (two columns on a phone so it doesn't run down the screen) */}
+          <nav
+            aria-label={ui.nav.footer}
+            className="grid grid-cols-2 gap-x-8 gap-y-2.5 md:flex md:flex-col md:gap-2"
+          >
             {navInventory
               .filter((item) => !item.gated || showSeances)
               .map((item) => (
@@ -47,8 +50,8 @@ export function Footer(props: { showSeances: boolean }) {
           </nav>
 
           {/* Group C — suivre */}
-          <div className="flex flex-col gap-2">
-            <div className="flex">
+          <div className="flex flex-col gap-3">
+            <div className="-ml-2 flex">
               {dict.site.social.instagram && (
                 <IconLink
                   icon="instagram"
@@ -74,7 +77,7 @@ export function Footer(props: { showSeances: boolean }) {
         </div>
 
         {/* Legal row */}
-        <div className="mt-8 flex flex-col gap-2 border-t border-hairline pt-5 md:flex-row md:items-center md:justify-between">
+        <div className="mt-7 flex flex-col gap-2 border-t border-hairline pt-5 md:flex-row md:items-center md:justify-between">
           <p className="text-small text-ink-secondary">
             © {year} {dict.site.brand}. {dict.copy.footer.rights}
           </p>

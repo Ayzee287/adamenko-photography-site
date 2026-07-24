@@ -46,3 +46,6 @@ next-env.d.ts
 .lighthouseci/
 playwright-report/
 test-results/
+
+# curation contact sheets are disposable review output (regenerate: npm run photos:sheets)
+curation/sheets/

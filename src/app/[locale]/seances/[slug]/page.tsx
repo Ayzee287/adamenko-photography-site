@@ -1,24 +1,16 @@
-// Phase 2 stub — story pages arrive with the content model (P13/P15).
-// No stories exist yet: generateStaticParams returns [], and with
-// dynamicParams=false that builds ZERO story pages — the ∅ law at the
-// routing layer (the seances index is gated separately by showSeances).
+// Séance [slug] — individual story pages. No stories exist yet (real-only law), so
+// generateStaticParams returns [] and, with dynamicParams=false, ZERO pages build:
+// every /seances/<slug> is a 404 (the ∅ law at the routing layer). When a real stories
+// collection lands, map it here.
+
+import { notFound } from "next/navigation";
 
 export const dynamicParams = false;
 
 export function generateStaticParams(): Array<{ slug: string }> {
-  return []; // P15: map over the stories collection.
+  return [];
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>;
-}) {
-  const { locale, slug } = await params;
-  return (
-    <>
-      <h1>séance : {slug}</h1>
-      <p>{locale}</p>
-    </>
-  );
+export default function Page() {
+  notFound();
 }

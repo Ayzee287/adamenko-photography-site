@@ -31,7 +31,7 @@ export const site = {
   location: photographer.location.label,
   // Factual service description — doubles as the default meta description.
   tagline:
-    "Photographe de famille, portrait, grossesse, couple et mariage à Lyon et au-delà.",
+    "Photographe de famille et de grossesse à Lyon, et de mariage dans toute la France.",
   nav: [
     { href: "/galeries", label: "Galeries" },
     { href: "/a-propos", label: "À propos" },
@@ -83,7 +83,7 @@ export const copy = {
     // never freshly authored (A5).
     cta: "Travaillons ensemble",
     metaDescription:
-      "Irina Adamenko, photographe de famille à Lyon. Une approche documentaire, des images douces et sincères, en France comme ailleurs en Europe.",
+      "Irina Adamenko, photographe de famille et de grossesse à Lyon, mariages dans toute la France. Une approche documentaire, des images douces et sincères.",
   },
   services: {
     eyebrow: "Travailler ensemble",
@@ -104,7 +104,7 @@ export const copy = {
       title: "Ce qui se passe ensuite",
       steps: [
         "Une réponse sous quelques jours.",
-        "Un échange sur votre projet — la date, le lieu, ce que vous imaginez.",
+        "Un échange sur votre projet : la date, le lieu, ce que vous imaginez.",
         "Une proposition adaptée à votre séance, sans engagement.",
       ],
     },
@@ -132,7 +132,7 @@ export const copy = {
     },
   },
   footer: {
-    tagline: "Photographe à Lyon : familles, couples, grossesse, mariages.",
+    tagline: "Famille et grossesse à Lyon · mariages dans toute la France.",
     instagram: "Instagram",
     rights: "Tous droits réservés.",
   },

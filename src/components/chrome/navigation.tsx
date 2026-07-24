@@ -34,7 +34,7 @@ export function Navigation(props: {
   const lang = locale === "en" ? "en" : "fr";
 
   return (
-    <nav aria-label={labels.primary} className="flex items-center gap-6">
+    <nav aria-label={labels.primary} className="ch-navrow">
       {navInventory
         .filter((item) => !item.gated || showSeances)
         .map((item) => (
@@ -45,27 +45,21 @@ export function Navigation(props: {
             active={currentRef.page === item.id}
           />
         ))}
-      <span aria-label={labels.language} className="flex items-center gap-2">
+      <span aria-label={labels.language} className="ch-lang">
         <Link
           href={alternates.fr}
           aria-current={lang === "fr" ? "true" : undefined}
-          className={cn(
-            "text-nav underline-offset-4",
-            lang === "fr" ? "text-ink underline decoration-1" : "text-ink-secondary hover:text-ink",
-          )}
+          className={cn("ch-navlink", lang === "fr" && "is-active")}
         >
           FR
         </Link>
-        <span aria-hidden className="text-ink-secondary">
+        <span aria-hidden className="ch-lang-sep">
           ·
         </span>
         <Link
           href={alternates.en}
           aria-current={lang === "en" ? "true" : undefined}
-          className={cn(
-            "text-nav underline-offset-4",
-            lang === "en" ? "text-ink underline decoration-1" : "text-ink-secondary hover:text-ink",
-          )}
+          className={cn("ch-navlink", lang === "en" && "is-active")}
         >
           EN
         </Link>

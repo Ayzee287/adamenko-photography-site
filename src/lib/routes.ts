@@ -103,8 +103,11 @@ export const navInventory: ReadonlyArray<{
   label: Record<"fr" | "en", string>;
   gated?: "showSeances";
 }> = [
+  // "Prestations" was removed from the nav (D095): its index duplicated the homepage
+  // genre plates + the galleries index, and /tarifs is now the single "what I offer & what
+  // it costs" hub. The per-service dossiers (/prestations/[service]) live on as SEO landing
+  // pages, reached from Tarifs — not as a top-level destination.
   { id: "galeries", label: { fr: "Galeries", en: "Galleries" } },
-  { id: "prestations", label: { fr: "Prestations", en: "Services" } },
   { id: "tarifs", label: { fr: "Tarifs", en: "Pricing" } },
   { id: "seances", label: { fr: "Séances", en: "Stories" }, gated: "showSeances" },
   { id: "a-propos", label: { fr: "À propos", en: "About" } },

@@ -1,32 +1,49 @@
-// faq-item — one objection removed. Native <details>/<summary>: zero JS,
-// full keyboard/SR semantics free. Question = sans/body + the one legal
-// weight override; chevron = the turn; answer measure-capped ≤90 words
-// (content law). One-open-at-a-time via the native `name` attribute —
-// the parent passes a shared group name (tarifs page).
+"use client";
+
+// faq-item — one objection removed, opened with intention. A button + region accordion
+// (aria-expanded / aria-controls) whose answer eases open AND closed on a grid-rows
+// height transition, the chevron turning with it. Reduced-motion collapses to an instant
+// toggle (chambre.css). Independent panels (open as many as you like).
+
+import { useId, useState } from "react";
 
 export function FaqItem(props: {
   question: string;
   answer: React.ReactNode;
+  /** Retained for call-site compatibility; panels are independent now. */
   group?: string;
 }) {
-  const { question, answer, group } = props;
+  const { question, answer } = props;
+  const [open, setOpen] = useState(false);
+  const id = useId();
+
   return (
-    <details name={group} className="group border-b border-hairline">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-5 py-5 text-body font-medium text-ink [&::-webkit-details-marker]:hidden">
-        {question}
+    <div className="ch-faq" data-open={open}>
+      <button
+        type="button"
+        className="ch-faq-q"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span>{question}</span>
         <svg
           viewBox="0 0 20 20"
-          className="h-(--size-icon) w-(--size-icon) shrink-0 transition-transform duration-(--duration-standard) ease-(--ease-standard) group-open:rotate-180"
+          className="ch-faq-chevron"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.4"
           strokeLinecap="round"
           aria-hidden
         >
           <path d="M5 8l5 5 5-5" />
         </svg>
-      </summary>
-      <div className="max-w-measure pb-5 text-body text-ink">{answer}</div>
-    </details>
+      </button>
+      <div id={id} className="ch-faq-a" role="region">
+        <div className="ch-faq-a-inner">
+          <div className="ch-faq-a-body text-body text-ink-secondary">{answer}</div>
+        </div>
+      </div>
+    </div>
   );
 }

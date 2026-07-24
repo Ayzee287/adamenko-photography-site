@@ -1,20 +1,17 @@
 "use client";
 
-// header — wayfinding chrome, never brand expression. Frozen behavior:
-// · height 64/72 (--size-header), inner max-w-site, wordmark left (serif 20,
-//   live text, home link) · Navigation ≥1024 · Menu trigger below (Addendum:
-//   the FR inventory provably overflows the tablet band)
-// · tone=overlay|paper — overlay rides the .surface-dark scope over imagery
-//   (P3 mechanism: one class, every child remaps); scroll-driven tone
-//   DERIVATION is P18 — pages pass the tone
-// · hide after 120px down / reveal on 8px up via the existing hook, UNTOUCHED
-// · ALWAYS revealed when focus enters (Addendum M4): onFocusCapture → reveal()
+// header — the floating navigation: a separate layer that lives ABOVE the world (fixed,
+// never in document flow), so content scrolls under it. A persistent soft scrim keeps the
+// wordmark + links legible over the bright hero; a frosted fill fades in once the visitor
+// leaves the top, so the bar stays readable over the plates below without ever becoming a
+// solid band. Light, quiet, premium. Wordmark left (home link), inline destinations ≥1024,
+// an editorial menu overlay below. (Interior chapters reserve the bar's height via
+// .ch-chapter, so the fixed layer never overlaps their content.)
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { link } from "@/lib/routes";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { cn } from "@/lib/utils/cn";
 import { Navigation } from "./navigation";
 import { MenuDialog, type MenuDialogLabels } from "./menu-dialog";
@@ -26,27 +23,43 @@ export interface HeaderChrome extends MenuDialogLabels {
 
 export function Header(props: {
   locale: Locale;
+  /** Retained for API stability; CHAMBRE is uniformly dark, so the bar is always the
+   *  floating overlay treatment. */
   tone?: "paper" | "overlay";
   showSeances: boolean;
   chrome: HeaderChrome;
   socials: { instagram?: string; facebook?: string };
 }) {
-  const { locale, tone = "paper", showSeances, chrome, socials } = props;
-  const { hidden, reveal } = useScrollDirection();
+  const { locale, showSeances, chrome, socials } = props;
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // A tiny threshold: at the very top the bar floats on scrim alone (over the hero);
+    // once the visitor moves, the frosted fill settles in. rAF-coalesced, passive.
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        setScrolled(window.scrollY > 32);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
     <>
-      <header
-        onFocusCapture={reveal}
-        className={cn(
-          "sticky top-0 z-header transition-transform duration-(--duration-standard) ease-(--ease-standard)",
-          tone === "overlay" ? "surface-dark bg-transparent" : "bg-paper",
-          hidden && !menuOpen && "-translate-y-full",
-        )}
-      >
-        <div className="mx-auto flex h-(--size-header) max-w-site items-center justify-between px-5 md:px-8">
-          <Link href={link(locale, { page: "home" })} className="text-wordmark text-ink">
+      <header className={cn("ch-nav", scrolled && "is-scrolled")}>
+        <div className="ch-nav-scrim" aria-hidden />
+        <div className="ch-nav-fill" aria-hidden />
+        <div className="ch-nav-inner">
+          <Link href={link(locale, { page: "home" })} className="ch-wordmark">
             {chrome.brand}
           </Link>
 
@@ -65,7 +78,7 @@ export function Header(props: {
             aria-expanded={menuOpen}
             aria-controls="menu-dialog"
             aria-label={chrome.openMenu}
-            className="flex h-(--size-target-min) items-center px-3 text-nav text-ink lg:hidden"
+            className="ch-nav-trigger flex items-center lg:hidden"
           >
             {chrome.menu}
           </button>

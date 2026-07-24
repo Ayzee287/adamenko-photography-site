@@ -1,10 +1,10 @@
 "use client";
 
-// Voice-compliant failure page (Architecture §3.2, DNA error law): state what
-// happened plainly, blame nobody, offer the way back. Client component by
-// Next contract; locale derived from the pathname (the request-locale cache
-// is server-only). No dictionary import — error pages must carry zero
-// dependencies that could themselves be the failure.
+// Voice-compliant failure page (DNA error law): state what happened plainly, blame
+// nobody, offer the way back — developed from the CHAMBRE dark. Client component by
+// Next contract; locale derived from the pathname (the request-locale cache is
+// server-only). No dictionary import — error pages must carry zero dependencies that
+// could themselves be the failure; the [data-chambre] marker re-themes it in place.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -38,18 +38,26 @@ export default function ErrorPage({
   const locale = localeFromPathname(pathname) === "en" ? "en" : "fr";
   const t = copy[locale];
   return (
-    <div className="mx-auto max-w-measure px-5 py-12 text-center">
-      <p className="text-kicker text-ink-secondary">{t.kicker}</p>
-      <h1 className="text-display mt-3">{t.title}</h1>
-      <p className="text-body mt-4 text-ink-secondary">{t.intro}</p>
-      <p className="mt-6 flex justify-center gap-6">
-        <button type="button" onClick={reset} className="text-button underline">
-          {t.retry}
-        </button>
-        <Link href={link(locale, { page: "home" })} className="text-button underline">
-          {t.home} →
-        </Link>
-      </p>
+    <div data-chambre className="ch-root">
+      <section className="ch-movement ch-wrap ch-chapter" style={{ textAlign: "center" }}>
+        <p className="ch-mono ch-kicker" style={{ justifyContent: "center" }}>
+          <span className="n">!</span> {t.kicker}
+        </p>
+        <h1 className="ch-display ch-chapter-title" style={{ margin: "1.2rem auto 0", maxWidth: "18ch" }}>
+          {t.title}
+        </h1>
+        <p className="ch-lead" style={{ margin: "1.6rem auto 0" }}>{t.intro}</p>
+        <div
+          style={{ marginTop: "2.4rem", display: "flex", justifyContent: "center", gap: "2.2rem", flexWrap: "wrap" }}
+        >
+          <button type="button" onClick={reset} className="ch-go">
+            {t.retry}
+          </button>
+          <Link href={link(locale, { page: "home" })} className="ch-go">
+            {t.home} <span className="ch-arrow" aria-hidden>→</span>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
