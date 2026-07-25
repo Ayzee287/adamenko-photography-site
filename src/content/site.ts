@@ -29,9 +29,10 @@ export const site = {
   brand: photographer.brand,
   shortBrand: photographer.shortBrand,
   location: photographer.location.label,
-  // Factual service description — doubles as the default meta description.
+  // Factual service description — doubles as the default meta description. Lyon is the
+  // base (a genuine local signal), not a limit on where the photography happens.
   tagline:
-    "Photographe de famille, portrait, grossesse, couple et mariage à Lyon et au-delà.",
+    "Photographe de famille, de grossesse et de mariage — basée à Lyon, disponible dans toute la France.",
   nav: [
     { href: "/galeries", label: "Galeries" },
     { href: "/a-propos", label: "À propos" },
@@ -83,7 +84,14 @@ export const copy = {
     // never freshly authored (A5).
     cta: "Travaillons ensemble",
     metaDescription:
-      "Irina Adamenko, photographe de famille à Lyon. Une approche documentaire, des images douces et sincères, en France comme ailleurs en Europe.",
+      "Irina Adamenko, photographe de famille et de grossesse à Lyon, mariages dans toute la France. Une approche documentaire, des images douces et sincères.",
+    // Quiet "where to next" links closing the page — so it never dead-ends.
+    crosslinks: {
+      label: "Suite",
+      work: "Voir le travail",
+      pricing: "Les tarifs",
+      contact: "Me contacter",
+    },
   },
   services: {
     eyebrow: "Travailler ensemble",
@@ -96,7 +104,7 @@ export const copy = {
     eyebrow: "Prendre contact",
     title: "Contact",
     intro:
-      "Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez. Je réponds sous quelques jours.",
+      "Parlez-moi de votre projet : la date, le lieu, ce que vous imaginez.",
     // Reassurance for the empty space beside the form — lowers the anxiety of the
     // first message (C1). A factual "what happens next", in the brand voice; no
     // fabricated claims, surfaces the response-time promise as a visual step.
@@ -104,7 +112,7 @@ export const copy = {
       title: "Ce qui se passe ensuite",
       steps: [
         "Une réponse sous quelques jours.",
-        "Un échange sur votre projet — la date, le lieu, ce que vous imaginez.",
+        "Un échange sur votre projet : la date, le lieu, ce que vous imaginez.",
         "Une proposition adaptée à votre séance, sans engagement.",
       ],
     },
@@ -117,11 +125,22 @@ export const copy = {
       occasionPlaceholder: "Choisissez…",
       occasionLabels,
       message: "Votre message",
+      // Optional context fields — the date envisaged and where it would happen.
+      period: "Période envisagée",
+      place: "Lieu",
+      optionalSuffix: "(facultatif)",
       submit: "Envoyer",
       sending: "Envoi…",
       success: "Merci, votre message est bien arrivé. Je vous réponds très vite.",
+      // The success panel that replaces the form once the message is sent.
+      successHeading: "Merci, votre message est bien parti.",
+      successBody: "Je vous réponds sous quelques jours.",
       error:
         "Désolée, l'envoi n'a pas abouti. Réessayez dans un instant, ou écrivez-moi directement.",
+      mailtoLabel: "M'écrire directement par e-mail",
+      // Screen-reader live-region announcements (never seen, always heard).
+      statusSent: "Message envoyé.",
+      statusError: "L'envoi a échoué. Votre message est conservé.",
       // Per-field hints shown when server-side validation rejects a field.
       errors: {
         name: "Indiquez votre nom.",
@@ -132,7 +151,7 @@ export const copy = {
     },
   },
   footer: {
-    tagline: "Photographe à Lyon : familles, couples, grossesse, mariages.",
+    tagline: "Famille, grossesse et couple · mariages dans toute la France · basée à Lyon.",
     instagram: "Instagram",
     rights: "Tous droits réservés.",
   },

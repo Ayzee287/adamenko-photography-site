@@ -10,9 +10,9 @@
 
 import type { DeepPartial } from "@/lib/dictionary";
 import type { Dictionary } from "./fr";
-import type { GenreSlug } from "@/types/gallery";
 import type { ContactOccasion } from "@/lib/contact";
 import { galleries as frGalleries, featured as frFeatured } from "@/content/galleries";
+import { galleryText, featuredAlts } from "@/content/galleries.en";
 
 // Contact-select labels, keyed by the CANONICAL submitted value (like galleryText
 // below, annotated with the full Record so a new occasion added to lib/contact
@@ -24,87 +24,10 @@ const occasionLabels: Record<ContactOccasion, string> = {
   Portrait: "Portrait",
   Mariage: "Wedding",
 };
+// Gallery text overlay — AUTO-GENERATED from curation/collections.txt by
+// `npm run photos:build`, the same source that generates the French gallery model. Keeping
+// both locales on one source removes the hand-maintained parallel arrays that drifted twice.
 
-// ── Gallery text overlay (alts in the same order as content/galleries.ts) ──────────
-// Keyed by GenreSlug (not string) so a genre added to the French galleries without an
-// English overlay fails typecheck instead of silently shipping a French alt (I6).
-const galleryText: Record<
-  GenreSlug,
-  { title: string; intro: string; coverAlt: string; alts: string[] }
-> = {
-  familles: {
-    title: "Families",
-    intro: "Everyday life and the bonds within it — at home, outdoors, together.",
-    coverAlt: "A family at home, a parent lifting their child into the window light.",
-    alts: [
-      "A mother and her child, forehead to forehead, in the tall grass at sunset.",
-      "A moment of family closeness, in natural light.",
-      "Shared laughter outdoors, as the session unfolds.",
-      "A tender moment between parents and child.",
-      "The gentleness of everyday life, as a family.",
-      "A walk together, unposed.",
-      "Family portrait, soft light.",
-      "Parent and child, caught in the moment.",
-      "A burst of family laughter.",
-    ],
-  },
-  grossesse: {
-    title: "Maternity",
-    intro: "The gentle weeks before the baby arrives.",
-    coverAlt: "A mother-to-be in a white dress in a golden field, at sunset.",
-    alts: [
-      "A couple sitting on the floor by the window, awaiting their child, in black and white.",
-      "A mother-to-be, soft indoor light.",
-      "A couple's tenderness before the baby arrives.",
-      "The wait, at home.",
-      "Maternity portrait in natural light.",
-      "The gentleness of a maternity session.",
-      "A mother-to-be in soft light, before the birth.",
-      "A couple embraces in a field at sunset, an ultrasound scan in hand.",
-    ],
-  },
-  couples: {
-    title: "Couples",
-    intro: "Two people, one bond. No stiff poses.",
-    coverAlt: "A couple kissing, sitting on the edge of a Parisian kerb.",
-    alts: [
-      "A couple at ease under the market halls, warm light.",
-      "A walk for two through the city.",
-      "Two lovers, a shared glance.",
-      "A couple's tenderness, unposed.",
-      "A moment of intimacy for two.",
-      "A couple's closeness, in natural light.",
-      "Two people in love, unposed.",
-    ],
-  },
-  portraits: {
-    title: "Portraits",
-    intro: "A simple portrait, in daylight.",
-    coverAlt: "Portrait of a mother-to-be in a golden field, at sunset.",
-    alts: [
-      "Portrait of a woman in a white dress, golden evening light.",
-      "A mother-to-be looking at her ultrasound scan, in black and white.",
-      "Portrait of a mother-to-be in the tall grass, in black and white.",
-      "A mother and her baby, a tender moment in black and white.",
-    ],
-  },
-  mariages: {
-    title: "Weddings",
-    intro: "The story of a day: emotion over staging.",
-    coverAlt: "The newlyweds in front of a burgundy 2CV, at the entrance of a château.",
-    alts: [
-      "The newlyweds forehead to forehead, laughing, in an ornate hall.",
-      "The newlyweds in a botanical garden, among the agaves.",
-      "A moment of the big day, caught in passing.",
-      "Portrait of the newlyweds.",
-      "The ceremony, told with discretion.",
-      "A detail from the wedding day.",
-      "The emotion of a wedding, in natural light.",
-      "A powerful moment, caught discreetly.",
-      "The newlyweds carried by their guests, a burst of joy, in black and white.",
-    ],
-  },
-};
 
 const enGalleries = frGalleries.map((g) => ({
   ...g,
@@ -114,25 +37,14 @@ const enGalleries = frGalleries.map((g) => ({
   images: g.images.map((img, i) => ({ ...img, alt: galleryText[g.slug].alts[i] })),
 }));
 
-const enFeaturedAlts = [
-  "A mother and her child, forehead to forehead, at sunset.",
-  "A couple at ease under the market halls, warm light.",
-  "A mother-to-be in a golden field, at sunset.",
-  "The newlyweds carried by their guests, in black and white.",
-  "A family at home, in the window light.",
-  "A couple in a field at sunset, an ultrasound scan in hand.",
-  "The newlyweds forehead to forehead, laughing.",
-  "A couple kissing on the edge of a Parisian kerb.",
-  "A couple by the window, waiting, in black and white.",
-  "The newlyweds in a botanical garden.",
-];
+const enFeaturedAlts = featuredAlts;
 
 const enFeatured = frFeatured.map((img, i) => ({ ...img, alt: enFeaturedAlts[i] }));
 
 export const en: DeepPartial<Dictionary> = {
   site: {
     tagline:
-      "Family, portrait, maternity, couple and wedding photographer — in Lyon and beyond.",
+      "Family, portrait, maternity, couple and wedding photographer, in Lyon and beyond.",
     // Hrefs stay canonical (French paths); the chrome prefixes them per locale.
     nav: [
       { href: "/galeries", label: "Galleries" },
@@ -161,7 +73,13 @@ export const en: DeepPartial<Dictionary> = {
       portraitAlt: "Portrait of the photographer",
       cta: "Let's work together",
       metaDescription:
-        "Irina Adamenko, family photographer in Lyon. A documentary approach — gentle, honest images, in France and across Europe.",
+        "Irina Adamenko, family and maternity photographer in Lyon, weddings throughout France. A documentary approach, gentle and honest.",
+      crosslinks: {
+        label: "More",
+        work: "View the work",
+        pricing: "Pricing",
+        contact: "Contact me",
+      },
     },
     services: {
       eyebrow: "Working together",
@@ -174,12 +92,12 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "Get in touch",
       title: "Contact",
       intro:
-        "Tell me about your project — the date, the place, what you have in mind. I reply within a few days.",
+        "Tell me about your project: the date, the place, what you have in mind.",
       reassurance: {
         title: "What happens next",
         steps: [
           "A reply within a few days.",
-          "A conversation about your project — the date, the place, what you picture.",
+          "A conversation about your project: the date, the place, what you picture.",
           "A proposal shaped around your session, with no obligation.",
         ],
       },
@@ -190,12 +108,20 @@ export const en: DeepPartial<Dictionary> = {
         occasionPlaceholder: "Choose…",
         occasionLabels,
         message: "Your message",
+        period: "Preferred date",
+        place: "Location",
+        optionalSuffix: "(optional)",
         submit: "Send",
         sending: "Sending…",
         success:
-          "Thank you — your message has arrived. I'll be in touch very soon.",
+          "Thank you, your message has arrived. I'll be in touch very soon.",
+        successHeading: "Thank you, your message is on its way.",
+        successBody: "I'll reply within a few days.",
         error:
           "Sorry, your message didn't go through. Try again in a moment, or email me directly.",
+        mailtoLabel: "Email me directly",
+        statusSent: "Message sent.",
+        statusError: "Sending failed. Your message has been kept.",
         errors: {
           name: "Please enter your name.",
           email: "Please enter a valid email address.",
@@ -205,7 +131,7 @@ export const en: DeepPartial<Dictionary> = {
       },
     },
     footer: {
-      tagline: "Photographer in Lyon — families, couples, maternity, weddings.",
+      tagline: "Families, maternity & couples · weddings throughout France · based in Lyon.",
       instagram: "Instagram",
       rights: "All rights reserved.",
     },
@@ -213,6 +139,16 @@ export const en: DeepPartial<Dictionary> = {
 
   ui: {
     skipToContent: "Skip to content",
+    actions: {
+      viewGallery: "View the gallery",
+      pricing: "Pricing",
+      contactMe: "Contact me",
+      more: "More",
+      howItWorks: "How it works",
+      requestDate: "Request a date",
+      requestQuote: "Request a quote",
+      manifesto: "Manifesto",
+    },
     nav: {
       primary: "Main navigation",
       footer: "Footer",
@@ -223,6 +159,7 @@ export const en: DeepPartial<Dictionary> = {
       language: "Language",
       instagram: "Instagram",
       facebook: "Facebook",
+      backToTop: "Back to top",
     },
     gallery: {
       enlarge: "Enlarge",
@@ -261,10 +198,10 @@ export const en: DeepPartial<Dictionary> = {
       title: "Photographs that look like you.",
       scrollCue: "Scroll",
       image: {
-        alt: "Newlyweds, arms raised to the hills, on a terrace at dusk.",
+        alt: "A bride in a lavender field, arms crossed, in the golden light of evening.",
       },
       imageHint:
-        "An embrace in the warm light at the end of the day. The very first thing you feel.",
+        "Golden light, a moment suspended. The very first thing you feel.",
     },
     signature: [
       "I photograph the bonds between us.",
@@ -275,7 +212,7 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "The photographer",
       title: "Behind the lens.",
       body: [
-        "I'm Irina, a family photographer in Lyon — Ukrainian, and a mother of three.",
+        "I'm Irina, a family photographer in Lyon. Ukrainian, and a mother of three.",
         "A lawyer who became a photographer, I put you at ease and then step back: it's the real moments that interest me, never stiff poses.",
       ],
       values: ["Warmth", "Honesty", "Presence", "Patience"],
@@ -328,33 +265,41 @@ export const en: DeepPartial<Dictionary> = {
           slug: "familles",
           title: "Families",
           cta: "View the gallery",
-          caption: "Everyday life and the bonds within it, at home or outdoors.",
-          src: "/galleries/familles/familles-01.jpg",
-          alt: "A mother and her child, forehead to forehead, in the tall grass at sunset.",
+          caption: "Everyday life and the bonds within it, at home or out in the open.",
+          src: "/galleries/familles/familles-a01.jpg",
+          alt: "A family gathered in a field, in the warm light of autumn.",
         },
         {
           slug: "grossesse",
           title: "Maternity",
           cta: "View the gallery",
           caption: "The gentle weeks before the baby arrives.",
-          src: "/galleries/grossesse/grossesse-05.jpg",
-          alt: "A mother-to-be in natural light, the wait before the birth.",
+          src: "/galleries/grossesse/grossesse-a00.jpg",
+          alt: "A mother-to-be before the columns of a Lyon palace.",
         },
         {
           slug: "couples",
           title: "Couples",
           cta: "View the gallery",
           caption: "Two people, no stiff poses.",
-          src: "/galleries/couples/couples-01.jpg",
-          alt: "A couple at ease under the market halls, warm light.",
+          src: "/galleries/couples/couples-a07.jpg",
+          alt: "A couple on a terrace overlooking the valley, at dusk.",
         },
         {
           slug: "mariages",
           title: "Weddings",
           cta: "View the gallery",
           caption: "Your day, from the preparations to the celebration.",
-          src: "/galleries/mariages/mariages-09.jpg",
-          alt: "The newlyweds carried by their guests, a burst of joy, in black and white.",
+          src: "/galleries/mariages/mariages-a00.jpg",
+          alt: "The newlyweds facing the sea, she in lace, he in a white tuxedo.",
+        },
+        {
+          slug: "portraits",
+          title: "Portraits",
+          cta: "View the gallery",
+          caption: "A simple, honest portrait, in daylight.",
+          src: "/galleries/portraits/portraits-a00.jpg",
+          alt: "Portrait of a young woman in lace, soft window light.",
         },
       ],
       cta: { label: "View all galleries", href: "/galeries" },
@@ -367,14 +312,14 @@ export const en: DeepPartial<Dictionary> = {
           label: "The experience",
           title: "What to expect",
           href: "/prestations",
-          image: { src: "/galleries/familles/familles-04.jpg", alt: "" },
+          image: { src: "/galleries/familles/familles-a04.jpg", alt: "" },
           hint: "A tender detail from a session: hands, a glance off-frame.",
         },
         {
           label: "Practical info",
           title: "Frequently asked questions",
           href: "/prestations#faq",
-          image: { src: "/galleries/couples/couples-06.jpg", alt: "" },
+          image: { src: "/galleries/couples/couples-a03.jpg", alt: "" },
           hint: "A quiet moment, waiting, in late-afternoon light.",
         },
         {
@@ -401,11 +346,11 @@ export const en: DeepPartial<Dictionary> = {
     finalCta: {
       eyebrow: "Contact",
       title: "Let's work together.",
-      body: "Tell me about your project — the date, the place, what you have in mind. I reply within a few days.",
+      body: "Tell me about your project: the date, the place, what you have in mind. I reply within a few days.",
       locationLabel: "Based in",
       location: "Lyon, France",
       availabilityLabel: "Availability",
-      availability: "In Lyon and anywhere in the world.",
+      availability: "Family and maternity in Lyon · weddings throughout France.",
       cta: { label: "Get in touch", href: "/contact" },
       instagramLabel: "Follow on Instagram",
     },
@@ -415,44 +360,113 @@ export const en: DeepPartial<Dictionary> = {
     eyebrow: "Investment",
     title: "Transparent, and shaped around you.",
     intro:
-      "Every project is different; the packages below set the frame. The exact rate depends on the length, the place and what you'd like to keep.",
+      "Clear rates, so you know what to expect from the start. The rest we decide together: the place, the pace, what you'll keep.",
     fromLabel: "from",
     onRequest: "Rate on request",
-    overviewCta: { label: "See the sessions", href: "/prestations" },
-    packages: [
-      {
-        name: "Session",
-        summary: "Family, maternity, couple or portrait, at home or outdoors.",
-        includes: [
-          "1 to 2 hours, one location",
-          "Planning and location scouting together",
-          "Private online gallery",
-          "High-resolution edited photographs",
-          "Private-use rights",
-        ],
-      },
-      {
-        name: "Wedding",
-        summary: "The story of a day, from the preparations to the celebration.",
-        includes: [
-          "Half-day or full day",
-          "Pre-wedding planning meeting",
-          "Private online gallery",
-          "High-resolution edited photographs",
-          "Album and print options",
-        ],
-      },
-    ],
+    coverageLabel: "Coverage",
+    deliveryLabel: "Delivery",
+    overviewCta: { label: "See the pricing", href: "/tarifs" },
+    sessions: {
+      eyebrow: "Sessions",
+      title: "Family, maternity & portrait.",
+      intro:
+        "Three separate sessions, all at the same rate. We settle the place and the pace together: at home, outdoors, wherever you feel most at ease.",
+      durationLabel: "Duration",
+      items: [
+        {
+          slug: "familles",
+          name: "Family",
+          summary:
+            "With your people, at home or outdoors: the games, the cuddles, the tender mess of everyday life.",
+          price: 220,
+          exactPrice: true,
+          duration: "1 hour",
+          includes: [
+            "One location, at home or outdoors",
+            "Planning and location scouting together",
+            "Private online gallery",
+            "High-resolution edited photographs",
+            "Private-use rights",
+          ],
+        },
+        {
+          slug: "grossesse",
+          name: "Maternity",
+          summary:
+            "To keep a trace of the waiting: alone, together, or with the older ones, at your pace.",
+          price: 220,
+          exactPrice: true,
+          duration: "1 hour",
+          includes: [
+            "One location, at home or outdoors",
+            "A calm pace, shaped around your comfort",
+            "Private online gallery",
+            "High-resolution edited photographs",
+            "Private-use rights",
+          ],
+        },
+        {
+          slug: "couples",
+          name: "Couple & portrait",
+          summary: "Two people, or a candid portrait, no stiff poses.",
+          price: 220,
+          exactPrice: true,
+          duration: "1 hour",
+          includes: [
+            "Outdoors or at home",
+            "Light direction, never a choreography",
+            "Private online gallery",
+            "High-resolution edited photographs",
+            "Private-use rights",
+          ],
+        },
+      ],
+    },
+    wedding: {
+      eyebrow: "Weddings",
+      title: "Three packages, across France.",
+      intro:
+        "From an intimate ceremony to a full day: three clear packages, each told as reportage, in natural light.",
+      recommendedLabel: "Recommended",
+      photosLabel: "Photographs",
+      packages: [
+        {
+          name: "Essential",
+          price: 650,
+          coverage: "Up to 5 hours",
+          photos: "Around 300 edited photographs",
+          includes: ["Private online gallery"],
+          delivery: "3 to 4 weeks",
+          note: "Weekdays, outside high season, or as a last-minute booking, subject to availability.",
+        },
+        {
+          name: "Signature",
+          price: 1100,
+          coverage: "Up to 8 hours",
+          photos: "Around 450 edited photographs",
+          includes: ["Private online gallery"],
+          delivery: "6 to 8 weeks",
+        },
+        {
+          name: "The whole day",
+          price: 1600,
+          coverage: "Up to 10 hours",
+          photos: "Around 600 edited photographs",
+          includes: ["Private online gallery"],
+          delivery: "6 to 8 weeks",
+          recommended: true,
+        },
+      ],
+    },
     addons: {
       eyebrow: "Options",
       title: "To go further.",
       items: [
         { title: "Extra hours", body: "More time together, so nothing feels rushed." },
         { title: "Additional locations", body: "A second setting that means something to you." },
-        { title: "Premium album", body: "A printed book, made to last and to pass on." },
+        { title: "Engagement session", body: "A shoot for two before the wedding, so you're at ease on the day." },
         { title: "Express delivery", body: "Your images first, within a few days." },
-        { title: "Fine-art prints", body: "Carefully made prints, ready to hang." },
-        { title: "Bespoke", body: "Something particular in mind? Let's talk — I'll adapt." },
+        { title: "Bespoke", body: "Something particular in mind? Let's talk, I'll adapt." },
       ],
     },
   },
@@ -484,7 +498,7 @@ export const en: DeepPartial<Dictionary> = {
         title: "Couple",
         tagline: "The two of you, at ease.",
         description: [
-          "No stiff poses or forced looks at the lens. We walk, we talk, I let you find each other again. That's where the right images arrive — in the movement.",
+          "No stiff poses or forced looks at the lens. We walk, we talk, I let you find each other again. That's where the right images arrive, in the movement.",
           "A couple session is also a good way to feel at ease before a wedding, if that's what lies ahead.",
         ],
         approach: [
@@ -545,35 +559,21 @@ export const en: DeepPartial<Dictionary> = {
 
   locations: {
     summary:
-      "Based in Lyon, available across Europe; international projects are considered case by case.",
+      "Based in Lyon. Family and maternity in Lyon; weddings throughout France.",
     areas: [
       {
         id: "lyon",
         label: "Lyon and the surrounding area",
         tier: "primary",
         schemaType: "City",
-        note: "Sessions at your home or outdoors, with no travel fee within the metropolitan area.",
+        note: "Family and maternity in Lyon, at your home or outdoors, with no travel fee within the metropolitan area.",
       },
       {
         id: "france",
         label: "France",
         tier: "regional",
         schemaType: "Country",
-        note: "Travelling throughout France for sessions and weddings.",
-      },
-      {
-        id: "europe",
-        label: "Europe",
-        tier: "regional",
-        schemaType: "Continent",
-        note: "Available for projects anywhere in Europe; travel is agreed together.",
-      },
-      {
-        id: "international",
-        label: "International",
-        tier: "international",
-        schemaType: "Continent",
-        note: "Projects beyond Europe are considered individually. Let's talk.",
+        note: "Weddings throughout France; travel is agreed together, transparently.",
       },
     ],
   },
@@ -581,7 +581,7 @@ export const en: DeepPartial<Dictionary> = {
   faq: {
     title: "Frequently asked questions",
     intro:
-      "A few answers to help you plan. Another question? Write to me — I'm always happy to reply.",
+      "A few answers to help you plan. Another question? Write to me, I'm always happy to reply.",
     items: [
       {
         category: "reservation",
@@ -611,7 +611,7 @@ export const en: DeepPartial<Dictionary> = {
       {
         category: "seance",
         q: "Where do the sessions take place?",
-        a: "In and around Lyon, at your home or outdoors. I also travel across France, Europe and abroad for projects that call for it.",
+        a: "At your home or outdoors, most often in and around Lyon, but elsewhere too depending on your project. For weddings, I travel throughout France.",
       },
       {
         category: "seance",
@@ -626,12 +626,12 @@ export const en: DeepPartial<Dictionary> = {
       {
         category: "livraison",
         q: "How are the photos delivered?",
-        a: "In a private online gallery, in high resolution and ready to print. Albums and fine-art prints are available as options.",
+        a: "In a private online gallery, in high resolution. You download your photos and keep them for good.",
       },
       {
         category: "deplacement",
-        q: "Do you work outside France?",
-        a: "Yes. I'm based in Lyon and available across Europe; international projects are considered case by case. Travel costs are agreed together, transparently.",
+        q: "Do you travel for weddings?",
+        a: "Yes, throughout France. I'm based in Lyon; for weddings, travel costs are agreed together, transparently.",
       },
     ],
   },
@@ -644,7 +644,6 @@ export const en: DeepPartial<Dictionary> = {
       { id: "phone", label: "Phone", value: "", href: "", external: false },
       { id: "instagram", label: "Instagram", value: "@adamenko_photography", href: "https://www.instagram.com/adamenko_photography/", external: true },
       { id: "facebook", label: "Facebook", value: "Adamenko Photography", href: "https://www.facebook.com/profile.php?id=100011367545612", external: true },
-      { id: "telegram", label: "Telegram", value: "@AdamenkoIr", href: "https://t.me/AdamenkoIr", external: true },
     ],
   },
 
@@ -652,16 +651,16 @@ export const en: DeepPartial<Dictionary> = {
     // Name / legal name / brand / location label are proper nouns — kept as French.
     specialties: ["Family", "Maternity", "Couple", "Portrait", "Wedding"],
     biography: [
-      "I'm Irina. I'm a family photographer in Lyon, and I work wherever I'm taken — in France and elsewhere in Europe.",
+      "I'm Irina, a family and maternity photographer in Lyon. I also photograph weddings, throughout France.",
       "I'm Ukrainian; I settled in Lyon with my family. A lawyer by training, I came to photography almost by chance, and then I couldn't do without it.",
-      "I'm a mother of three. The days with little ones, the bursts of laughter and the surprises — I know them well: that's often where the most beautiful images are hiding.",
-      "I love to photograph life as it is. With me, no fixed stare at the lens: I guide you with a few simple gestures, then I step back. What interests me is the real moments — a smile, a hug, a game, the small rituals of everyday life.",
+      "I'm a mother of three. The days with little ones, the bursts of laughter and the surprises: I know them well, and that's often where the most beautiful images are hiding.",
+      "I love to photograph life as it is. With me, no fixed stare at the lens: I guide you with a few simple gestures, then I step back. What interests me is the real moments: a smile, a hug, a game, the small rituals of everyday life.",
       "At heart, my work is to give you these moments back the way you lived them: gentle, honest images, made to live with you and to be passed on.",
     ],
     availability: {
       base: "Lyon, France",
-      scope: "In Lyon and anywhere in the world.",
-      note: "Available for sessions in Lyon, across France and internationally.",
+      scope: "Families, maternity and couples in and around Lyon and beyond · weddings throughout France.",
+      note: "Based in Lyon; travelling across the region and, for weddings, throughout France.",
     },
     portrait: {
       alt: "Irina Adamenko, photographer in Lyon, a film camera in her hands.",
@@ -683,7 +682,7 @@ export const en: DeepPartial<Dictionary> = {
           heading: "Site publisher",
           paragraphs: [
             "Adamenko Photography, Irina Adamenko (Sereda), sole trader (entrepreneur individuel, EI).",
-            "Place of business: Bât. 1, 173 av. Barthélemy Buyer, 69005 Lyon, France.",
+            "Photographic activity based in Lyon, France.",
             "Activity: photographic activities (APE code 74.20Z).",
             "SIRET: 979 493 327 00014. VAT not applicable, art. 293 B of the French General Tax Code (CGI).",
             "Contact: adamenkoiu@gmail.com.",

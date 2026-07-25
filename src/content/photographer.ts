@@ -71,15 +71,13 @@ export const photographer: Photographer = {
     region: "Auvergne-Rhône-Alpes",
     country: "France",
     label: "Lyon, France",
-    // Confirmed 2026-06-24 (SIREN/INSEE). This is the registered establishment
-    // address; it is the legally required éditeur address on the Mentions légales.
-    streetAddress: "Bât. 1, 173 avenue Barthélemy Buyer",
-    postalCode: "69005",
+    // Street address intentionally NOT stored or displayed (client policy, 2026-07):
+    // a service-area studio, not a storefront. City + SIRET carry the legal identity.
   },
   availability: {
     base: "Lyon, France",
-    scope: "À Lyon et partout dans le monde.",
-    note: "Disponible pour des séances à Lyon, en France et à l'international.",
+    scope: "Familles, grossesses et couples en région lyonnaise et au-delà · mariages dans toute la France.",
+    note: "Basée à Lyon ; je me déplace en région et, pour les mariages, dans toute la France.",
   },
   specialties: ["Famille", "Grossesse", "Couple", "Portrait", "Mariage"],
   // Rewritten (2026-06-24) from the photographer's OWN words on her previous site,
@@ -89,7 +87,7 @@ export const photographer: Photographer = {
   // they are now stale and would be fabrication if guessed; a current timeframe can be
   // restored once she confirms one. Warm, plain, first person.
   biography: [
-    "Je m'appelle Irina. Je suis photographe de famille à Lyon, et je travaille partout où l'on m'emmène, en France comme ailleurs en Europe.",
+    "Je m'appelle Irina, photographe de famille et de grossesse à Lyon. Je photographie aussi les mariages, partout en France.",
     "Je suis ukrainienne ; j'ai posé mes valises à Lyon avec ma famille. Avocate de formation, je suis venue à la photographie presque par hasard, puis je n'ai plus pu m'en passer.",
     "Je suis maman de trois enfants. Les journées avec des tout-petits, les fous rires et les imprévus, je connais : c'est souvent là que se cachent les plus belles images.",
     "J'aime photographier la vie telle qu'elle est. Avec moi, pas de regard figé vers l'objectif : je vous guide par quelques gestes simples, puis je m'efface. Ce qui m'intéresse, ce sont les vrais moments : un sourire, un câlin, un jeu, les petits rituels du quotidien.",
@@ -110,8 +108,9 @@ export const photographer: Photographer = {
     instagram: "https://www.instagram.com/adamenko_photography/",
     personalInstagram: "https://www.instagram.com/sereduha/",
     facebook: "https://www.facebook.com/profile.php?id=100011367545612",
-    // Recovered from the previous site's contact block — an active channel she used.
-    telegram: "https://t.me/AdamenkoIr",
+    // Telegram intentionally NOT exposed: it is a personal account, not a business
+    // channel (client decision). Kept out of the contact page, the footer and sameAs.
+    telegram: undefined,
     phone: undefined,
   },
 };

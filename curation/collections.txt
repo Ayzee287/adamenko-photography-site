@@ -1,0 +1,111 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# ADAMENKO PHOTOGRAPHY — CURATION SHEET
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# This file IS the edit. The website galleries are built from it.
+# A photographer/art director edits this; the machine only organises and optimises.
+#
+#   THE ORDER OF THE LINES IS THE ORDER ON THE WALL.
+#   The first photo after 'cover:' is the OPENING frame. The last line is the closing frame.
+#   Re-ordering a gallery = moving lines. Removing a photo = deleting (or #-commenting) a line.
+#
+# ── Format ────────────────────────────────────────────────────────────────
+#   [slug]                     start a collection (familles · grossesse · couples · portraits · mariages)
+#   title:  Mariages           display title (FR)
+#   title.en: Weddings         display title (EN)
+#   intro:  ...                one line under the title (FR)
+#   intro.en: ...              (EN)
+#   cover:  IMG_8402 | FR alt text | EN alt text
+#   IMG_3259 | FR alt text | EN alt text        ← one line per photograph, in hang order
+#
+#   Alt text is required (accessibility + SEO). Describe what is in the frame, in plain
+#   language. Never name a client. The EN part is optional — it falls back to FR.
+#
+# ── Workflow ──────────────────────────────────────────────────────────────
+#   1. npm run photos:sheets   → contact sheets of the whole raw library, to review
+#   2. edit this file          → choose, order, describe
+#   3. npm run photos:build    → optimises the chosen frames and publishes the galleries
+#
+# Raw library: C:\Users\Administrator\Documents\photos
+# ═══════════════════════════════════════════════════════════════════════════
+
+[familles]
+title: Familles
+title.en: Families
+intro: Le quotidien et les liens, à la maison, en ville, au grand air.
+intro.en: Everyday life and the bonds within it, at home, in the city, out in the open.
+cover: IMG_5754 | Une famille dans les rues de Lyon, l'enfant porté dans les bras. | A family in the streets of Lyon, their child carried in their arms.
+IMG_0147 | Une famille réunie dans un champ, à la lumière chaude de l'automne. | A family gathered in a field, in the warm light of autumn.
+IMG_0173 | Un enfant au chapeau de paille, blotti contre son parent dans les herbes. | A child in a straw hat, nestled against their parent in the grass.
+IMG_0171 | Une mère et son fils marchent dans les hautes herbes, au soleil couchant. | A mother and her son walk through the tall grass at sunset.
+IMG_0187 | Une mère embrasse son bébé emmitouflé, tendresse d'une fin de journée. | A mother kisses her bundled-up baby, the tenderness of late afternoon.
+IMG_1346 | Un moment de jeu en famille, allongés ensemble, en noir et blanc. | A playful family moment, lying together, in black and white.
+IMG_1341 | Parents et enfant réveillés ensemble, la douceur du matin à la maison. | Parents and child waking together, the softness of morning at home.
+IMG_5779 | Une maman et son tout-petit dans une rue de Lyon, front contre front. | A mother and her little one in a Lyon street, forehead to forehead.
+IMG_5763 | Une maman embrasse son bébé, un instant volé sur un trottoir lyonnais. | A mother kisses her baby, a stolen moment on a Lyon pavement.
+IMG_5776 | Un éclat de rire d'enfant, porté à bout de bras dans la ville. | A child's burst of laughter, held up at arm's length in the city.
+IMG_5753 | Une famille en promenade dans Lyon, complicité du quotidien. | A family on a walk through Lyon, the closeness of everyday life.
+IMG_1350 | Un père, son bébé et le chien de la maison, un matin tranquille. | A father, his baby and the family dog, one quiet morning.
+IMG_0179 | Un bébé qui bâille sous son bonnet de fourrure, au creux des bras. | A baby yawning under a fur hood, cradled in someone's arms.
+
+[grossesse]
+title: Grossesse
+title.en: Maternity
+intro: Les semaines douces avant l'arrivée du bébé.
+intro.en: The gentle weeks before the baby arrives.
+cover: IMG_7757 | Future maman devant les colonnes d'un palais lyonnais. | A mother-to-be before the columns of a Lyon palace.
+IMG_7754 | Future maman adossée à une colonne de pierre, dans Lyon. | A mother-to-be leaning against a stone column, in Lyon.
+IMG_7762 | Les futurs parents front contre front, sous une arche ancienne. | The parents-to-be forehead to forehead, beneath an old archway.
+IMG_7766 | Un couple qui se tient les mains, l'attente d'un enfant, en ville. | A couple holding hands, awaiting their child, in the city.
+IMG_7770 | Future maman de profil, la main sur le ventre, lumière douce. | A mother-to-be in profile, hand on her belly, in soft light.
+IMG_7785 | Les mains des futurs parents réunies sur le ventre arrondi. | The parents-to-be's hands joined on the rounded belly.
+IMG_7787 | Un couple enlacé dans une cour lyonnaise, avant la naissance. | A couple embracing in a Lyon courtyard, before the birth.
+IMG_7791 | Future maman rieuse, portée par son compagnon, dans la ville. | A laughing mother-to-be, lifted by her partner, in the city.
+IMG_7756 | L'attente, à deux, sous les arcades d'un palais de Lyon. | The wait, together, under the arcades of a Lyon palace.
+
+[couples]
+title: Couples
+title.en: Couples
+intro: Deux personnes, un lien. Sans poses figées.
+intro.en: Two people, one bond. No stiff poses.
+cover: IMG_3404 | Deux amoureux dans un jardin à la française, à la tombée du jour. | Two lovers in a formal French garden, at dusk.
+IMG_3382 | Un couple marche côte à côte sur une grande pelouse, une demeure au loin. | A couple walks side by side across a wide lawn, a mansion in the distance.
+IMG_3385 | Deux amoureux enlacés près d'un bassin ancien, dans un parc. | Two lovers embracing beside an old pond, in a park.
+IMG_3386 | Un couple complice au bord de l'eau, lumière verte d'un jardin. | A close couple by the water, in the green light of a garden.
+IMG_3389 | Un regard partagé, tout près, dans la douceur d'un après-midi. | A shared glance, up close, in the softness of an afternoon.
+IMG_3395 | Une femme respire un bouquet blanc, son compagnon à ses côtés. | A woman breathes in a white bouquet, her partner at her side.
+IMG_3410 | Deux amoureux rient ensemble, assis sur des marches de pierre. | Two lovers laughing together, sitting on stone steps.
+IMG_4507 | Un couple sur une terrasse dominant la vallée, au crépuscule. | A couple on a terrace overlooking the valley, at twilight.
+
+[portraits]
+title: Portraits
+title.en: Portraits
+intro: Un portrait simple et sincère, à la lumière du jour.
+intro.en: A simple, sincere portrait, in daylight.
+cover: IMG_4565 | Portrait d'une jeune femme en dentelle, lumière douce de fenêtre. | Portrait of a young woman in lace, soft window light.
+IMG_4533 | Une mariée dans un champ de lavande, robe brodée, regard baissé. | A bride in a lavender field, embroidered dress, eyes lowered.
+IMG_4566 | Portrait d'une mariée à la fenêtre, voile et dentelle, lumière douce. | A portrait of a bride by the window, veil and lace, soft light.
+IMG_4569 | Un portrait en dentelle, en noir et blanc, à la fenêtre. | A portrait in lace, in black and white, by the window.
+IMG_8344 | Portrait franc d'une mariée, épaules dénudées, lumière de sous-bois. | A candid portrait of a bride, bare shoulders, woodland light.
+IMG_8756 | Une mariée devant une porte ancienne, bouquet à la main. | A bride before an old doorway, bouquet in hand.
+IMG_8761 | Portrait de profil, un collier de perles, regard au loin. | A profile portrait, a string of pearls, gazing into the distance.
+
+[mariages]
+title: Mariages
+title.en: Weddings
+intro: Le récit d'une journée, de Lyon aux côtes de Bretagne. L'émotion plutôt que la mise en scène.
+intro.en: The story of a day, from Lyon to the Brittany coast. Emotion over staging.
+cover: IMG_8402 | Les mariés face à la mer, elle en dentelle, lui en smoking blanc. | The newlyweds facing the sea, she in lace, he in a white tuxedo.
+IMG_3259 | Les préparatifs de la mariée, à la lumière d'une fenêtre. | The bride getting ready, in the light of a window.
+IMG_3232 | Les mariés s'embrassent dans une décapotable ancienne, jour de fête. | The newlyweds kiss in a vintage convertible, a day of celebration.
+IMG_8346 | Un baiser renversé, en noir et blanc, dans un parc. | A dipped kiss, in black and white, in a park.
+IMG_8335 | Les mariés enlacés dans un jardin, front contre front. | The newlyweds embracing in a garden, forehead to forehead.
+IMG_8740 | La mariée en robe à traîne fait tourner sa jupe sur la pelouse. | The bride in a trained gown spins her skirt on the lawn.
+IMG_8743 | Le marié soulève sa femme dans ses bras, éclat de rire. | The groom lifts his wife in his arms, a burst of laughter.
+IMG_8415 | Les mariés marchent sur la plage, la robe portée par le vent. | The newlyweds walk on the beach, the dress carried by the wind.
+IMG_8425 | Un couple de mariés sur le sable, la mer en toile de fond. | A newlywed couple on the sand, the sea as a backdrop.
+IMG_8437 | Le marié ouvre la portière d'un cabriolet blanc, en bord de mer. | The groom opens the door of a white convertible, by the sea.
+IMG_8461 | La voiture des mariés devant un manoir de pierre, sous la pluie fine. | The wedding car before a stone manor, in the fine rain.
+IMG_8758 | Une demeure ancienne couverte de glycine, un jour de mariage. | An old manor covered in wisteria, on a wedding day.
+IMG_3230 | Portrait de la mariée en noir et blanc, un instant de calme. | Portrait of the bride in black and white, a moment of calm.
+

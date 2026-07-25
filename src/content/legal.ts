@@ -53,7 +53,7 @@ export const mentionsLegales: LegalDocument = {
       heading: "Éditeur du site",
       paragraphs: [
         `${brand}, ${photographer.legalName}, entrepreneur individuel (EI).`,
-        `Siège de l'activité : ${photographer.location.streetAddress}, ${photographer.location.postalCode} ${photographer.location.city}, ${photographer.location.country}.`,
+        `Activité photographique domiciliée à ${photographer.location.city}, ${photographer.location.country}.`,
         `Activité : activités photographiques (code APE ${APE}).`,
         `SIRET : ${SIRET}. ${TVA_MENTION}.`,
         `Contact : ${photographer.contact.email}.`,

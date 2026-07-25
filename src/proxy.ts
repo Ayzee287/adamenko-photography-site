@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { defaultLocale, isLocale } from "@/lib/i18n";
+import { resolveEnRoute } from "@/lib/routes";
 
 // Locale routing (Next 16 `proxy` convention; replaces the deprecated `middleware`).
 // The whole app lives under `app/[lang]`; this keeps the default locale (French)
@@ -27,8 +28,26 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 308);
   }
 
-  // Any locale prefix that already routes correctly (active non-default, or an inactive
-  // one we want to 404) passes straight through.
+  // English: the public URLs are LOCALIZED slugs (…/en/about) but the routes are
+  // FR-shaped (…/en/a-propos). Map between them (P14): rewrite the localized URL to the
+  // real route, and 308-redirect the FR-slug form to the localized canonical.
+  if (seg === "en") {
+    const r = resolveEnRoute(pathname);
+    if (r.action === "rewrite" && r.target) {
+      const url = req.nextUrl.clone();
+      url.pathname = r.target;
+      return NextResponse.rewrite(url);
+    }
+    if (r.action === "redirect" && r.target) {
+      const url = req.nextUrl.clone();
+      url.pathname = r.target;
+      return NextResponse.redirect(url, 308);
+    }
+    return NextResponse.next();
+  }
+
+  // Any other locale prefix that already routes correctly (an inactive one we want to
+  // 404) passes straight through.
   if (isLocale(seg)) {
     return NextResponse.next();
   }

@@ -124,11 +124,16 @@ function renderShell(opts: {
 // ── Owner notification ────────────────────────────────────────────────────────
 
 /** The inquiry the photographer receives. Reply-To (set by the route) is the visitor. */
-export function buildOwnerNotification(data: ValidContact): EmailContent {
+export function buildOwnerNotification(
+  data: ValidContact & { period?: string; place?: string; source?: string },
+): EmailContent {
   const name = sanitizeHeader(data.name);
   const occasion = sanitizeHeader(data.occasion);
   const email = data.email.trim();
   const message = data.message.trim();
+  const period = sanitizeHeader(data.period ?? "");
+  const place = sanitizeHeader(data.place ?? "");
+  const source = sanitizeHeader(data.source ?? "");
 
   const subject = `Nouvelle demande · ${occasion} · ${name}`;
 
@@ -138,6 +143,9 @@ export function buildOwnerNotification(data: ValidContact): EmailContent {
     `Nom : ${name}`,
     `E-mail : ${email}`,
     `Type de séance : ${occasion}`,
+    ...(period ? [`Période envisagée : ${period}`] : []),
+    ...(place ? [`Lieu : ${place}`] : []),
+    ...(source ? [`Comment m'a trouvée : ${source}`] : []),
     "",
     "Message :",
     message,
@@ -157,6 +165,8 @@ export function buildOwnerNotification(data: ValidContact): EmailContent {
                     <td style="padding:7px 0;font-size:12px;letter-spacing:0.04em;color:${COLOR.muted};width:130px;vertical-align:top;">${label}</td>
                     <td style="padding:7px 0;font-size:15px;line-height:1.5;color:${COLOR.ink};">${value}</td>
                   </tr>`;
+  const optRow = (label: string, value: string) =>
+    value ? row(label, escapeHtml(value)) : "";
 
   const content = `
             <tr>
@@ -166,6 +176,9 @@ export function buildOwnerNotification(data: ValidContact): EmailContent {
                   ${row("Nom", eName)}
                   ${row("E-mail", `<a href="mailto:${eEmail}" style="color:${COLOR.clay};text-decoration:none;">${eEmail}</a>`)}
                   ${row("Type de séance", eOccasion)}
+                  ${optRow("Période envisagée", period)}
+                  ${optRow("Lieu", place)}
+                  ${optRow("Vous a trouvée via", source)}
                 </table>
               </td>
             </tr>

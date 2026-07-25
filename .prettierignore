@@ -1,0 +1,17 @@
+# Build output & deps
+.next/
+node_modules/
+graphify-out/
+tsconfig.tsbuildinfo
+package-lock.json
+
+# Assets & docs (V1 formatting preserved; docs are prose)
+public/
+docs/
+
+# Legacy V1 content kept until Phase 15 (reshaped there, not reformatted here)
+src/content/
+src/lib/
+src/proxy.ts
+src/types/
+src/styles/

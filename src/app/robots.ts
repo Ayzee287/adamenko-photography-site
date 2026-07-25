@@ -1,16 +1,16 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, allowIndexing } from "@/lib/site";
+import { siteUrl, allowIndexing } from "@/lib/site";
 
-// Only the production deployment is indexable. Preview and local builds return a
-// blanket disallow so review URLs never compete with the canonical site in search.
+// Only the production deployment is indexable (allowIndexing = VERCEL_ENV
+// "production"); preview + local builds disallow everything so review URLs never
+// compete in search. The dev tooling routes are always kept out of the index.
 export default function robots(): MetadataRoute.Robots {
   if (!allowIndexing) {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
-
   return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: absoluteUrl("/sitemap.xml"),
-    host: absoluteUrl(),
+    rules: { userAgent: "*", allow: "/", disallow: ["/dev/", "/*/dev/"] },
+    sitemap: new URL("/sitemap.xml", siteUrl).toString(),
+    host: siteUrl.origin,
   };
 }

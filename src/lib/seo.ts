@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
-import { defaultLocale, localizedAlternates, ogLocale, type Locale } from "@/lib/i18n";
+import { defaultLocale, ogLocale, type Locale } from "@/lib/i18n";
+import { alternatesForPath } from "@/lib/routes";
 import { getDictionary } from "@/lib/dictionary";
 
 /** The localised home title / social headline: "<brand> · <localised descriptor>". */
@@ -24,8 +25,8 @@ export function headlineFor(locale: Locale = defaultLocale): string {
 export const INDEXABLE_PATHS = [
   "/",
   "/galeries",
+  "/tarifs",
   "/a-propos",
-  "/prestations",
   "/contact",
   "/mentions-legales",
   "/confidentialite",
@@ -44,9 +45,14 @@ export function buildMetadata({
 }): Metadata {
   const desc = description ?? getDictionary(locale).site.tagline;
   const ogTitle = title ? `${title} · ${site.brand}` : headlineFor(locale);
-  const alternates = localizedAlternates(path, locale);
+  const alternates = alternatesForPath(path, locale);
   return {
-    title,
+    // Only set `title` when the page provides one. A present-but-`undefined` title
+    // key is treated by Next's metadata merge as an explicit empty title and WIPES the
+    // layout's `title.default` — which is exactly how the homepage (no page title) lost
+    // its <title> entirely. Omitting the key lets the home inherit `title.default`
+    // (= headlineFor(locale)); interior pages pass a string and get the template.
+    ...(title !== undefined ? { title } : {}),
     description: desc,
     alternates,
     openGraph: {

@@ -1,0 +1,23 @@
+/* Reset layer — Tailwind preflight (from the tokens.css import) is the reset;
+   this file adds only the token-driven base states (Foundations §1/§7).
+   No typography here — type roles are Phase 4. */
+
+@layer base {
+  body {
+    background-color: var(--surface-base);
+    color: var(--content-primary);
+  }
+
+  /* Selection tint — bronze 16% (`state/selection`) */
+  ::selection {
+    background-color: var(--state-selection);
+  }
+
+  /* The universal focus ring: 2px, 2px offset, never restyled per component,
+     no transition (a ring that fades in is a ring that's late). */
+  :focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 2px;
+    transition: none;
+  }
+}

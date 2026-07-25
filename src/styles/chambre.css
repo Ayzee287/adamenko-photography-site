@@ -1,0 +1,1479 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHAMBRE — the darkroom art direction (V2 creative reset).
+
+   A page-scoped dark re-theme + cinematic system, opt-in via [data-chambre].
+   The existing semantic tokens are re-pointed to obsidian / bone / ash, so every
+   existing primitive (TextLink, PillButton, Footer, Header…) recolours correctly
+   with zero code change; CHAMBRE-only utilities (plate, develop, safelight, mono)
+   add the composition on top. Motion is GPU-only (opacity/transform/filter) and
+   fully reduced-motion safe. Imported after tokens.css so it can re-scope.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --ch-ember: #c86b3c;              /* the darkroom safelight — LIGHT only, never a fill */
+  --ch-ember-soft: rgba(200, 107, 60, 0.16);
+  --ch-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --ch-ease: cubic-bezier(0.16, 1, 0.3, 1);       /* the develop curve */
+  --ch-ease-soft: cubic-bezier(0.33, 0, 0.2, 1);  /* the breath curve */
+  --ch-edge: clamp(1.25rem, 5vw, 5rem);
+  /* The silence between movements. Generous enough to feel composed, tight enough that
+     two stacked movements never leave a dead screen between them (beat ×2 at the join). */
+  --ch-beat: clamp(3.75rem, 9vh, 7rem);
+}
+
+/* ── The re-theme: obsidian room, bone light, ash secondary ─────────────────
+   Re-points the SAME semantic vars the token layer already exposes, so the whole
+   shell (header, main, footer) becomes CHAMBRE — but only where the marker lives. */
+body:has([data-chambre]) {
+  --surface-base: #0a0908;      /* obsidian — warm near-black, never #000 */
+  --surface-deep: #0e0c0b;      /* the mat */
+  --content-primary: #ede6da;   /* bone — warm film-paper white */
+  --content-secondary: #8b837a; /* ash */
+  --content-disabled: #4a443e;
+  --border-hairline: rgba(237, 230, 218, 0.11);
+  --border-focus: #ede6da;
+  --state-selection: rgba(200, 107, 60, 0.22);
+  background-color: #0a0908;
+}
+
+/* Chrome coherence — the header is a self-styled floating layer (.ch-nav, below); the
+   footer settles into the quiet closing index. */
+body:has([data-chambre]) footer {
+  background-color: var(--surface-deep);
+}
+
+/* ── The floating navigation — a separate layer that lives above the world ────────
+   A fixed bar that never joins the document flow: content scrolls UNDER it. Two
+   stacked backdrops keep the light wordmark and links legible over anything — a
+   persistent soft top scrim (essential over the bright hero) and a frosted fill that
+   fades in once the visitor leaves the top (over the plates below). Nothing solid,
+   nothing heavy; it reads as glass floating over the room. */
+.ch-nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 100; /* below the overture (200) and the menu/lightbox dialogs */
+  pointer-events: none; /* only the inner row is interactive */
+}
+.ch-nav-scrim {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: calc(var(--size-header) + 3rem);
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 6, 5, 0.66), rgba(8, 6, 5, 0.22) 52%, transparent);
+  transition: opacity 0.55s var(--ch-ease-soft);
+}
+.ch-nav-fill {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: var(--size-header);
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(10, 9, 8, 0.55);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  border-bottom: 1px solid var(--border-hairline);
+  transition: opacity 0.55s var(--ch-ease-soft);
+}
+.ch-nav.is-scrolled .ch-nav-fill { opacity: 1; }
+.ch-nav.is-scrolled .ch-nav-scrim { opacity: 0.35; }
+.ch-nav-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 82rem;
+  margin-inline: auto;
+  height: var(--size-header);
+  padding-inline: var(--ch-edge);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+}
+.ch-wordmark {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1rem + 0.42vw, 1.32rem);
+  letter-spacing: 0.005em;
+  color: var(--content-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.4s var(--ch-ease);
+}
+.ch-wordmark:hover { opacity: 0.72; }
+.ch-navrow { display: flex; align-items: center; gap: clamp(1.4rem, 2.1vw, 2.3rem); }
+.ch-navlink {
+  position: relative;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  color: var(--content-secondary);
+  text-decoration: none;
+  padding: 0.45rem 0;
+  transition: color 0.4s var(--ch-ease);
+}
+.ch-navlink:hover,
+.ch-navlink:focus-visible { color: var(--content-primary); }
+.ch-navlink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.15rem;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ch-ease);
+}
+.ch-navlink:hover::after,
+.ch-navlink:focus-visible::after { transform: scaleX(1); }
+.ch-navlink.is-active { color: var(--content-primary); }
+.ch-navlink.is-active::after { transform: scaleX(1); background: var(--ch-ember); }
+/* the language toggle — a quiet utility set a step further out */
+.ch-lang { display: flex; align-items: center; gap: 0.55rem; margin-left: clamp(0.6rem, 1.4vw, 1.4rem); }
+.ch-lang .ch-navlink { font-size: 0.7rem; letter-spacing: 0.12em; padding: 0.45rem 0; }
+.ch-lang-sep { color: var(--content-disabled); font-size: 0.7rem; }
+/* display is owned by Tailwind on the element (flex items-center lg:hidden) so the
+   responsive `lg:hidden` isn't overridden by a plain rule here. */
+.ch-nav-trigger {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--content-primary);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0.6rem 0.1rem;
+}
+
+/* The film clips its own decorative overflow (safelight glows) horizontally —
+   without a scroll container (clip ≠ hidden) and without clipping the fixed grain
+   (whose containing block is the viewport). Guarantees the body never scrolls sideways. */
+.ch-root { overflow-x: clip; }
+
+/* ── Ambient rendering system — the darkroom itself ──────────────────────────
+   ONE global layer, rendered once in the layout (<Ambient/>), gated to CHAMBRE
+   routes, entirely behind the content and aria-hidden. GPU-cheap by construction:
+   layered radial gradients + a soft grain, NO blur() filters, and one very slow
+   opacity breath on a composited layer. Almost impossible to notice consciously —
+   but remove it and the whole room goes flat. Single source of truth: no page owns
+   an atmosphere gradient any more. */
+
+/* Film grain — authentic film movement: a fixed noise plane gently "boiling". A GPU
+   transform on a slightly-oversized layer (inset −60px) so translating it never reveals
+   an edge; steps() gives the grain its flicker. */
+.ch-grain {
+  position: fixed;
+  inset: -60px;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  will-change: transform;
+}
+body:has([data-chambre]) .ch-grain { opacity: 0.06; animation: ch-grain-boil 2.4s steps(4) infinite; }
+@keyframes ch-grain-boil {
+  0%   { transform: translate3d(0, 0, 0); }
+  25%  { transform: translate3d(-14px, 9px, 0); }
+  50%  { transform: translate3d(10px, -12px, 0); }
+  75%  { transform: translate3d(-8px, -7px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* The room's depth — a warm back-wall glow (the room HAS a light source; the centre never
+   goes dead), walls receding into shadow top and bottom, and a deep peripheral vignette so
+   content floats in a space with real depth. Fixed (scroll never repaints it). The glow
+   drifts down and the whole room warms as the visitor descends (--ch-scroll, 0→1, set by
+   <AmbientCursor/>). Behind everything; never touches text contrast or the photographs. */
+.ch-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -2; /* behind content AND behind the beam/key light */
+  pointer-events: none;
+  opacity: 0;
+  background:
+    /* walls receding into shadow, top and bottom */
+    linear-gradient(to bottom, rgba(5, 3, 2, 0.6), transparent 13%),
+    linear-gradient(to top, rgba(5, 3, 2, 0.52), transparent 15%),
+    /* the warm back wall — a soft pool of lamp-light, off-centre, drifting down on scroll */
+    radial-gradient(72% 58% at 50% calc(24% + var(--ch-scroll, 0) * 16%),
+      rgba(220, 179, 133, 0.08), rgba(201, 131, 81, 0.022) 45%, transparent 70%),
+    /* deep warm vignette · the almost-black room */
+    radial-gradient(132% 122% at 50% 44%, transparent 40%, rgba(28, 17, 10, 0.5) 82%, rgba(8, 6, 5, 0.82) 100%);
+}
+body:has([data-chambre]) .ch-ambient { opacity: 1; }
+
+/* The safe-light — a soft warm lamp high in one corner, breathing and drifting slowly on
+   its own composited layer (only opacity/transform animate — no repaint, no blur). */
+.ch-ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(44% 40% at 88% 3%, rgba(206, 112, 62, 0.11), transparent 58%);
+  animation:
+    ch-safelight-breath 14s var(--ch-ease-soft) infinite,
+    ch-safelight-drift 44s var(--ch-ease-soft) infinite;
+  will-change: opacity, transform;
+}
+@keyframes ch-safelight-breath {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes ch-safelight-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-3%, 2.4%, 0); }
+}
+
+/* The volumetric shaft — a slow diagonal beam of light crossing the room, so light
+   visibly exists INSIDE the space and has direction (a darkroom door left ajar). One large
+   rotated plane with a soft band gradient, blended additively (screen), drifting sideways.
+   GPU transform only; softness is the gradient falloff, not a blur() filter. */
+.ch-beam {
+  position: fixed;
+  top: -30vh;
+  left: -10vw;
+  width: 120vw;
+  height: 160vh;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background: linear-gradient(74deg,
+    transparent 32%,
+    rgba(224, 190, 148, 0.03) 45%,
+    rgba(231, 199, 157, 0.065) 50%,
+    rgba(224, 190, 148, 0.03) 55%,
+    transparent 68%);
+  transform: translate3d(-6vw, 0, 0);
+  animation: ch-beam-drift 66s var(--ch-ease-soft) infinite;
+  will-change: transform;
+}
+body:has([data-chambre]) .ch-beam { opacity: 1; }
+@keyframes ch-beam-drift {
+  0%, 100% { transform: translate3d(-7vw, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(7vw, 0, 0) rotate(1.6deg); }
+}
+
+/* The KEY LIGHT — the room's answer to presence. The outer element carries the cursor
+   offset (--ch-lx/ly, eased from a single rAF in AmbientCursor); the inner element owns a
+   slow autonomous wander in CSS, so the lamp breathes even when the hand is still, on every
+   device (free, GPU-composited). Two nested transforms compose. Behind content. */
+.ch-keylight {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform: translate3d(var(--ch-lx, 0vw), var(--ch-ly, 0vh), 0);
+  will-change: transform;
+}
+.ch-ambient-light {
+  position: absolute;
+  width: 116vw;
+  height: 116vh;
+  margin: -58vh 0 0 -58vw;
+  opacity: 0;
+  background: radial-gradient(closest-side,
+      rgba(227, 191, 147, 0.11),
+      rgba(206, 139, 87, 0.038) 44%,
+      transparent 70%);
+  animation: ch-keylight-wander 40s var(--ch-ease-soft) infinite;
+  will-change: transform;
+}
+body:has([data-chambre]) .ch-ambient-light { opacity: 1; }
+@keyframes ch-keylight-wander {
+  0%, 100% { transform: translate3d(-6vw, 4vh, 0); }
+  33% { transform: translate3d(6vw, -4vh, 0); }
+  66% { transform: translate3d(3vw, 6vh, 0); }
+}
+
+/* Living dust — motes in three depth tiers (size/opacity/blur/speed set per-mote by the
+   component) drifting up through the light, with a sideways sway, so the AIR has volume and
+   the room breathes even when the visitor is idle. Pure CSS transform/opacity (no canvas,
+   no rAF); deterministic positions (SSR-safe); behind content; frozen under reduced-motion. */
+.ch-motes {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+}
+body:has([data-chambre]) .ch-motes { opacity: 1; }
+.ch-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(231, 207, 169, 0.7), transparent 68%);
+  opacity: 0;
+  animation: ch-mote-drift var(--m-dur, 32s) linear var(--m-del, 0s) infinite;
+  will-change: transform, opacity;
+}
+@keyframes ch-mote-drift {
+  0% { opacity: 0; transform: translate3d(0, 0, 0); }
+  12% { opacity: var(--m-o, 0.1); }
+  50% { transform: translate3d(var(--m-sway, 10px), calc(var(--m-y, -96px) * 0.5), 0); }
+  88% { opacity: var(--m-o, 0.1); }
+  100% { opacity: 0; transform: translate3d(var(--m-x, 16px), var(--m-y, -96px), 0); }
+}
+
+/* ── Type: reuse the Fraunces/Inter roles; add the mono voice + a cinematic
+      display size the 13-role scale deliberately caps below (hero cinema). ──── */
+.ch-mono {
+  font-family: var(--ch-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.ch-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  font-size: clamp(2.8rem, 9vw, 7.5rem);
+  text-wrap: balance;
+}
+.ch-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 5.2vw, 4rem);
+  text-wrap: balance;
+}
+
+/* ── Develop (scroll reveal) ────────────────────────────────────────────────
+   SSR-safe: content is VISIBLE by default. The client island arms ONLY elements
+   below the fold at mount (so nothing above the fold — or without JS — is ever
+   hidden), then reveals them on enter. Mirrors the repo's proven motion pattern. */
+.ch-develop.armed {
+  opacity: 0;
+  transform: translateY(22px);
+  /* the print emerges from underexposure — darker + softer, then finds its light */
+  filter: brightness(0.36) blur(8px);
+}
+.ch-develop.shown {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition:
+    opacity 1.3s var(--ch-ease),
+    transform 1.3s var(--ch-ease),
+    filter 1.3s var(--ch-ease);
+  transition-delay: var(--ch-delay, 0ms);
+}
+
+/* ── Plate — the museum print: dark mat, vignette, film grain, mono plaque,
+      optional serif caption, exposure-lift on hover. Wraps <Photo> (next/image),
+      so blur-up + CLS-safe ratio boxes are inherited. ───────────────────────── */
+.ch-plate {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--surface-deep);
+  border: 1px solid var(--border-hairline);
+  /* Depth — the print lifts off the dark wall (soft cast shadow) and its top edge
+     catches a hair of light (inset rim). Static; painted once. */
+  box-shadow:
+    0 42px 90px -54px rgba(0, 0, 0, 0.92),
+    /* light wrapping the print — a faint warm halo where it meets the wall */
+    0 0 52px -12px rgba(200, 140, 90, 0.05),
+    inset 0 1px 0 rgba(237, 230, 218, 0.05);
+  isolation: isolate;
+  text-decoration: none;
+  color: inherit;
+}
+.ch-plate-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Base grade is static (no filter animation); only transform animates → composited. */
+  filter: brightness(0.92) contrast(1.02);
+  transition: transform 1.6s var(--ch-ease-soft);
+}
+/* Exposure-lift on hover, GPU-only: the print leans a hair into the light (transform)
+   while its vignette pulls back (opacity below) so it reads as gaining exposure, not
+   zooming. No filter is animated — no repaint. */
+a.ch-plate:hover .ch-plate-img,
+a.ch-plate:focus-visible .ch-plate-img,
+button.ch-plate:hover .ch-plate-img,
+button.ch-plate:focus-visible .ch-plate-img {
+  transform: scale(1.025);
+}
+.ch-plate-vig {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 1.5s var(--ch-ease-soft);
+  background:
+    radial-gradient(120% 90% at 30% 18%, transparent 34%, rgba(10, 9, 8, 0.5) 100%),
+    linear-gradient(to top, rgba(10, 9, 8, 0.85), transparent 52%);
+}
+a.ch-plate:hover .ch-plate-vig,
+a.ch-plate:focus-visible .ch-plate-vig,
+button.ch-plate:hover .ch-plate-vig,
+button.ch-plate:focus-visible .ch-plate-vig {
+  opacity: 0.62;
+}
+.ch-plate-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.ch-plaque {
+  position: absolute;
+  left: clamp(0.9rem, 2vw, 1.4rem);
+  bottom: clamp(0.8rem, 2vw, 1.2rem);
+  z-index: 3;
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  font-family: var(--ch-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--content-primary);
+  opacity: 0.92;
+  font-variant-numeric: tabular-nums;
+}
+.ch-dot {
+  width: 4px; height: 4px; border-radius: 50%; background: var(--ch-ember); flex: none;
+  transition: box-shadow 0.6s var(--ch-ease-soft);
+}
+/* the light finds the label: the plaque's ember catches a soft glow as the print exposes */
+a.ch-plate:hover .ch-dot,
+a.ch-plate:focus-visible .ch-dot,
+button.ch-plate:hover .ch-dot,
+button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 60, 0.55); }
+
+/* ── The exhibition (Viewing Room) — justified rows ────────────────────────────
+   Frames are hung as justified rows (JS-solved in Exhibition): every frame keeps its
+   true ratio (no crop), each row fills the wall, order is preserved. No cartels, no
+   numbers — the photograph is the only thing on the wall. Dense enough to browse a
+   large series, with a gap that lets each frame breathe. */
+/* aligned to .ch-wrap so the hang shares the chapter title's left edge */
+.ex { max-width: 82rem; margin-inline: auto; }
+.ex-grid {
+  --ex-row: clamp(220px, 32vh, 384px);
+  --ex-gap: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: var(--ex-gap);
+  align-content: flex-start;
+}
+/* Rows are placed explicitly by Exhibition (never left to flex-wrap, which strands a frame
+   when a row misses the fractional container width by a sub-pixel). A sparse closing row
+   centres, so the final photograph reads as chosen rather than left over. */
+.ex-row { display: flex; gap: var(--ex-gap); }
+.ex-row.is-partial { justify-content: center; }
+.ex-row.is-fallback { flex-wrap: wrap; }
+@media (max-width: 560px) { .ex-grid { --ex-gap: 8px; } }
+
+.ex-tile {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--surface-deep);
+  cursor: zoom-in;
+  flex: 0 0 auto;
+  isolation: isolate;
+}
+.ex-tile :where(img) {
+  filter: brightness(0.93) contrast(1.02);
+  transition: transform 1.5s var(--ch-ease-soft), filter 0.7s var(--ch-ease-soft);
+}
+/* a hairline of light finds the frame's edge on hover, and it leans into exposure */
+.ex-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(237, 230, 218, 0);
+  transition: box-shadow 0.55s var(--ch-ease-soft);
+}
+.ex-tile:hover :where(img),
+.ex-tile:focus-visible :where(img) {
+  transform: scale(1.05);
+  filter: brightness(1.03) contrast(1.02);
+}
+.ex-tile:hover::after,
+.ex-tile:focus-visible::after { box-shadow: inset 0 0 0 1px rgba(237, 230, 218, 0.24); }
+.ex-tile:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; }
+
+/* develop-in: armed frames emerge from underexposure as they enter (Exhibition arms only
+   what is below the fold; is-in plays the reveal). */
+.ex-tile.arm { opacity: 0; transform: translateY(16px); filter: brightness(0.36) blur(7px); }
+.ex-tile.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: opacity 1s var(--ch-ease), transform 1s var(--ch-ease), filter 1s var(--ch-ease);
+}
+.ch-caption {
+  position: absolute;
+  left: clamp(0.9rem, 2vw, 1.4rem);
+  right: clamp(0.9rem, 2vw, 1.4rem);
+  bottom: 2.7rem;
+  z-index: 3;
+  font-family: var(--font-serif);
+  color: var(--content-primary);
+  font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+  line-height: 1.15;
+  max-width: 24ch;
+  text-shadow: 0 1px 24px rgba(10, 9, 8, 0.6);
+}
+
+.ch-ar-cine { aspect-ratio: 21 / 9; }
+.ch-ar-frame { aspect-ratio: 3 / 2; }
+.ch-ar-tall { aspect-ratio: 4 / 5; }
+.ch-ar-portrait { aspect-ratio: 2 / 3; }
+.ch-ar-sq { aspect-ratio: 1 / 1; }
+
+/* ── Layout: movements + silence ────────────────────────────────────────────── */
+.ch-movement { padding-inline: var(--ch-edge); padding-block: var(--ch-beat); position: relative; z-index: 1; }
+.ch-wrap { max-width: 82rem; margin-inline: auto; }
+.ch-measure { max-width: 40rem; }
+.ch-kicker { display: inline-flex; gap: 0.9rem; align-items: baseline; }
+.ch-kicker .n { color: var(--ch-ember); }
+
+/* movement grids */
+.ch-about-grid { display: grid; gap: clamp(2rem, 5vw, 4.5rem); grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 52rem) { .ch-about-grid { grid-template-columns: 0.85fr 1.15fr; } }
+.ch-plates { display: grid; gap: clamp(1.25rem, 3vw, 2rem); grid-template-columns: 1fr; }
+@media (min-width: 52rem) { .ch-plates { grid-template-columns: 1fr 1fr; } }
+.ch-span-full { grid-column: 1 / -1; }
+
+/* ── The genre index (home M·04) — an editorial, varied-proportion composition ─────
+   NOT five identical cards. A wide FEATURE row (a landscape + a portrait) over a TRIO
+   row (landscape · portrait · landscape). Each row's columns are proportioned to the
+   frames' aspect ratios (landscape 3:2 → 1.5fr, portrait 2:3 → 0.667fr), so every
+   frame in a row lands at the SAME height with no forced crop, landscape reads as
+   landscape, and the feature row (fewer columns) is naturally larger than the trio —
+   giving hierarchy. Below 52rem the frames stack, each true to its own proportion. */
+.ch-genres { display: flex; flex-direction: column; gap: clamp(1.1rem, 2.6vw, 2rem); }
+.ch-genres-row { display: grid; gap: clamp(1rem, 2.2vw, 1.7rem); grid-template-columns: 1fr; }
+@media (min-width: 52rem) {
+  .ch-genres-row--feature { grid-template-columns: 1.5fr 0.667fr; align-items: start; }
+  .ch-genres-row--trio { grid-template-columns: 1.5fr 0.667fr 1.5fr; align-items: start; }
+}
+.ch-index-item { display: block; text-decoration: none; color: inherit; min-width: 0; }
+.ch-index-meta { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.95rem; }
+.ch-index-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--content-primary);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.ch-index-name .ch-arrow {
+  font-size: 0.72em;
+  color: var(--ch-ember);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.4s var(--ch-ease), transform 0.4s var(--ch-ease);
+}
+.ch-index-item:hover .ch-index-name .ch-arrow,
+.ch-index-item:focus-visible .ch-index-name .ch-arrow { opacity: 1; transform: none; }
+.ch-index-line {
+  font-family: var(--font-sans);
+  font-size: 0.83rem;
+  font-weight: 340;
+  line-height: 1.4;
+  color: var(--content-secondary);
+  max-width: 24ch;
+}
+/* The whole cell is the link, so the plate's own (a.ch-plate) hover rules can't fire —
+   reproduce the exposure-lift here: the print leans a hair into the light, its vignette
+   pulls back, the plaque ember (none here) stays quiet. */
+.ch-index-item:hover .ch-plate-img,
+.ch-index-item:focus-visible .ch-plate-img { transform: scale(1.03); }
+.ch-index-item:hover .ch-plate-vig,
+.ch-index-item:focus-visible .ch-plate-vig { opacity: 0.62; }
+/* Gallery wall — a curated exhibition hang: one featured print above a supporting
+   strip, so five albums read as composed, never as a 2-column grid with an orphan. */
+.ch-gallery-wall { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.7rem); }
+.ch-gallery-support { display: grid; gap: clamp(1rem, 2.4vw, 1.7rem); grid-template-columns: 1fr; }
+@media (min-width: 40rem) { .ch-gallery-support { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 64rem) { .ch-gallery-support { grid-template-columns: repeat(4, 1fr); } }
+/* ── Voices — desktop: three quiet quotes side by side; mobile: a snap carousel ──
+   The three-high stack was a long wall of text on a phone. On mobile the rail scrolls
+   horizontally, one review at a time, the next peeking to invite a swipe; dots below
+   show how many and jump between them. Native scroll-snap = native touch feel. */
+.ch-voices-rail {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 52rem) {
+  /* Two quiet columns, so an even set of real reviews balances (a 3-up left the
+     fourth review orphaned on its own row). Each quote gets a comfortable measure
+     for the "read more" expansion. */
+  .ch-voices-rail { grid-template-columns: repeat(2, 1fr); gap: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4.5rem); }
+}
+@media (max-width: 51.99rem) {
+  .ch-voices-rail {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* the rail bleeds to the screen edges so a card can sit centred with a peek each side */
+    margin-inline: calc(-1 * var(--ch-edge));
+    padding-inline: var(--ch-edge);
+    scroll-padding-inline: var(--ch-edge);
+  }
+  .ch-voices-rail::-webkit-scrollbar { display: none; }
+  /* One review, clearly. The card takes almost the whole width so only a thin sliver of
+     the next one shows (a swipe hint, never a second column competing for the eye). The
+     readable single-card typography lives at the end of the voices block (source order). */
+  .ch-voices-rail > .ch-voice {
+    flex: 0 0 90%;
+    scroll-snap-align: center;
+    max-width: none;
+  }
+}
+.ch-voices-dots { display: none; }
+@media (max-width: 51.99rem) {
+  .ch-voices-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.55rem;
+    margin-top: 1.5rem;
+  }
+  .ch-voices-dots button {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--content-disabled);
+    cursor: pointer;
+    transition: background-color 0.4s var(--ch-ease), transform 0.4s var(--ch-ease);
+  }
+  .ch-voices-dots button.on { background: var(--ch-ember); transform: scale(1.25); }
+}
+.ch-voice-stars {
+  display: inline-flex;
+  gap: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--content-disabled);
+  margin-bottom: 1rem;
+}
+.ch-voice-stars .on { color: var(--ch-ember); }
+.ch-voice-quote { position: relative; }
+/* The toggles under a review — read more / see the original. Quiet mono affordances,
+   the ember only on engage, so they never compete with the words above. */
+.ch-voice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin-top: 0.9rem;
+}
+.ch-voice-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--ch-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  border-bottom: 1px solid var(--border-hairline);
+  transition: color 0.4s var(--ch-ease), border-color 0.4s var(--ch-ease);
+}
+.ch-voice-toggle:hover,
+.ch-voice-toggle:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
+.ch-voice-cite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: var(--ch-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--content-primary);
+  margin-top: 1.3rem;
+}
+/* The source + date sit under the name, dimmer — proof without noise. */
+.ch-voice-meta {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--content-secondary);
+}
+.ch-voices-agg {
+  margin-top: clamp(1.75rem, 4vh, 2.5rem);
+  font-family: var(--ch-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  text-align: center;
+}
+.ch-voices-agg-link {
+  color: var(--content-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-hairline);
+  transition: border-color 0.4s var(--ch-ease), color 0.4s var(--ch-ease);
+}
+.ch-voices-agg-link:hover,
+.ch-voices-agg-link:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
+@media (min-width: 52rem) { .ch-voices-agg { text-align: left; } }
+
+/* interior chapters — the opening title page clears the floating header */
+.ch-chapter {
+  padding-top: calc(var(--size-header) + clamp(3.25rem, 8.5vh, 6rem));
+  padding-bottom: clamp(1.5rem, 4vh, 2.75rem);
+}
+.ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: 1.2rem; }
+/* A tight opening (e.g. /tarifs): clears the header but drops the full-screen
+   statement, so the page's primary content — the prices — is reached almost at once.
+   Smaller title, far less clearance above and below. */
+.ch-chapter--tight {
+  padding-top: calc(var(--size-header) + clamp(1.25rem, 3.5vh, 2.25rem));
+  padding-bottom: 0;
+}
+.ch-chapter--tight .ch-chapter-title {
+  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  margin-top: 0.9rem;
+}
+.ch-chapter--tight .ch-lead { margin-top: 1.1rem; }
+/* the first movement right after a tight opening pulls its content up close */
+.ch-movement--tight-top { padding-top: clamp(1.75rem, 4vh, 2.75rem); }
+/* /tarifs is an information page with several stacked registers (sessions · weddings ·
+   options · FAQ). At the full movement beat the join between registers left ~160px of
+   dead space; a tighter beat here rebalances the rhythm — still calm, no longer sparse.
+   Scoped to the page root so the tight opening (explicit padding-top) and every other
+   page keep their own spacing. */
+.ch-tarifs { --ch-beat: clamp(2.5rem, 6vh, 4.5rem); }
+.ch-lead {
+  max-width: 42rem;
+  margin-top: 1.6rem;
+  font-family: var(--font-sans);
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.3rem);
+  font-weight: 340;
+  line-height: 1.6;
+  color: var(--content-secondary);
+}
+.ch-prose { max-width: 42rem; display: flex; flex-direction: column; gap: 1rem; }
+.ch-prose p { margin: 0; }
+
+/* ── Mobile density — cinematic without oversized type or empty screens ──────────
+   The desktop rhythm (large --ch-beat, tall chapter clearance, big heading floors)
+   left phones with dead half-screens between sections and a stack that felt designed
+   for a wide viewport and merely squeezed. This block gives the phone its own, tighter
+   composition: the visitor reaches meaningful content sooner, photography still breathes. */
+@media (max-width: 48rem) {
+  :root {
+    --ch-beat: clamp(2.1rem, 5.5vh, 3.4rem);
+  }
+  .ch-chapter {
+    padding-top: calc(var(--size-header) + 1.6rem);
+    padding-bottom: 0.6rem;
+  }
+  .ch-chapter-title { font-size: clamp(2rem, 8.5vw, 2.7rem); margin-top: 0.9rem; }
+  .ch-title { font-size: clamp(1.6rem, 6.5vw, 2.1rem); }
+  .ch-lead { font-size: 1rem; line-height: 1.55; margin-top: 1rem; }
+  /* card interiors are tighter on a phone; the border already carries the frame */
+  .ch-card { padding: 1.3rem; }
+  .ch-offer { gap: 0.9rem; }
+  /* the about grid and split stack; trim their generous desktop gaps */
+  .ch-about-grid { gap: 1.75rem; }
+  .ch-split { gap: 1.75rem; }
+}
+/* very narrow phones (≤360) — one more step down so nothing wraps awkwardly */
+@media (max-width: 22.5rem) {
+  .ch-chapter-title { font-size: 1.85rem; }
+  .ch-title { font-size: 1.5rem; }
+}
+/* hairline-separated rows (approach / includes / legal bullets) */
+.ch-list { list-style: none; margin: 0; padding: 0; max-width: 42rem; }
+.ch-list li { border-top: 1px solid var(--border-hairline); padding: 0.85rem 0; }
+.ch-list li:last-child { border-bottom: 1px solid var(--border-hairline); }
+/* two-column editorial split for chapters (text beside a plate) */
+.ch-split { display: grid; gap: clamp(2rem, 5vw, 4.5rem); grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 52rem) { .ch-split { grid-template-columns: 1fr 1fr; } .ch-split.narrow-media { grid-template-columns: 0.8fr 1.2fr; } }
+/* a quiet dark price card */
+.ch-card { border: 1px solid var(--border-hairline); padding: clamp(1.6rem, 3vw, 2.4rem); background: var(--surface-deep); }
+.ch-price { font-family: var(--ch-mono); font-size: 1.2rem; letter-spacing: 0.02em; color: var(--content-primary); font-variant-numeric: tabular-nums; }
+
+/* ── Pricing — sessions + wedding packages (the /tarifs registers) ──────────────
+   A three-up hang of offer cards. Each card is a slow flex column so its CTA and
+   note settle to the bottom and the row reads as an even set; the recommended
+   wedding package lifts on an ember rim. */
+.ch-price-grid {
+  display: grid;
+  gap: clamp(1.1rem, 2.4vw, 1.7rem);
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+@media (min-width: 40rem) { .ch-price-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 62rem) { .ch-price-grid { grid-template-columns: repeat(3, 1fr); } }
+.ch-package-cell { display: flex; }
+.ch-package-cell > .ch-package { width: 100%; }
+
+.ch-offer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  height: 100%;
+  transition: border-color 0.6s var(--ch-ease-soft), transform 0.6s var(--ch-ease-soft),
+    box-shadow 0.6s var(--ch-ease-soft);
+}
+.ch-offer:hover { border-color: rgba(237, 230, 218, 0.2); }
+.ch-offer-head { display: flex; flex-direction: column; gap: 0.5rem; }
+.ch-offer-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--content-primary);
+}
+.ch-price-from {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+}
+.ch-price--lg { font-size: 1.55rem; letter-spacing: 0.01em; }
+/* The session length is SUPPORTING information — deliberately quieter than the price
+   (a small labelled caption beneath the headline), never a second figure competing with it. */
+.ch-offer-duration {
+  margin-top: -0.1rem;
+  font-family: var(--ch-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--content-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.ch-offer-duration-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.64rem;
+  color: var(--content-disabled);
+  margin-right: 0.6rem;
+}
+.ch-offer-summary { color: var(--content-secondary); font-size: 0.98rem; line-height: 1.55; }
+
+/* hairline-separated inclusion list, tighter than .ch-list */
+.ch-spec-list { list-style: none; margin: 0; padding: 0; }
+.ch-spec-list li {
+  border-top: 1px solid var(--border-hairline);
+  padding: 0.7rem 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--content-primary);
+}
+.ch-offer-cta { margin-top: auto; padding-top: 0.4rem; }
+
+/* wedding spec (coverage · photos · delivery) — a labelled micro-table */
+.ch-package-spec { margin: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.ch-package-spec > div { display: flex; flex-direction: column; gap: 0.15rem; }
+.ch-package-spec dt {
+  font-family: var(--ch-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+}
+.ch-package-spec dd { margin: 0; color: var(--content-primary); font-size: 0.95rem; line-height: 1.4; }
+.ch-package-note {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--content-secondary);
+  border-top: 1px solid var(--border-hairline);
+  padding-top: 0.9rem;
+}
+
+/* the recommended package — the light settles on it */
+.ch-package { position: relative; }
+.ch-package--featured {
+  border-color: rgba(200, 107, 60, 0.55);
+  box-shadow: 0 30px 80px -60px rgba(0, 0, 0, 0.9), 0 0 60px -22px rgba(200, 107, 60, 0.28);
+  background:
+    linear-gradient(to bottom, rgba(200, 107, 60, 0.05), transparent 40%),
+    var(--surface-deep);
+}
+@media (min-width: 62rem) {
+  .ch-package-cell.is-featured { transform: translateY(-14px); }
+}
+.ch-package--featured:hover { border-color: rgba(200, 107, 60, 0.7); }
+.ch-package-badge {
+  position: absolute;
+  top: 0;
+  right: clamp(1.2rem, 3vw, 2rem);
+  transform: translateY(-50%);
+  background: var(--ch-ember);
+  color: #120a06;
+  font-family: var(--ch-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.7rem;
+  font-weight: 500;
+}
+
+/* ── Forms — the field answers the cursor: the hairline warms on hover and the
+      safelight settles around it on focus. Colour/shadow only, never layout. ────── */
+body:has([data-chambre]) :is(input, textarea, select) {
+  transition:
+    border-color 0.4s var(--ch-ease),
+    box-shadow 0.4s var(--ch-ease),
+    background-color 0.4s var(--ch-ease);
+}
+body:has([data-chambre]) :is(input, textarea, select):hover:not(:focus) {
+  border-color: rgba(237, 230, 218, 0.32);
+}
+body:has([data-chambre]) :is(input, textarea, select):focus-visible {
+  outline: none;
+  border-color: var(--ch-ember);
+  box-shadow: 0 0 0 3px rgba(200, 107, 60, 0.16);
+}
+
+/* ── Lightbox — the premium photograph viewer (media/lightbox.tsx) ──────────────
+   Native <dialog> in the top layer; a fixed stage holds portrait and landscape alike
+   so navigating never makes the layout jump; the chrome fades on stillness. */
+.lb {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #070605;
+  color: #ede6da;
+  overflow: hidden;
+}
+.lb::backdrop { background: rgba(6, 5, 4, 0.6); }
+.lb-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y; /* let the viewer own horizontal drags; vertical handled in JS */
+}
+/* the stage: a fixed frame the photograph is contained within (never crops, never jumps) */
+.lb-stage {
+  position: absolute;
+  inset: clamp(0.75rem, 3vw, 2.5rem);
+  bottom: clamp(3.5rem, 8vh, 5rem); /* room for the meta row */
+  will-change: transform, opacity;
+}
+.lb-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+.lb-img { object-fit: contain; }
+/* the next frame eases in from the direction of travel */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-slide { animation: lb-in 0.42s var(--ch-ease) both; }
+  .lb-slide[data-dir="1"] { --lb-from: 4%; }
+  .lb-slide[data-dir="-1"] { --lb-from: -4%; }
+}
+@keyframes lb-in {
+  from { opacity: 0; transform: translateX(var(--lb-from, 0)); }
+  to { opacity: 1; transform: none; }
+}
+
+/* controls — hairline-quiet, ≥44px, fading on stillness */
+.lb-btn {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: rgba(18, 15, 13, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ede6da;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.4s var(--ch-ease-soft), background-color 0.3s, transform 0.3s var(--ch-ease-soft);
+}
+.lb-btn:hover { background: rgba(30, 24, 20, 0.7); }
+.lb-btn:active { transform: scale(0.92); }
+.lb-btn:focus-visible { outline: 2px solid #ede6da; outline-offset: 3px; }
+.lb-close { top: clamp(0.75rem, 2vw, 1.4rem); right: clamp(0.75rem, 2vw, 1.4rem); }
+.lb-prev { left: clamp(0.6rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); }
+.lb-next { right: clamp(0.6rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); }
+.lb-prev:active, .lb-next:active { transform: translateY(-50%) scale(0.92); }
+/* on touch the edge paddles are redundant with swipe — keep them but smaller/quieter */
+@media (max-width: 640px) {
+  .lb-prev, .lb-next { width: 40px; min-width: 40px; height: 40px; min-height: 40px; background: rgba(18, 15, 13, 0.3); }
+}
+/* auto-hide: fade the whole chrome away on stillness (photo alone), back on move */
+.lb[data-chrome="off"] .lb-btn,
+.lb[data-chrome="off"] .lb-meta { opacity: 0; pointer-events: none; }
+
+/* ── to-top ─────────────────────────────────────────────────────────────────────
+   The return-to-top control: same paddle treatment as the lightbox buttons so it
+   reads as one system. Hidden (no pointer, not focusable) until the page component
+   flags it shown well past the first screen. Fixed bottom corner; z-index keeps it
+   over content but under the header (100), overture (200) and the top-layer dialogs,
+   which cover it while a modal is open. */
+.ch-totop {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.75rem);
+  bottom: calc(clamp(1rem, 3vw, 1.75rem) + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid rgba(237, 230, 218, 0.14);
+  background: rgba(18, 15, 13, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ede6da;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  pointer-events: none;
+  transition:
+    opacity 0.45s var(--ch-ease-soft),
+    transform 0.45s var(--ch-ease-soft),
+    background-color 0.3s;
+}
+.ch-totop[data-shown="true"] {
+  opacity: 0.82;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ch-totop[data-shown="true"]:hover {
+  opacity: 1;
+  background: rgba(30, 24, 20, 0.72);
+}
+.ch-totop:active { transform: translateY(0) scale(0.92); }
+.ch-totop:focus-visible {
+  opacity: 1;
+  outline: 2px solid #ede6da;
+  outline-offset: 3px;
+}
+
+.lb-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(0.9rem, 2.5vh, 1.6rem);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding-inline: 1.25rem;
+  transition: opacity 0.4s var(--ch-ease-soft);
+}
+.lb-caption {
+  font-family: var(--font-serif);
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  color: rgba(237, 230, 218, 0.86);
+  text-align: center;
+  max-width: 42ch;
+  line-height: 1.3;
+}
+.lb-counter {
+  font-family: var(--ch-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  color: rgba(237, 230, 218, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+.lb-counter-i { color: #ede6da; }
+.lb-progress {
+  width: min(180px, 44vw);
+  height: 1px;
+  background: rgba(237, 230, 218, 0.16);
+  overflow: hidden;
+}
+.lb-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--ch-ember);
+  transform-origin: left;
+  transition: transform 0.42s var(--ch-ease);
+}
+
+/* ── FAQ — the answer eases open and closed (grid-rows height), chevron turns ──── */
+.ch-faq { border-bottom: 1px solid var(--border-hairline); }
+.ch-faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--content-primary);
+  transition: color 0.4s var(--ch-ease);
+}
+.ch-faq-q:hover { color: var(--ch-ember); }
+.ch-faq-chevron {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  color: var(--content-secondary);
+  transition: transform 0.5s var(--ch-ease), color 0.4s var(--ch-ease);
+}
+.ch-faq-q:hover .ch-faq-chevron { color: var(--ch-ember); }
+.ch-faq[data-open="true"] .ch-faq-chevron { transform: rotate(180deg); }
+.ch-faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ch-ease);
+}
+.ch-faq[data-open="true"] .ch-faq-a { grid-template-rows: 1fr; }
+.ch-faq-a-inner { overflow: hidden; }
+.ch-faq-a-body {
+  max-width: 42rem;
+  padding-bottom: 1.35rem;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.45s var(--ch-ease) 0.05s, transform 0.45s var(--ch-ease) 0.05s;
+}
+.ch-faq[data-open="true"] .ch-faq-a-body { opacity: 1; transform: none; }
+
+/* the offer stated plainly at the top of a service dossier: the price is the headline,
+   the session length a quieter caption on the line below (never a second price). */
+.ch-service-meta {
+  font-family: var(--ch-mono);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--content-primary);
+  font-variant-numeric: tabular-nums;
+  padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+.ch-service-duration {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--content-secondary);
+}
+
+/* ── Contact — the form is the hero; reassurance + channels support it (no photo) ── */
+.ch-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  align-items: start;
+}
+@media (min-width: 52rem) {
+  .ch-contact-grid { grid-template-columns: 1.25fr 0.85fr; }
+}
+.ch-contact-form { max-width: 40rem; }
+.ch-contact-side { display: flex; flex-direction: column; gap: clamp(2rem, 4vh, 2.75rem); }
+.ch-contact-direct { border-top: 1px solid var(--border-hairline); padding-top: clamp(1.5rem, 3vh, 2rem); }
+.ch-contact-channels li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.ch-contact-channel-label { flex: none; }
+.ch-contact-channel-link {
+  color: var(--content-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.4s var(--ch-ease), border-color 0.4s var(--ch-ease);
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+.ch-contact-channel-link:hover,
+.ch-contact-channel-link:focus-visible {
+  color: var(--ch-ember);
+  border-bottom-color: var(--ch-ember);
+}
+
+/* the cross-link row above the footer — pages never dead-end */
+.ch-crosslinks { display: flex; flex-wrap: wrap; gap: 1.5rem 2.4rem; align-items: center; }
+
+/* the mono index affordance (the only "button" language) */
+.ch-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--ch-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--content-primary);
+  text-decoration: none;
+  position: relative;
+  padding: 0.35rem 0;
+}
+.ch-go::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ch-ease);
+}
+.ch-go:hover::after,
+.ch-go:focus-visible::after { transform: scaleX(1); }
+.ch-go .ch-arrow { transition: transform 0.5s var(--ch-ease); }
+.ch-go:hover .ch-arrow,
+.ch-go:focus-visible .ch-arrow { transform: translateX(6px); }
+
+/* ── Overture — the cold open (loading as atmosphere, not a spinner) ─────────── */
+.ch-overture {
+  position: fixed;
+  inset: 0;
+  z-index: 200; /* above header (100) + skip-link (110); below dialog/lightbox */
+  background: #0a0908;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.85s var(--ch-ease);
+}
+/* The curtain becomes non-blocking the instant it starts to lift, so the site is
+   interactive during the fade; the component unmounts it on its own timer regardless. */
+.ch-overture.lift { opacity: 0; pointer-events: none; }
+.ch-overture .glow {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  margin: 0 auto 2.2rem;
+  background: var(--ch-ember);
+  box-shadow: 0 0 44px 16px var(--ch-ember-soft), 0 0 14px 4px rgba(200, 107, 60, 0.5);
+  animation: ch-pulse 2.6s var(--ch-ease-soft) infinite;
+}
+.ch-overture .mark {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  letter-spacing: 0.55em;
+  text-transform: uppercase;
+  color: #ede6da;
+  padding-left: 0.55em;
+  text-align: center;
+}
+.ch-overture .mark span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: ch-expose 0.9s var(--ch-ease) forwards;
+}
+.ch-overture-studio {
+  margin-top: 1.1rem;
+  font-family: var(--ch-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  text-align: center;
+  padding-left: 0.42em;
+  opacity: 0;
+  animation: ch-expose 0.8s var(--ch-ease) 0.85s forwards;
+}
+@keyframes ch-expose { to { opacity: 1; transform: none; } }
+@keyframes ch-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ── The First Frame — the full-bleed cinematic hero ────────────────────────── */
+.ch-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 34rem;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+.ch-hero-media { position: absolute; inset: 0; z-index: 0; }
+/* The opening frame is a portrait held full-bleed; on wide viewports the cover-crop
+   favours the upper third so the subject is never cut. */
+.ch-hero-media :where(img) { object-position: center 30%; }
+/* Drift — the camera breathes: a slow scroll-linked parallax on the hero, GPU-only and
+   scroll-driven (no JS, no rAF). Progressive: browsers without a scroll-timeline simply
+   get the still frame; reduced-motion opts out. The constant scale gives the translate
+   room so no edge is ever revealed. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .ch-hero-media {
+      will-change: transform;
+      animation: ch-hero-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+    }
+  }
+}
+@keyframes ch-hero-drift {
+  from { transform: scale(1.06) translate3d(0, 0, 0); }
+  to { transform: scale(1.06) translate3d(0, 7%, 0); }
+}
+.ch-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(10, 9, 8, 0.92), rgba(10, 9, 8, 0.1) 46%, rgba(10, 9, 8, 0.4)),
+    radial-gradient(130% 80% at 18% 96%, rgba(10, 9, 8, 0.7), transparent 58%);
+}
+.ch-hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 82rem;
+  margin-inline: auto;
+  padding: 0 var(--ch-edge) clamp(3rem, 10vh, 7rem);
+}
+/* The first-frame headline. Line length capped for the poster balance; on phones the
+   size steps down and the measure narrows so the longest word-pair wraps rather than
+   overflowing the frame (which clips it — the hero hides its overflow). */
+.ch-hero-title { max-width: 17ch; }
+@media (max-width: 40rem) {
+  .ch-hero-title {
+    font-size: clamp(2.4rem, 10.5vw, 3.6rem);
+    max-width: 13ch;
+  }
+}
+/* Legibility floor over any photograph: the kicker rides bone (not ash) and both
+   carry a soft dark halo, so orientation copy clears AA even over a bright frame. */
+.ch-hero-content .ch-mono { color: var(--content-primary); }
+.ch-hero-content h1,
+.ch-hero-content .ch-mono { text-shadow: 0 1px 44px rgba(10, 9, 8, 0.6); }
+.ch-hero-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ch-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+}
+.ch-hero-cue .bar {
+  width: 1px;
+  height: 2.2rem;
+  background: linear-gradient(to bottom, transparent, var(--content-secondary));
+  animation: ch-cue 2.6s var(--ch-ease-soft) infinite;
+  transform-origin: top;
+}
+@keyframes ch-cue {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50%      { opacity: 1; transform: scaleY(1); }
+}
+
+/* ── Voices — reviews as quiet fragments overheard in the dark ───────────────── */
+.ch-voice { max-width: 34rem; }
+.ch-voice-quote {
+  font-family: var(--font-serif);
+  /* A firmer floor so a phone never drops the quote to its smallest size. */
+  font-size: clamp(1.32rem, 2.2vw, 1.6rem);
+  line-height: 1.4;
+  color: var(--content-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Expanded ("read more"): lift the visual line-clamp so the full words actually show —
+   otherwise the JS text grows but the box still crops it to four lines. */
+.ch-voice-quote.is-open {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+/* On a phone the review is a single card, so its mono metadata is lifted a step off the
+   desktop micro-caption sizes — proof that reads as considered, never fine print. */
+@media (max-width: 51.99rem) {
+  .ch-voice-cite { font-size: 0.72rem; }
+  .ch-voice-meta { font-size: 0.68rem; }
+  .ch-voice-toggle { font-size: 0.72rem; }
+  .ch-voices-agg { font-size: 0.72rem; }
+  .ch-voice-stars { font-size: 0.92rem; }
+}
+
+/* ── Page transition — the new chapter develops in on navigation ────────────── */
+.ch-page-enter { animation: ch-page-enter 600ms var(--ch-ease) backwards; }
+@keyframes ch-page-enter {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ── Reduced motion — everything present, instant ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ch-page-enter { animation: none !important; }
+  .ch-ambient::after,
+  .ch-beam,
+  .ch-grain,
+  .ch-ambient-light,
+  .ch-mote,
+  .ch-hero-cue .bar,
+  .ch-overture .glow,
+  .ch-overture .mark span { animation: none !important; }
+  /* the room keeps its static depth (glow, vignette, beam, key light) — only motion stops */
+  .ch-mote { opacity: 0 !important; }
+  .ch-ambient-light { transform: translate3d(-4vw, 3vh, 0); }
+  .ch-develop.armed,
+  .ch-develop.shown {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .ch-plate-img { transition: none !important; }
+  .ex-tile.arm,
+  .ex-tile.is-in {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .ex-tile :where(img) { transition: none !important; }
+  .ch-faq-a,
+  .ch-faq-a-body,
+  .ch-faq-chevron { transition: none !important; }
+  .ch-faq-a-body { opacity: 1 !important; transform: none !important; }
+  .ch-overture { transition: opacity 0.2s linear; }
+  .ch-overture .mark span { opacity: 1; transform: none; }
+  .ch-overture-studio { opacity: 1 !important; animation: none !important; }
+}

@@ -6,6 +6,7 @@
 // from the locations model. Unknown fields are OMITTED, never faked.
 
 import { photographer } from "@/content/photographer";
+import { home } from "@/content/home";
 import { absoluteUrl } from "@/lib/site";
 import { defaultLocale, type Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionary";
@@ -44,11 +45,8 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   if (location.postalCode) address.postalCode = location.postalCode;
 
   // Public profiles that corroborate the business identity (local-SEO / E-E-A-T).
-  const sameAs = [
-    contact.instagram,
-    contact.facebook,
-    contact.telegram,
-  ].filter(Boolean);
+  // Telegram is deliberately excluded (personal account, not a business channel).
+  const sameAs = [contact.instagram, contact.facebook].filter(Boolean);
 
   const business: JsonLdObject = {
     "@context": "https://schema.org",
@@ -57,7 +55,9 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
     name: photographer.brand,
     url: absoluteUrl("/"),
     // A real signature photograph (better for local SEO than the typographic card).
-    image: absoluteUrl("/home/hero.jpg"),
+    // Derived from the hero content so it can never drift from the actual asset
+    // (the hardcoded "/home/hero.jpg" 404'd — the real file is hero-lavande.jpg).
+    image: absoluteUrl(home.hero.image.src),
     description: dict.site.tagline,
     address,
     areaServed: dict.locations.areas.map((a) => ({

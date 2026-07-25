@@ -1,5 +1,18 @@
 # Adamenko Photography — Portfolio Website
 
+> **⚠ Branch `v2` — V2 rebuild in progress (Phase 0 complete).**
+> This branch is the V2 implementation workspace: the V1 app tree
+> (`src/app`, `src/components`) has been removed and replaced by a placeholder
+> shell. Production (`main`) still serves V1 untouched.
+> The build follows the frozen V2 specification stack — Creative DNA → Visual
+> Language Specification → UX Blueprint → Page Blueprint System → Design
+> Foundations → Component Library → Assembly Manual → Frontend Architecture
+> Document → Implementation Roadmap (Phases 0–24). Kept infrastructure:
+> `/public` image masters, `src/content` (reviews sync target + typed content),
+> `src/lib`, `src/proxy.ts` (locale routing), `scripts/`, the
+> `sync-reviews` workflow, and all build config. Everything below this note
+> documents **V1** and remains valid on `main`.
+
 A warm, premium portfolio website for **Adamenko Photography** — an independent
 **family, portrait, maternity, couples & wedding** photographer based in **Lyon, France**.
 
