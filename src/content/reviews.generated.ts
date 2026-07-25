@@ -7,7 +7,7 @@
 import type { GoogleReview, GoogleRatingSummary, GoogleProfileLinks } from "@/types/reviews";
 
 /** Aggregate profile rating at the last sync, or null before the first sync. */
-export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 5 };
+export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 4 };
 
 /** Official Google Maps deep-links for the profile, or null before the first sync. */
 export const googleProfile: GoogleProfileLinks | null = {
