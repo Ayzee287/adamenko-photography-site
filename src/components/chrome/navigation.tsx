@@ -45,7 +45,7 @@ export function Navigation(props: {
             active={currentRef.page === item.id}
           />
         ))}
-      <span aria-label={labels.language} className="ch-lang">
+      <span role="group" aria-label={labels.language} className="ch-lang">
         <Link
           href={alternates.fr}
           aria-current={lang === "fr" ? "true" : undefined}

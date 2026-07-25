@@ -42,7 +42,7 @@ export function Footer(props: { showSeances: boolean }) {
                 <Link
                   key={item.id}
                   href={link(locale, { page: item.id })}
-                  className="text-nav text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+                  className="w-fit py-1 text-nav text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
                 >
                   {item.label[lang]}
                 </Link>
@@ -69,7 +69,7 @@ export function Footer(props: { showSeances: boolean }) {
             </div>
             <a
               href={`mailto:${dict.photographer.contact.email}`}
-              className="text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
             >
               {dict.photographer.contact.email}
             </a>
@@ -84,13 +84,13 @@ export function Footer(props: { showSeances: boolean }) {
           <nav aria-label={ui.nav.legal} className="flex gap-6">
             <Link
               href={link(locale, { page: "mentions-legales" })}
-              className="text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
             >
               {dict.site.legalNav[0].label}
             </Link>
             <Link
               href={link(locale, { page: "confidentialite" })}
-              className="text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
             >
               {dict.site.legalNav[1].label}
             </Link>

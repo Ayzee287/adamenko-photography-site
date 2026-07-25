@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getDictionary } from "@/lib/dictionary";
 import { setRequestLocale } from "@/lib/request-locale";
 import { isLocale, defaultLocale, type Locale } from "@/lib/i18n";
-import { link, type GenreSlug } from "@/lib/routes";
+import { link, navInventory, type GenreSlug } from "@/lib/routes";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
@@ -22,8 +22,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const active = isLocale(locale) ? locale : defaultLocale;
+  // Localized page name (Tarifs / Pricing) from the route registry — the hardcoded
+  // "Tarifs" literal made the EN <title> read "Tarifs" instead of "Pricing".
+  const title = navInventory.find((n) => n.id === "tarifs")!.label[active === "fr" ? "fr" : "en"];
   return buildMetadata({
-    title: "Tarifs",
+    title,
     description: getDictionary(active).pricing.intro,
     path: "/tarifs",
     locale: active,

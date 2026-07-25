@@ -128,7 +128,7 @@ export function MenuDialog(props: {
                 />
               )}
             </div>
-            <span aria-label={labels.language} className="flex items-center gap-2">
+            <span role="group" aria-label={labels.language} className="flex items-center gap-2">
               <Link
                 href={alternates.fr}
                 onClick={onClose}

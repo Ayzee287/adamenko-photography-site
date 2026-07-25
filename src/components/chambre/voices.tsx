@@ -29,7 +29,7 @@ const CLAMP_CHARS = 210;
 
 function Stars({ n }: { n: number }) {
   return (
-    <span className="ch-voice-stars" aria-label={`${n} / 5`}>
+    <span className="ch-voice-stars" role="img" aria-label={`${n} / 5`}>
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={i < n ? "on" : ""} aria-hidden>
           ★

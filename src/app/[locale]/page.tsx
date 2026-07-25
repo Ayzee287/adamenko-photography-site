@@ -180,7 +180,7 @@ export default async function HomePage({
             );
           };
           return (
-            <div className="ch-genres" aria-label={home.seances.title}>
+            <div className="ch-genres">
               <Develop className="ch-genres-row ch-genres-row--feature">
                 {cell("familles", "frame", "(min-width: 52rem) 58vw, 100vw")}
                 {cell("grossesse", "portrait", "(min-width: 52rem) 26vw, 100vw")}
