@@ -17,6 +17,7 @@ export const ui = {
     language: "Choix de la langue",
     instagram: "Instagram",
     facebook: "Facebook",
+    backToTop: "Revenir en haut",
   },
   // Reusable action / cross-link labels shared across pages (kept out of per-page copy
   // so /en never falls back to French on a secondary CTA).

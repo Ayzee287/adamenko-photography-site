@@ -19,6 +19,7 @@ import { Ambient } from "@/components/chambre/ambient";
 import { SkipLink } from "@/components/chrome/skip-link";
 import { Header } from "@/components/chrome/header";
 import { Footer } from "@/components/chrome/footer";
+import { ToTop } from "@/components/chrome/to-top";
 import { notFound } from "next/navigation";
 import "@/styles/tokens.css";
 import "@/styles/chambre.css";
@@ -86,6 +87,9 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer showSeances={showSeances} />
+        {/* Return-to-top: a quiet global convenience for the long editorial pages.
+            Reveals itself once the visitor is well past the first screen. */}
+        <ToTop label={dict.ui.nav.backToTop} />
         {/* Analytics (P20) — Vercel Web Analytics + Speed Insights: cookieless, no
             personal identification (declared in the privacy policy), no credentials or
             IDs, and a no-op when not deployed on Vercel, so dev is unaffected. */}

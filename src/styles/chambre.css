@@ -1036,6 +1036,54 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
 .lb[data-chrome="off"] .lb-btn,
 .lb[data-chrome="off"] .lb-meta { opacity: 0; pointer-events: none; }
 
+/* ── to-top ─────────────────────────────────────────────────────────────────────
+   The return-to-top control: same paddle treatment as the lightbox buttons so it
+   reads as one system. Hidden (no pointer, not focusable) until the page component
+   flags it shown well past the first screen. Fixed bottom corner; z-index keeps it
+   over content but under the header (100), overture (200) and the top-layer dialogs,
+   which cover it while a modal is open. */
+.ch-totop {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.75rem);
+  bottom: calc(clamp(1rem, 3vw, 1.75rem) + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid rgba(237, 230, 218, 0.14);
+  background: rgba(18, 15, 13, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ede6da;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  pointer-events: none;
+  transition:
+    opacity 0.45s var(--ch-ease-soft),
+    transform 0.45s var(--ch-ease-soft),
+    background-color 0.3s;
+}
+.ch-totop[data-shown="true"] {
+  opacity: 0.82;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.ch-totop[data-shown="true"]:hover {
+  opacity: 1;
+  background: rgba(30, 24, 20, 0.72);
+}
+.ch-totop:active { transform: translateY(0) scale(0.92); }
+.ch-totop:focus-visible {
+  opacity: 1;
+  outline: 2px solid #ede6da;
+  outline-offset: 3px;
+}
+
 .lb-meta {
   position: absolute;
   left: 0;
