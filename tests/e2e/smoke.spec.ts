@@ -1,23 +1,26 @@
-// Phase 1 smoke: the placeholder shell serves both locales with correct lang
-// attributes through the kept locale proxy (FR unprefixed, EN under /en).
-// Real page flows replace/extend this from Phase 12 onward.
+// Locale-routing smoke: the real V2 app serves both locales with correct lang
+// attributes through the kept locale proxy (FR unprefixed, EN under /en), and the
+// dynamic-slug / 404 / landmark invariants hold. (The Phase-1 placeholder-copy
+// assertions this file shipped with were retired once CHAMBRE replaced the shell.)
 
 import { expect, test } from "@playwright/test";
 
-test("FR placeholder renders unprefixed at / with lang=fr", async ({ page }) => {
+test("FR home renders unprefixed at / with lang=fr", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "fr");
-  await expect(page.locator("main#main")).toContainText(
-    "nouvelle version en préparation",
-  );
+  // Anchor on the brand wordmark: a fixed client fact, so this survives any
+  // art-direction copy change while still proving the real chrome rendered.
+  await expect(
+    page.getByRole("banner").getByText("Adamenko Photography"),
+  ).toBeVisible();
 });
 
-test("EN placeholder renders at /en with lang=en", async ({ page }) => {
+test("EN home renders at /en with lang=en", async ({ page }) => {
   await page.goto("/en");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.locator("main#main")).toContainText(
-    "a new version is in the making",
-  );
+  await expect(
+    page.getByRole("banner").getByText("Adamenko Photography"),
+  ).toBeVisible();
 });
 
 test("/fr redirects permanently to / (default locale has no prefix)", async ({
@@ -44,13 +47,13 @@ test("unknown dynamic slugs 404 (dynamicParams=false)", async ({ page }) => {
   }
 });
 
-test("stub pages render for both locales through the proxy", async ({
+test("service + gallery pages render for both locales through the proxy", async ({
   page,
 }) => {
   await page.goto("/prestations/famille");
-  await expect(page.locator("h1")).toContainText("famille");
-  await page.goto("/en/galeries/mariages");
-  await expect(page.locator("h1")).toContainText("mariages");
+  await expect(page.locator("h1").first()).toHaveText("Famille");
+  await page.goto("/en/galleries/weddings");
+  await expect(page.locator("h1").first()).toHaveText("Weddings");
 });
 
 test("the layout owns exactly one main#main landmark", async ({ page }) => {

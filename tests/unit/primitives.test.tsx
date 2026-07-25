@@ -221,8 +221,12 @@ describe("gallery-grid + lightbox", () => {
     fireEvent.click(screen.getByRole("button", { name: "Agrandir : Trois." }));
     const dialog = document.querySelector("dialog")!;
     expect(dialog.hasAttribute("open")).toBe(true);
+    // Multi-image: the quiet counter reads "n / count", wrapped in SR words so it is
+    // announced as "Photographie 3 sur 3" rather than a bare "3 / 3".
     expect(dialog.textContent).toContain("3");
     expect(dialog.textContent).toContain("/");
+    expect(dialog.textContent).toContain("Photographie");
+    expect(dialog.textContent).toContain("sur");
   });
 
   it("lightbox arrows wrap around and Escape path closes", () => {
@@ -255,7 +259,9 @@ describe("gallery-grid + lightbox", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("single image hides the arrows; counter reads n / count with SR words", () => {
+  it("single image hides both the arrows and the counter (nothing to navigate)", () => {
+    // With one photograph there is nowhere to go: the arrows AND the counter/progress are
+    // suppressed (both guarded by `count > 1`), leaving the frame alone on the stage.
     render(
       <Lightbox
         images={[{ src: "/a.jpg", alt: "A" }]}
@@ -267,9 +273,9 @@ describe("gallery-grid + lightbox", () => {
       />,
     );
     expect(screen.queryByRole("button", { name: "Photographie suivante" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Photographie précédente" })).toBeNull();
     const dialog = document.querySelector("dialog")!;
     expect(dialog.getAttribute("aria-label")).toBe("Aperçu de la photographie");
-    expect(dialog.textContent).toContain("Photographie");
-    expect(dialog.textContent).toContain("sur");
+    expect(dialog.querySelector(".lb-counter")).toBeNull();
   });
 });

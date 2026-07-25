@@ -31,9 +31,9 @@ test("desktop navigation: frozen order, active state, click-through", async ({
   test.skip(!isDesktopNav(viewport?.width), "inline nav is ≥1024 only");
   await page.goto("/galeries");
   const nav = page.getByRole("navigation", { name: "Navigation principale" });
+  // "Prestations" was removed from the nav (D095): /tarifs is the single offer+cost hub.
   await expect(nav.getByRole("link")).toHaveText([
     "Galeries",
-    "Prestations",
     "Tarifs",
     "À propos",
     "Contact",
@@ -106,7 +106,7 @@ test("footer: contentinfo with pages, socials, email and legal links", async ({
   await expect(footer).toBeVisible();
   await expect(
     footer.getByRole("navigation", { name: "Pied de page" }).getByRole("link"),
-  ).toHaveCount(5);
+  ).toHaveCount(4); // Prestations removed from the nav (D095)
   await expect(footer.getByLabel("Instagram")).toBeVisible();
   await expect(
     footer.getByRole("link", { name: "Mentions légales" }),

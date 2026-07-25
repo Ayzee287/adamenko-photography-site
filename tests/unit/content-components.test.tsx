@@ -206,15 +206,19 @@ describe("availability + faq-item + contact-reassurance", () => {
     expect(screen.getByText(/octobre/).className).toContain("text-body");
   });
 
-  it("faq-item: native details/summary with shared group name", () => {
+  it("faq-item: button/aria-expanded accordion controlling a labelled region", () => {
+    // CHAMBRE's FAQ is an animated accordion, not native <details>/<summary>: the question is a
+    // <button className="ch-faq-q" aria-expanded> that controls a role="region" answer panel via
+    // aria-controls/id. This is the a11y contract the component actually ships.
     const { container } = render(
       <FaqItem group="faq" question="Comment réserver ?" answer="Écrivez-moi." />,
     );
-    const details = container.querySelector("details")!;
-    expect(details.getAttribute("name")).toBe("faq");
-    expect(container.querySelector("summary")?.textContent).toContain(
-      "Comment réserver ?",
-    );
+    const button = container.querySelector<HTMLButtonElement>("button.ch-faq-q")!;
+    expect(button.getAttribute("aria-expanded")).toBe("false");
+    expect(button.textContent).toContain("Comment réserver ?");
+    const region = container.querySelector('[role="region"]')!;
+    expect(button.getAttribute("aria-controls")).toBe(region.id);
+    expect(region.textContent).toContain("Écrivez-moi.");
   });
 
   it("contact-reassurance: complementary, 3 ordered steps, ∅ slots clean", () => {

@@ -16,6 +16,26 @@ import { TextInput } from "../../src/components/forms/text-input";
 import { SelectInput } from "../../src/components/forms/select-input";
 import { InquiryForm, type InquiryFormLabels } from "../../src/components/forms/inquiry-form";
 
+// submitInquiry is REAL delivery now (P19): it rate-limits per IP (reads request headers) and
+// gates success on a genuine Resend send. A unit env has neither a request scope nor mail creds,
+// so we provide a synthetic request scope and a stubbed transport that reports success. This
+// exercises the action's real validation/honeypot/dev-trigger branches while letting the one
+// happy-path test reach a deterministic "success" instead of the honest "unconfigured" error.
+// (Only "valid input succeeds" reaches these paths; the other action tests return earlier.)
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers({ "x-forwarded-for": "203.0.113.7" }),
+}));
+vi.mock("@/lib/email/config", () => ({
+  getEmailConfig: () => ({
+    ok: true,
+    config: { to: "owner@example.com", from: "Studio <from@example.com>", apiKey: "test" },
+    warnings: [],
+  }),
+}));
+vi.mock("@/lib/email/send", () => ({
+  sendEmail: async () => ({ ok: true, id: "test-message-id" }),
+}));
+
 afterEach(() => cleanup());
 
 function fd(entries: Record<string, string>): FormData {

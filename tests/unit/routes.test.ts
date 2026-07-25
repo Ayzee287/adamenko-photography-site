@@ -95,9 +95,10 @@ describe("route registry — alternates & navigation", () => {
   });
 
   it("nav inventory is the frozen header set, in order", () => {
+    // "prestations" was removed from the nav (D095): /tarifs is the single offer+cost hub;
+    // per-service pages remain as SEO landing pages reached from Tarifs, not a top-level dest.
     expect(navInventory.map((n) => n.id)).toEqual([
       "galeries",
-      "prestations",
       "tarifs",
       "seances",
       "a-propos",

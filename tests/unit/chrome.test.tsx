@@ -79,13 +79,10 @@ describe("Navigation", () => {
     render(<Navigation locale="fr" showSeances={false} labels={navLabels} />);
     const nav = screen.getByRole("navigation", { name: "Navigation principale" });
     const items = [...nav.querySelectorAll("a")].map((a) => a.textContent);
-    expect(items.slice(0, 5)).toEqual([
-      "Galeries",
-      "Prestations",
-      "Tarifs",
-      "À propos",
-      "Contact",
-    ]);
+    // "Prestations" was removed from the nav (D095) — /tarifs is the single offer+cost hub;
+    // per-service pages live on only as SEO landing pages, reached from Tarifs.
+    expect(items.slice(0, 4)).toEqual(["Galeries", "Tarifs", "À propos", "Contact"]);
+    expect(items).not.toContain("Prestations");
     expect(items).not.toContain("Séances");
   });
 
@@ -140,24 +137,23 @@ describe("Header", () => {
     expect(trigger.getAttribute("aria-controls")).toBe("menu-dialog");
   });
 
-  it("hides on deep scroll and reveals when focus enters (Addendum M4)", () => {
+  it("gains the scrolled state once the visitor leaves the top (frosted fill settles in)", () => {
+    // CHAMBRE's header is a floating overlay that never hides — it does not translate away
+    // on scroll (the old V1/M4 hide-on-scroll was retired). At the very top it floats on the
+    // scrim; past a small threshold it gains `is-scrolled` so the frosted fill fades in.
     render(
       <Header locale="fr" showSeances={false} chrome={chrome} socials={socials} />,
     );
     const banner = screen.getByRole("banner");
-    expect(banner.className).not.toContain("-translate-y-full");
+    expect(banner.className).toContain("ch-nav");
+    expect(banner.className).not.toContain("is-scrolled");
 
     Object.defineProperty(window, "scrollY", { value: 200, configurable: true });
     fireEvent.scroll(window);
-    Object.defineProperty(window, "scrollY", { value: 400, configurable: true });
-    fireEvent.scroll(window);
-    expect(banner.className).toContain("-translate-y-full");
-
-    fireEvent.focus(screen.getByText("Adamenko Photography", { selector: "a" }));
-    expect(banner.className).not.toContain("-translate-y-full");
+    expect(banner.className).toContain("is-scrolled");
   });
 
-  it("overlay tone rides the .surface-dark scope", () => {
+  it("is the floating overlay treatment (ch-nav) — CHAMBRE is uniformly dark, no tone switch", () => {
     render(
       <Header
         locale="fr"
@@ -167,7 +163,9 @@ describe("Header", () => {
         socials={socials}
       />,
     );
-    expect(screen.getByRole("banner").className).toContain("surface-dark");
+    // `tone` is retained for API stability; the bar is always the ch-nav overlay (scrim + fill),
+    // never a paper/surface-dark switch.
+    expect(screen.getByRole("banner").className).toContain("ch-nav");
   });
 });
 
@@ -231,7 +229,7 @@ describe("MenuDialog", () => {
       />,
     );
     const dialog = document.querySelector("dialog")!;
-    expect(dialog.querySelectorAll("nav a")).toHaveLength(5); // gated inventory
+    expect(dialog.querySelectorAll("nav a")).toHaveLength(4); // gated inventory (Prestations removed, D095)
     expect(screen.getByText("Travaillons ensemble").closest("a")?.getAttribute("href")).toBe(
       "/contact",
     );
@@ -248,17 +246,20 @@ describe("Footer", () => {
     render(<Footer showSeances={false} />);
     const footer = screen.getByRole("contentinfo");
     expect(footer.textContent).toContain("Adamenko Photography");
-    expect(footer.textContent).toContain("Photographe à Lyon");
+    // Identity line = the dictionary tagline. Lyon reads as an identity/SEO signal here (the one
+    // surface the charter keeps it on), not the old "Photographe à Lyon" stamp.
+    expect(footer.textContent).toContain("Lyon");
     const pages = screen.getByRole("navigation", { name: "Pied de page" });
-    expect(pages.querySelectorAll("a")).toHaveLength(5);
+    expect(pages.querySelectorAll("a")).toHaveLength(4); // Prestations removed from nav (D095)
     const legal = screen.getByRole("navigation", { name: "Liens légaux" });
     const legalHrefs = [...legal.querySelectorAll("a")].map((a) =>
       a.getAttribute("href"),
     );
     expect(legalHrefs).toEqual(["/mentions-legales", "/confidentialite"]);
-    expect(screen.getByText("adamenkoiu@gmail.com").getAttribute("href")).toBe(
-      "mailto:adamenkoiu@gmail.com",
-    );
+    // The email is a deliberate action: the address sits in a <span> inside the mailto <a>.
+    expect(
+      screen.getByText("adamenkoiu@gmail.com").closest("a")?.getAttribute("href"),
+    ).toBe("mailto:adamenkoiu@gmail.com");
   });
 });
 
