@@ -44,11 +44,8 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   if (location.postalCode) address.postalCode = location.postalCode;
 
   // Public profiles that corroborate the business identity (local-SEO / E-E-A-T).
-  const sameAs = [
-    contact.instagram,
-    contact.facebook,
-    contact.telegram,
-  ].filter(Boolean);
+  // Telegram is deliberately excluded (personal account, not a business channel).
+  const sameAs = [contact.instagram, contact.facebook].filter(Boolean);
 
   const business: JsonLdObject = {
     "@context": "https://schema.org",

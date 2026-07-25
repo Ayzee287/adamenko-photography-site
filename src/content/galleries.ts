@@ -11,7 +11,7 @@ export const galleries: Gallery[] = [
   {
     slug: "familles",
     title: "Familles",
-    intro: "Le quotidien et les liens, à la maison, dans les rues de Lyon, au grand air.",
+    intro: "Le quotidien et les liens, à la maison, en ville, au grand air.",
     cover: {
       src: "/galleries/familles/familles-a00.jpg",
       width: 1467, height: 2200, ratio: "aspect-[2/3]",
@@ -35,7 +35,7 @@ export const galleries: Gallery[] = [
   {
     slug: "grossesse",
     title: "Grossesse",
-    intro: "Les semaines douces avant l'arrivée du bébé, dans la lumière de Lyon.",
+    intro: "Les semaines douces avant l'arrivée du bébé.",
     cover: {
       src: "/galleries/grossesse/grossesse-a00.jpg",
       width: 1467, height: 2200, ratio: "aspect-[2/3]",

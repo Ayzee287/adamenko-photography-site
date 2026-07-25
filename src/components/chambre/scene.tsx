@@ -28,10 +28,14 @@ export function ChapterOpening(props: {
   intro?: string;
   /** The mono index mark before the eyebrow. */
   mark?: string;
+  /** A tight opening — reduced clearance + a smaller title — for pages whose primary
+   *  content should be reachable immediately (e.g. /tarifs, where a visitor came for
+   *  the prices, not a full-screen statement). */
+  tight?: boolean;
 }) {
-  const { kicker, title, intro, mark = "§" } = props;
+  const { kicker, title, intro, mark = "§", tight = false } = props;
   return (
-    <div className="ch-movement ch-wrap ch-chapter">
+    <div className={cn("ch-movement ch-wrap ch-chapter", tight && "ch-chapter--tight")}>
       <p className="ch-mono ch-kicker">
         <span className="n">{mark}</span> {kicker}
       </p>

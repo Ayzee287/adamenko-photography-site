@@ -11,12 +11,13 @@ import Link from "next/link";
 import { Photo } from "@/components/media/photo";
 import { cn } from "@/lib/utils/cn";
 
-export type PlateRatio = "cine" | "frame" | "tall" | "sq";
+export type PlateRatio = "cine" | "frame" | "tall" | "portrait" | "sq";
 
 const ratioClass: Record<PlateRatio, string> = {
   cine: "ch-ar-cine",
   frame: "ch-ar-frame",
   tall: "ch-ar-tall",
+  portrait: "ch-ar-portrait",
   sq: "ch-ar-sq",
 };
 

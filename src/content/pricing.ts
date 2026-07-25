@@ -61,14 +61,14 @@ export const pricing = {
     eyebrow: "Séances",
     title: "Famille, maternité & portrait.",
     intro:
-      "La séance famille et la séance maternité sont deux rendez-vous distincts : 220 €, une heure, à Lyon. Rien à calculer, rien à négocier.",
+      "Trois séances distinctes, au même tarif. On choisit ensemble le lieu et le rythme : chez vous, en extérieur, là où vous serez le plus à l'aise.",
     durationLabel: "Durée",
     items: [
       {
         slug: "familles",
         name: "Famille",
         summary:
-          "Une heure avec les vôtres, chez vous ou dehors, à Lyon. Les jeux, les câlins, le désordre tendre du quotidien.",
+          "Avec les vôtres, chez vous ou en extérieur : les jeux, les câlins, le désordre tendre du quotidien.",
         price: 220,
         exactPrice: true,
         duration: "1 heure",
@@ -84,7 +84,7 @@ export const pricing = {
         slug: "grossesse",
         name: "Maternité",
         summary:
-          "Une heure pour garder une trace de l'attente : seule, à deux, ou avec les aînés. À Lyon, à votre rythme.",
+          "Pour garder une trace de l'attente : seule, à deux, ou avec les aînés, à votre rythme.",
         price: 220,
         exactPrice: true,
         duration: "1 heure",
@@ -101,6 +101,8 @@ export const pricing = {
         name: "Couple & portrait",
         summary: "Deux personnes, ou un portrait franc, sans poses figées.",
         price: 220,
+        exactPrice: true,
+        duration: "1 heure",
         includes: [
           "En extérieur ou chez vous",
           "Des indications légères, jamais une chorégraphie",

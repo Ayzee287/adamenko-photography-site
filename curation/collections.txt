@@ -32,8 +32,8 @@
 [familles]
 title: Familles
 title.en: Families
-intro: Le quotidien et les liens, à la maison, dans les rues de Lyon, au grand air.
-intro.en: Everyday life and the bonds within it, in Lyon, at home, out in the open.
+intro: Le quotidien et les liens, à la maison, en ville, au grand air.
+intro.en: Everyday life and the bonds within it, at home, in the city, out in the open.
 cover: IMG_5754 | Une famille dans les rues de Lyon, l'enfant porté dans les bras. | A family in the streets of Lyon, their child carried in their arms.
 IMG_0147 | Une famille réunie dans un champ, à la lumière chaude de l'automne. | A family gathered in a field, in the warm light of autumn.
 IMG_0173 | Un enfant au chapeau de paille, blotti contre son parent dans les herbes. | A child in a straw hat, nestled against their parent in the grass.
@@ -51,8 +51,8 @@ IMG_0179 | Un bébé qui bâille sous son bonnet de fourrure, au creux des bras.
 [grossesse]
 title: Grossesse
 title.en: Maternity
-intro: Les semaines douces avant l'arrivée du bébé, dans la lumière de Lyon.
-intro.en: The gentle weeks before the baby arrives, in the light of Lyon.
+intro: Les semaines douces avant l'arrivée du bébé.
+intro.en: The gentle weeks before the baby arrives.
 cover: IMG_7757 | Future maman devant les colonnes d'un palais lyonnais. | A mother-to-be before the columns of a Lyon palace.
 IMG_7754 | Future maman adossée à une colonne de pierre, dans Lyon. | A mother-to-be leaning against a stone column, in Lyon.
 IMG_7762 | Les futurs parents front contre front, sous une arche ancienne. | The parents-to-be forehead to forehead, beneath an old archway.

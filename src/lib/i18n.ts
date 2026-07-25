@@ -105,14 +105,7 @@ export function canonicalPathname(pathname: string): string {
   return pathname;
 }
 
-/**
- * `alternates` for Next metadata: a localized canonical plus an hreflang map covering
- * every ACTIVE locale and `x-default`. Today that is French + x-default; it grows
- * automatically as locales are activated.
- */
-export function localizedAlternates(path: string, locale: Locale = defaultLocale) {
-  const languages: Record<string, string> = {};
-  for (const l of activeLocales) languages[htmlLang[l]] = localizedPath(l, path);
-  languages["x-default"] = localizedPath(defaultLocale, path);
-  return { canonical: localizedPath(locale, path), languages };
-}
+// Localized hreflang/canonical alternates now live in @/lib/routes (`alternatesForPath`),
+// which speaks the same localized-slug URLs as `link()` — so canonical, hreflang, the
+// sitemap and the nav can never disagree. (The old prefix-only `localizedAlternates`
+// here was the source of that disagreement and has been removed.)

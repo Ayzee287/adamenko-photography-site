@@ -19,7 +19,7 @@ export function Footer(props: { showSeances: boolean }) {
 
   return (
     <footer className="bg-paper-deep">
-      <div className="mx-auto max-w-site px-5 py-8 md:px-8 md:py-12">
+      <div className="mx-auto max-w-site px-5 py-8 md:px-8">
         <div className="flex flex-col gap-6 md:flex-row md:justify-between md:gap-8">
           {/* Group A — identity */}
           <div className="max-w-measure md:max-w-none md:basis-1/2">
@@ -77,7 +77,7 @@ export function Footer(props: { showSeances: boolean }) {
         </div>
 
         {/* Legal row */}
-        <div className="mt-7 flex flex-col gap-2 border-t border-hairline pt-5 md:flex-row md:items-center md:justify-between">
+        <div className="mt-6 flex flex-col gap-2 border-t border-hairline pt-5 md:flex-row md:items-center md:justify-between">
           <p className="text-small text-ink-secondary">
             © {year} {dict.site.brand}. {dict.copy.footer.rights}
           </p>

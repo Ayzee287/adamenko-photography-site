@@ -7,7 +7,6 @@ import { setRequestLocale } from "@/lib/request-locale";
 import { isLocale, defaultLocale, type Locale } from "@/lib/i18n";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
 import { Develop } from "@/components/chambre/develop";
-import { Plate } from "@/components/chambre/plate";
 import { InquiryForm, type InquiryFormLabels } from "@/components/forms/inquiry-form";
 import { ContactReassurance } from "@/components/content/contact-reassurance";
 import { submitInquiry } from "@/lib/forms/submit-inquiry";
@@ -43,13 +42,15 @@ export default async function ContactPage({
     email: f.email,
     sessionType: f.occasion,
     sessionTypePlaceholder: f.occasionPlaceholder,
-    period: "Période envisagée",
-    place: "Lieu",
+    period: f.period,
+    place: f.place,
     message: f.message,
-    source: "Comment m'avez-vous trouvée ?",
-    sourcePlaceholder: "Choisissez…",
-    optionalSuffix: "(facultatif)",
-    honeypot: "Ne pas remplir",
+    // The "how did you find me?" select is not rendered here (no `sources` passed),
+    // so these labels are inert — kept only to satisfy the frozen form contract.
+    source: f.occasion,
+    sourcePlaceholder: f.occasionPlaceholder,
+    optionalSuffix: f.optionalSuffix,
+    honeypot: "company",
     submit: f.submit,
     sending: f.sending,
     errors: {
@@ -59,13 +60,13 @@ export default async function ContactPage({
       message: f.errors.message,
     },
     formError: f.error,
-    mailtoLabel: "M'écrire directement par e-mail",
+    mailtoLabel: f.mailtoLabel,
     success: {
-      heading: "Merci, votre message est bien parti.",
-      body: "Je vous réponds sous quelques jours.",
+      heading: f.successHeading,
+      body: f.successBody,
     },
-    statusSent: "Message envoyé.",
-    statusError: "L'envoi a échoué. Votre message est conservé.",
+    statusSent: f.statusSent,
+    statusError: f.statusError,
   };
 
   // The channels a visitor can use instead of the form — only those actually configured
@@ -75,69 +76,62 @@ export default async function ContactPage({
     (ch) => ch.id !== "form" && ch.href && ch.value,
   );
 
-  // Submitted values are ServiceSlugs (the inquiry schema's enum); labels are French.
+  // Submitted values are ServiceSlugs (the inquiry schema's enum); the visible labels
+  // come from the localised occasion map (keyed by the canonical French occasion), so
+  // the dropdown reads "Family / Maternity / …" on the English site.
+  const ol = f.occasionLabels;
   const sessionTypes = [
-    { value: "famille", label: "Famille" },
-    { value: "grossesse", label: "Grossesse" },
-    { value: "couple", label: "Couple" },
-    { value: "mariage", label: "Mariage" },
-    { value: "portrait", label: "Portrait" },
+    { value: "famille", label: ol.Famille },
+    { value: "grossesse", label: ol.Grossesse },
+    { value: "couple", label: ol.Couple },
+    { value: "mariage", label: ol.Mariage },
+    { value: "portrait", label: ol.Portrait },
   ];
 
   return (
     <ChambreScene>
-      <ChapterOpening kicker={c.eyebrow} title={c.title} intro={c.intro} mark="§ Contact" />
+      <ChapterOpening kicker={c.eyebrow} title={c.title} intro={c.intro} mark="§" />
 
+      {/* Contact is a conversion page: the FORM is the hero (left, wider), the quiet
+          reassurance + the direct channels support it (right). No dominant photograph —
+          the visitor came to write, and the living-darkroom already carries the mood. */}
       <section className="ch-movement ch-wrap">
-        <div className="ch-split">
-          <Develop>
-            <div style={{ maxWidth: "40rem" }}>
-              <InquiryForm
-                action={submitInquiry}
-                labels={labels}
-                sessionTypes={sessionTypes}
-                origin="/contact"
-                locale={active}
-                mailtoHref={`mailto:${email}`}
-              />
-            </div>
+        <div className="ch-contact-grid">
+          <Develop className="ch-contact-form">
+            <InquiryForm
+              action={submitInquiry}
+              labels={labels}
+              sessionTypes={sessionTypes}
+              origin="/contact"
+              locale={active}
+              mailtoHref={`mailto:${email}`}
+            />
           </Develop>
-          <Develop delay={90}>
+
+          <Develop delay={90} className="ch-contact-side">
             <ContactReassurance
               heading={c.reassurance.title}
               steps={[...c.reassurance.steps]}
-              promise={dict.contactChannels.responseTime}
             />
 
-            {/* The column used to end here, leaving a dead half-screen beside the form.
-                A warm frame and the direct channels close it: the visitor who would rather
-                write than fill in a form has somewhere to go, and the moment stays human. */}
-            <div className="ch-contact-aside">
-              <Plate
-                src="/galleries/familles/familles-a07.jpg"
-                alt="Une maman et son tout-petit dans une rue de Lyon, front contre front."
-                ratio="tall"
-                sizes="(min-width: 52rem) 40vw, 100vw"
-              />
-              <div className="ch-contact-direct">
-                <p className="ch-mono ch-kicker">
-                  <span className="n">§</span> {directHeading}
-                </p>
-                <ul className="ch-list ch-contact-channels">
-                  {directChannels.map((ch) => (
-                    <li key={ch.id}>
-                      <span className="ch-mono ch-contact-channel-label">{ch.label}</span>
-                      <a
-                        className="ch-contact-channel-link"
-                        href={ch.href}
-                        {...(ch.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      >
-                        {ch.value}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="ch-contact-direct">
+              <p className="ch-mono ch-kicker">
+                <span className="n">§</span> {directHeading}
+              </p>
+              <ul className="ch-list ch-contact-channels">
+                {directChannels.map((ch) => (
+                  <li key={ch.id}>
+                    <span className="ch-mono ch-contact-channel-label">{ch.label}</span>
+                    <a
+                      className="ch-contact-channel-link"
+                      href={ch.href}
+                      {...(ch.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    >
+                      {ch.value}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </Develop>
         </div>

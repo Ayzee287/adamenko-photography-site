@@ -57,12 +57,5 @@ export const contactChannels = {
       href: contact.facebook ?? "",
       external: true,
     },
-    {
-      id: "telegram",
-      label: "Telegram",
-      value: "@AdamenkoIr",
-      href: contact.telegram ?? "",
-      external: true,
-    },
   ] satisfies ContactChannel[],
 } as const;

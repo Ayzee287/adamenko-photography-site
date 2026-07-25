@@ -55,7 +55,11 @@ function justify(ars: number[], containerW: number, targetH: number, gap: number
     let h = avail / rowAr;
     let partial = false;
     if (isLast && h > targetH * 1.18) {
-      h = targetH;
+      // Sparse closing row: don't blow it to full width (a wide frame would tower). A LONE
+      // closing frame is enlarged into a deliberate final print — larger than the mosaic
+      // above so it reads as a conclusion, not a leftover tile; a 2+ frame partial row
+      // keeps the target height. Both are centred (.is-partial).
+      h = row.length === 1 ? Math.min(h, targetH * 1.35) : targetH;
       partial = true;
     }
     const height = Math.round(h);

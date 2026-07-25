@@ -53,19 +53,20 @@ export default async function ServicePage({
   if (!item) notFound();
   const cover = dict.galleries.find((g) => g.slug === genre)?.cover;
 
-  // The offer, stated plainly on the service itself — exact for the client-fixed
-  // sessions (family/maternity: "220 € · 1 heure"), a starting point otherwise.
+  // The offer, stated plainly on the service itself: the PRICE is the headline; the
+  // session length is supporting information beside it, never a second price.
   const p = dict.pricing;
   const session = p.sessions.items.find((s) => s.slug === genre);
-  let offerLine = "";
+  let priceLine = "";
+  let durationLine = "";
   if (session) {
-    offerLine =
-      session.exactPrice && session.duration
-        ? `${formatPrice(session.price, active)} · ${session.duration}`
-        : `${p.fromLabel} ${formatPrice(session.price, active)}`;
+    priceLine = session.exactPrice
+      ? formatPrice(session.price, active)
+      : `${p.fromLabel} ${formatPrice(session.price, active)}`;
+    if (session.duration) durationLine = `${p.sessions.durationLabel} · ${session.duration}`;
   } else if (genre === "mariages") {
     const min = Math.min(...p.wedding.packages.map((pk) => pk.price));
-    offerLine = `${p.fromLabel} ${formatPrice(min, active)}`;
+    priceLine = `${p.fromLabel} ${formatPrice(min, active)}`;
   }
 
   return (
@@ -78,9 +79,12 @@ export default async function ServicePage({
       />
 
       <section className="ch-movement ch-wrap">
-        {offerLine && (
+        {priceLine && (
           <Develop>
-            <p className="ch-service-meta">{offerLine}</p>
+            <p className="ch-service-meta">
+              {priceLine}
+              {durationLine && <span className="ch-service-duration">{durationLine}</span>}
+            </p>
           </Develop>
         )}
         {cover?.src ? (
@@ -105,7 +109,7 @@ export default async function ServicePage({
             </div>
           </Develop>
           <Develop delay={90}>
-            <p className="ch-mono ch-kicker"><span className="n">§</span> Comment ça se passe</p>
+            <p className="ch-mono ch-kicker"><span className="n">§</span> {dict.ui.actions.howItWorks}</p>
             <ul className="ch-list text-body text-ink" style={{ marginTop: "1.4rem" }}>
               {item.approach.map((a, i) => (
                 <li key={i}>{a}</li>
@@ -118,15 +122,15 @@ export default async function ServicePage({
         </div>
 
         <Develop>
-          <nav aria-label="Suite" className="ch-crosslinks" style={{ marginTop: "clamp(2.5rem,6vh,4rem)" }}>
+          <nav aria-label={dict.ui.actions.more} className="ch-crosslinks" style={{ marginTop: "clamp(2.5rem,6vh,4rem)" }}>
             <Link className="ch-go" href={link(active, { page: "genre", genre: genre as GenreSlug })}>
-              Voir la galerie <span className="ch-arrow" aria-hidden>→</span>
+              {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "tarifs" })}>
-              Les tarifs <span className="ch-arrow" aria-hidden>→</span>
+              {dict.ui.actions.pricing} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "contact" })}>
-              Me contacter <span className="ch-arrow" aria-hidden>→</span>
+              {dict.ui.actions.contactMe} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </nav>
         </Develop>

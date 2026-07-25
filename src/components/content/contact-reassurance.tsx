@@ -7,7 +7,8 @@ import { Availability } from "./availability";
 export function ContactReassurance(props: {
   heading: string;
   steps: string[];
-  promise: string;
+  /** Optional closing line; omitted when step 1 already states the response time. */
+  promise?: string;
   availability?: string;
   review?: React.ReactNode;
 }) {
@@ -25,7 +26,7 @@ export function ContactReassurance(props: {
           </li>
         ))}
       </ol>
-      <p className="mt-5 text-body text-ink">{promise}</p>
+      {promise && <p className="mt-5 text-body text-ink">{promise}</p>}
       {availability && (
         <div className="mt-5">
           <Availability sentence={availability} surface="paper" />

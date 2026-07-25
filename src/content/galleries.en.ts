@@ -12,7 +12,7 @@ export const galleryText: Record<
 > = {
   familles: {
     title: "Families",
-    intro: "Everyday life and the bonds within it, in Lyon, at home, out in the open.",
+    intro: "Everyday life and the bonds within it, at home, in the city, out in the open.",
     coverAlt: "A family in the streets of Lyon, their child carried in their arms.",
     alts: [
       "A family gathered in a field, in the warm light of autumn.",
@@ -31,7 +31,7 @@ export const galleryText: Record<
   },
   grossesse: {
     title: "Maternity",
-    intro: "The gentle weeks before the baby arrives, in the light of Lyon.",
+    intro: "The gentle weeks before the baby arrives.",
     coverAlt: "A mother-to-be before the columns of a Lyon palace.",
     alts: [
       "A mother-to-be leaning against a stone column, in Lyon.",

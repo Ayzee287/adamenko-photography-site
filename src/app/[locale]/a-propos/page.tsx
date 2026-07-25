@@ -41,7 +41,7 @@ export default async function AboutPage({
 
   return (
     <ChambreScene>
-      <ChapterOpening kicker={dict.copy.about.title} title={ph.name} mark="§ Portrait" />
+      <ChapterOpening kicker={dict.copy.about.title} title={ph.name} mark="§" />
 
       <section className="ch-movement ch-wrap">
         <div className="ch-split narrow-media">
@@ -51,7 +51,6 @@ export default async function AboutPage({
                 src={ph.portrait.src}
                 alt={ph.portrait.alt}
                 ratio="tall"
-                plaque="Irina Adamenko · Lyon"
                 sizes="(min-width: 52rem) 40vw, 100vw"
               />
             </Develop>
@@ -76,15 +75,15 @@ export default async function AboutPage({
 
       <section className="ch-movement ch-wrap">
         <Develop>
-          <nav aria-label="Suite" className="ch-crosslinks">
+          <nav aria-label={dict.copy.about.crosslinks.label} className="ch-crosslinks">
             <Link className="ch-go" href={link(active, { page: "galeries" })}>
-              Voir le travail <span className="ch-arrow" aria-hidden>→</span>
+              {dict.copy.about.crosslinks.work} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "tarifs" })}>
-              Les tarifs <span className="ch-arrow" aria-hidden>→</span>
+              {dict.copy.about.crosslinks.pricing} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "contact" })}>
-              Me contacter <span className="ch-arrow" aria-hidden>→</span>
+              {dict.copy.about.crosslinks.contact} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </nav>
         </Develop>

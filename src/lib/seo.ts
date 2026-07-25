@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
-import { defaultLocale, localizedAlternates, ogLocale, type Locale } from "@/lib/i18n";
+import { defaultLocale, ogLocale, type Locale } from "@/lib/i18n";
+import { alternatesForPath } from "@/lib/routes";
 import { getDictionary } from "@/lib/dictionary";
 
 /** The localised home title / social headline: "<brand> · <localised descriptor>". */
@@ -44,7 +45,7 @@ export function buildMetadata({
 }): Metadata {
   const desc = description ?? getDictionary(locale).site.tagline;
   const ogTitle = title ? `${title} · ${site.brand}` : headlineFor(locale);
-  const alternates = localizedAlternates(path, locale);
+  const alternates = alternatesForPath(path, locale);
   return {
     title,
     description: desc,

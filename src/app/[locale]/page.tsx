@@ -44,16 +44,17 @@ export default async function HomePage({
   const { home } = dict;
   const portrait = dict.photographer.portrait;
 
-  // Voices — real Google reviews only. The FR-visible text is Google's translation
-  // when the review was written in another language; otherwise the verbatim original.
-  const voices = dict.testimonials.slice(0, 3).map((r) => {
-    const translated = r.translations?.[active];
-    return {
-      text: translated && translated !== r.quote ? translated : r.quote,
-      name: r.name,
-      rating: r.rating,
-    };
-  });
+  // Voices — every real Google review (curated in content/testimonials.ts), passed whole:
+  // the component shows Google's translation for the active locale with a toggle back to the
+  // verbatim original, clamps long reviews to a glance, and dates each one. Nothing invented.
+  const voices = dict.testimonials.map((r) => ({
+    quote: r.quote,
+    language: r.language,
+    translations: r.translations,
+    name: r.name,
+    rating: r.rating,
+    date: r.date,
+  }));
 
   return (
     <div data-chambre className="ch-root">
@@ -85,7 +86,7 @@ export default async function HomePage({
 
       {/* ── M·02 · THE WHISPER (manifesto) ─────────────────────────────────────
           The void, then one line after another. Pure emotion. */}
-      <section className="ch-movement ch-wrap" style={{ textAlign: "center" }} aria-label="Manifeste">
+      <section className="ch-movement ch-wrap" style={{ textAlign: "center" }} aria-label={dict.ui.actions.manifesto}>
         <Develop>
           <p className="ch-display" style={{ fontSize: "clamp(2.1rem,6vw,5rem)", margin: "0 auto", maxWidth: "18ch", position: "relative" }}>
             {home.signature.map((line, i) => (
@@ -107,7 +108,6 @@ export default async function HomePage({
                 src={portrait.src}
                 alt={portrait.alt}
                 ratio="tall"
-                plaque="Irina Adamenko · Portraitiste"
                 sizes="(min-width: 52rem) 40vw, 100vw"
               />
             </Develop>
@@ -139,38 +139,62 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── M·04 · THE WORK (plates → the galleries) ───────────────────────────
-          Not a grid of thumbnails: a sequence of lit plates, each a door to its series. */}
+      {/* ── M·04 · THE WORK (the genre index → the galleries) ───────────────────
+          An editorial, varied-proportion composition of ALL FIVE séances — NOT five
+          identical cards. A wide feature row (a landscape + a portrait) sits above a
+          trio (landscape · portrait · landscape). Each row's columns are proportioned
+          to the frames' aspect ratios, so a landscape reads as landscape and a portrait
+          as portrait, the frames align at equal height with no forced crop, and the two
+          rows differ in scale for hierarchy. Below 52rem the frames stack, each true to
+          its proportion — a designed vertical index, not a carousel. */}
       <section className="ch-movement ch-wrap" aria-labelledby="ch-work">
         <Develop>
           <p className="ch-mono ch-kicker">
             <span className="n">§</span> {home.seances.eyebrow}
           </p>
-          <h2 id="ch-work" className="ch-title" style={{ marginTop: "1.2rem", marginBottom: "clamp(2.5rem,6vh,5rem)" }}>
+          <h2 id="ch-work" className="ch-title" style={{ marginTop: "1.2rem", marginBottom: "clamp(2rem,5vh,3.5rem)" }}>
             {home.seances.title}
           </h2>
         </Develop>
-        <div className="ch-plates">
-          {home.seances.scenes.map((scene, i) => {
-            const full = i % 3 === 0;
-            const ratio: PlateRatio = full ? "cine" : "tall";
+        {(() => {
+          const bySlug = Object.fromEntries(home.seances.scenes.map((s) => [s.slug, s]));
+          const cell = (slug: string, ratio: PlateRatio, sizes: string) => {
+            const scene = bySlug[slug];
+            if (!scene) return null;
             return (
-              <Develop key={scene.slug} delay={(i % 2) * 90} className={full ? "ch-span-full" : undefined}>
-                <Plate
-                  href={link(active, { page: "genre", genre: scene.slug as GenreSlug })}
-                  src={scene.src}
-                  alt={scene.alt}
-                  ratio={ratio}
-                  plaque={scene.title}
-                  caption={scene.caption}
-                  sizes={full ? "(min-width: 82rem) 1312px, 100vw" : "(min-width: 52rem) 46vw, 100vw"}
-                />
-              </Develop>
+              <Link
+                key={slug}
+                className="ch-index-item"
+                href={link(active, { page: "genre", genre: scene.slug as GenreSlug })}
+                aria-label={`${scene.title} — ${scene.caption}`}
+              >
+                <Plate src={scene.src} alt="" ratio={ratio} sizes={sizes} />
+                <span className="ch-index-meta">
+                  <span className="ch-index-name">
+                    {scene.title}
+                    <span className="ch-arrow" aria-hidden>→</span>
+                  </span>
+                  <span className="ch-index-line">{scene.caption}</span>
+                </span>
+              </Link>
             );
-          })}
-        </div>
+          };
+          return (
+            <div className="ch-genres" aria-label={home.seances.title}>
+              <Develop className="ch-genres-row ch-genres-row--feature">
+                {cell("familles", "frame", "(min-width: 52rem) 58vw, 100vw")}
+                {cell("grossesse", "portrait", "(min-width: 52rem) 26vw, 100vw")}
+              </Develop>
+              <Develop delay={90} className="ch-genres-row ch-genres-row--trio">
+                {cell("couples", "frame", "(min-width: 52rem) 38vw, 100vw")}
+                {cell("portraits", "portrait", "(min-width: 52rem) 18vw, 100vw")}
+                {cell("mariages", "frame", "(min-width: 52rem) 38vw, 100vw")}
+              </Develop>
+            </div>
+          );
+        })()}
         <Develop>
-          <div style={{ marginTop: "clamp(2.5rem,6vh,4rem)" }}>
+          <div style={{ marginTop: "clamp(2rem,5vh,3.25rem)" }}>
             <Link className="ch-go" href={link(active, { page: "galeries" })}>
               {home.seances.cta.label} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
@@ -193,8 +217,13 @@ export default async function HomePage({
           <div style={{ marginTop: "clamp(2rem,5vh,3.25rem)" }}>
             <Voices
               items={voices}
+              locale={active}
               attribution={home.testimonials.attribution}
               carouselLabel={home.testimonials.carouselLabel}
+              readMore={home.testimonials.readMore}
+              readLess={home.testimonials.readLess}
+              viewOriginal={home.testimonials.viewOriginal}
+              viewTranslation={home.testimonials.viewTranslation}
               aggregate={googleRating}
               aggregateTemplate={home.testimonials.summary}
               viewAllLabel={home.testimonials.viewAllOnGoogle}
@@ -222,9 +251,6 @@ export default async function HomePage({
               {home.finalCta.cta.label} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </div>
-          <p className="ch-mono" style={{ marginTop: "2rem", position: "relative" }}>
-            45.7640°N 4.8357°E — {home.finalCta.location}
-          </p>
         </Develop>
       </section>
     </div>

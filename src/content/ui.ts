@@ -18,6 +18,18 @@ export const ui = {
     instagram: "Instagram",
     facebook: "Facebook",
   },
+  // Reusable action / cross-link labels shared across pages (kept out of per-page copy
+  // so /en never falls back to French on a secondary CTA).
+  actions: {
+    viewGallery: "Voir la galerie",
+    pricing: "Les tarifs",
+    contactMe: "Me contacter",
+    more: "Suite",
+    howItWorks: "Comment ça se passe",
+    requestDate: "Demander une date",
+    requestQuote: "Demander un devis",
+    manifesto: "Manifeste",
+  },
   gallery: {
     /** Prefix for the grid thumbnail's accessible name: `${enlarge} : ${alt}`. */
     enlarge: "Agrandir",

@@ -76,8 +76,8 @@ export const photographer: Photographer = {
   },
   availability: {
     base: "Lyon, France",
-    scope: "Famille et grossesse à Lyon · mariages dans toute la France.",
-    note: "Basée à Lyon ; déplacements dans toute la France pour les mariages.",
+    scope: "Familles, grossesses et couples en région lyonnaise et au-delà · mariages dans toute la France.",
+    note: "Basée à Lyon ; je me déplace en région et, pour les mariages, dans toute la France.",
   },
   specialties: ["Famille", "Grossesse", "Couple", "Portrait", "Mariage"],
   // Rewritten (2026-06-24) from the photographer's OWN words on her previous site,
@@ -108,8 +108,9 @@ export const photographer: Photographer = {
     instagram: "https://www.instagram.com/adamenko_photography/",
     personalInstagram: "https://www.instagram.com/sereduha/",
     facebook: "https://www.facebook.com/profile.php?id=100011367545612",
-    // Recovered from the previous site's contact block — an active channel she used.
-    telegram: "https://t.me/AdamenkoIr",
+    // Telegram intentionally NOT exposed: it is a personal account, not a business
+    // channel (client decision). Kept out of the contact page, the footer and sameAs.
+    telegram: undefined,
     phone: undefined,
   },
 };

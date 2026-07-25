@@ -9,7 +9,13 @@
 // until then, `link()` already returns the final public EN paths, so no
 // call-site ever changes.
 
-import type { Locale } from "@/lib/i18n";
+import {
+  activeLocales,
+  defaultLocale,
+  htmlLang,
+  localizedPath,
+  type Locale,
+} from "@/lib/i18n";
 
 /* ── Dynamic-segment slug tables (FR = filesystem slug, EN = public alias) ── */
 
@@ -172,4 +178,45 @@ export function refFromPathname(pathname: string): PageRef | null {
   }
 
   return null;
+}
+
+/* ── P14: English alias rewrites (the missing routing layer) ─────────────────────
+   The filesystem is FR-shaped under app/[locale], and `link()` already emits the
+   final LOCALIZED public EN slugs (…/en/about). This resolver — called by the proxy —
+   closes the loop: it rewrites the localized public URL to the FR-slug route that
+   actually exists (…/en/a-propos, prerendered), and 308-redirects the FR-slug form
+   under /en to the localized canonical, so every page has exactly ONE URL. Paths the
+   ref parser doesn't recognize (dev routes, unknowns) pass through untouched. */
+export function resolveEnRoute(pathname: string): {
+  action: "rewrite" | "redirect" | "pass";
+  target?: string;
+} {
+  const p = pathname.replace(/\/+$/, "") || "/";
+  const ref = refFromPathname(p);
+  if (!ref) return { action: "pass" };
+  const canonical = link("en", ref); // localized public URL, e.g. /en/about
+  const frPath = link("fr", ref); // unprefixed FR-slug path, e.g. /a-propos
+  const internal = frPath === "/" ? "/en" : `/en${frPath}`; // FR-slug route under /en
+  // Someone hit the internal FR-slug form under /en → send them to the localized URL.
+  if (p === internal && internal !== canonical) {
+    return { action: "redirect", target: canonical };
+  }
+  // The localized public URL has no matching route folder → rewrite to the FR-slug route.
+  if (p === canonical && canonical !== internal) {
+    return { action: "rewrite", target: internal };
+  }
+  return { action: "pass" };
+}
+
+/* ── Localized hreflang/canonical for a FR canonical path ────────────────────────
+   The ONE alternates system, shared by per-page metadata (seo.ts) and the sitemap, so
+   canonical + hreflang + nav all speak the same localized-slug URLs (…/en/about). A
+   path the ref parser can't map falls back to the prefix-only form. */
+export function alternatesForPath(frPath: string, locale: Locale = defaultLocale) {
+  const ref = refFromPathname(frPath);
+  const urlFor = (l: Locale) => (ref ? link(l, ref) : localizedPath(l, frPath));
+  const languages: Record<string, string> = {};
+  for (const l of activeLocales) languages[htmlLang[l]] = urlFor(l);
+  languages["x-default"] = urlFor(defaultLocale);
+  return { canonical: urlFor(locale), languages };
 }

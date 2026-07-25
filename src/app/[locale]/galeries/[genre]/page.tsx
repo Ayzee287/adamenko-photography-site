@@ -85,7 +85,7 @@ export default async function GenrePage({
 
       <section className="ch-movement ch-wrap">
         <Develop>
-          <nav aria-label="Suite" className="ch-crosslinks">
+          <nav aria-label={active === "en" ? "More" : "Suite"} className="ch-crosslinks">
             <Link
               className="ch-go"
               href={link(active, { page: "service", service: serviceForGenre[genre as GenreSlug] })}

@@ -6,7 +6,9 @@
 // analytics mounts at its slot in P20. The layout owns the single
 // <main id="main"> landmark — pages render content, never landmarks.
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { activeLocales, htmlLang, isLocale, type Locale } from "@/lib/i18n";
 import { setRequestLocale } from "@/lib/request-locale";
 import { buildBaseMetadata } from "@/lib/seo/metadata";
@@ -20,6 +22,12 @@ import { Footer } from "@/components/chrome/footer";
 import { notFound } from "next/navigation";
 import "@/styles/tokens.css";
 import "@/styles/chambre.css";
+
+// The whole site renders on the CHAMBRE obsidian surface, so the mobile browser chrome
+// is tinted to match (the warm V1 theme-color would flash a pale bar over a dark site).
+export const viewport: Viewport = {
+  themeColor: "#0a0908",
+};
 
 // Séances is gated on ≥3 published stories (frozen nav law). The stories
 // collection arrives in P15 — until then the gate is closed by constant.
@@ -78,7 +86,11 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer showSeances={showSeances} />
-        {/* analytics slot (P20) */}
+        {/* Analytics (P20) — Vercel Web Analytics + Speed Insights: cookieless, no
+            personal identification (declared in the privacy policy), no credentials or
+            IDs, and a no-op when not deployed on Vercel, so dev is unaffected. */}
+        <Analytics />
+        <SpeedInsights />
         <script
           type="application/ld+json"
           // Site-wide LocalBusiness graph (the photographer linked as founder), built

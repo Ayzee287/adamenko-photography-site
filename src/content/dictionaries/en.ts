@@ -74,6 +74,12 @@ export const en: DeepPartial<Dictionary> = {
       cta: "Let's work together",
       metaDescription:
         "Irina Adamenko, family and maternity photographer in Lyon, weddings throughout France. A documentary approach, gentle and honest.",
+      crosslinks: {
+        label: "More",
+        work: "View the work",
+        pricing: "Pricing",
+        contact: "Contact me",
+      },
     },
     services: {
       eyebrow: "Working together",
@@ -86,7 +92,7 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "Get in touch",
       title: "Contact",
       intro:
-        "Tell me about your project: the date, the place, what you have in mind. I reply within a few days.",
+        "Tell me about your project: the date, the place, what you have in mind.",
       reassurance: {
         title: "What happens next",
         steps: [
@@ -102,12 +108,20 @@ export const en: DeepPartial<Dictionary> = {
         occasionPlaceholder: "Choose…",
         occasionLabels,
         message: "Your message",
+        period: "Preferred date",
+        place: "Location",
+        optionalSuffix: "(optional)",
         submit: "Send",
         sending: "Sending…",
         success:
           "Thank you, your message has arrived. I'll be in touch very soon.",
+        successHeading: "Thank you, your message is on its way.",
+        successBody: "I'll reply within a few days.",
         error:
           "Sorry, your message didn't go through. Try again in a moment, or email me directly.",
+        mailtoLabel: "Email me directly",
+        statusSent: "Message sent.",
+        statusError: "Sending failed. Your message has been kept.",
         errors: {
           name: "Please enter your name.",
           email: "Please enter a valid email address.",
@@ -117,7 +131,7 @@ export const en: DeepPartial<Dictionary> = {
       },
     },
     footer: {
-      tagline: "Photographer in Lyon. Families, couples, maternity, weddings.",
+      tagline: "Families, maternity & couples · weddings throughout France · based in Lyon.",
       instagram: "Instagram",
       rights: "All rights reserved.",
     },
@@ -125,6 +139,16 @@ export const en: DeepPartial<Dictionary> = {
 
   ui: {
     skipToContent: "Skip to content",
+    actions: {
+      viewGallery: "View the gallery",
+      pricing: "Pricing",
+      contactMe: "Contact me",
+      more: "More",
+      howItWorks: "How it works",
+      requestDate: "Request a date",
+      requestQuote: "Request a quote",
+      manifesto: "Manifesto",
+    },
     nav: {
       primary: "Main navigation",
       footer: "Footer",
@@ -240,7 +264,7 @@ export const en: DeepPartial<Dictionary> = {
           slug: "familles",
           title: "Families",
           cta: "View the gallery",
-          caption: "Everyday life and the bonds within it, in Lyon or out in the open.",
+          caption: "Everyday life and the bonds within it, at home or out in the open.",
           src: "/galleries/familles/familles-a01.jpg",
           alt: "A family gathered in a field, in the warm light of autumn.",
         },
@@ -248,7 +272,7 @@ export const en: DeepPartial<Dictionary> = {
           slug: "grossesse",
           title: "Maternity",
           cta: "View the gallery",
-          caption: "The gentle weeks before the baby arrives, in Lyon.",
+          caption: "The gentle weeks before the baby arrives.",
           src: "/galleries/grossesse/grossesse-a00.jpg",
           alt: "A mother-to-be before the columns of a Lyon palace.",
         },
@@ -257,8 +281,8 @@ export const en: DeepPartial<Dictionary> = {
           title: "Couples",
           cta: "View the gallery",
           caption: "Two people, no stiff poses.",
-          src: "/galleries/couples/couples-a00.jpg",
-          alt: "Two lovers in a formal French garden, at dusk.",
+          src: "/galleries/couples/couples-a07.jpg",
+          alt: "A couple on a terrace overlooking the valley, at dusk.",
         },
         {
           slug: "mariages",
@@ -267,6 +291,14 @@ export const en: DeepPartial<Dictionary> = {
           caption: "Your day, from the preparations to the celebration.",
           src: "/galleries/mariages/mariages-a00.jpg",
           alt: "The newlyweds facing the sea, she in lace, he in a white tuxedo.",
+        },
+        {
+          slug: "portraits",
+          title: "Portraits",
+          cta: "View the gallery",
+          caption: "A simple, honest portrait, in daylight.",
+          src: "/galleries/portraits/portraits-a00.jpg",
+          alt: "Portrait of a young woman in lace, soft window light.",
         },
       ],
       cta: { label: "View all galleries", href: "/galeries" },
@@ -337,14 +369,14 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "Sessions",
       title: "Family, maternity & portrait.",
       intro:
-        "The family session and the maternity session are two separate appointments: 220 €, one hour, in Lyon. Nothing to calculate, nothing to negotiate.",
+        "Three separate sessions, all at the same rate. We settle the place and the pace together: at home, outdoors, wherever you feel most at ease.",
       durationLabel: "Duration",
       items: [
         {
           slug: "familles",
           name: "Family",
           summary:
-            "One hour with your people, at home or outdoors, in Lyon. The games, the cuddles, the tender mess of everyday life.",
+            "With your people, at home or outdoors: the games, the cuddles, the tender mess of everyday life.",
           price: 220,
           exactPrice: true,
           duration: "1 hour",
@@ -360,7 +392,7 @@ export const en: DeepPartial<Dictionary> = {
           slug: "grossesse",
           name: "Maternity",
           summary:
-            "One hour to keep a trace of the waiting: alone, together, or with the older ones. In Lyon, at your pace.",
+            "To keep a trace of the waiting: alone, together, or with the older ones, at your pace.",
           price: 220,
           exactPrice: true,
           duration: "1 hour",
@@ -377,6 +409,8 @@ export const en: DeepPartial<Dictionary> = {
           name: "Couple & portrait",
           summary: "Two people, or a candid portrait, no stiff poses.",
           price: 220,
+          exactPrice: true,
+          duration: "1 hour",
           includes: [
             "Outdoors or at home",
             "Light direction, never a choreography",
@@ -576,7 +610,7 @@ export const en: DeepPartial<Dictionary> = {
       {
         category: "seance",
         q: "Where do the sessions take place?",
-        a: "In and around Lyon, at your home or outdoors. I also travel across France, Europe and abroad for projects that call for it.",
+        a: "At your home or outdoors, most often in and around Lyon, but elsewhere too depending on your project. For weddings, I travel throughout France.",
       },
       {
         category: "seance",
@@ -609,7 +643,6 @@ export const en: DeepPartial<Dictionary> = {
       { id: "phone", label: "Phone", value: "", href: "", external: false },
       { id: "instagram", label: "Instagram", value: "@adamenko_photography", href: "https://www.instagram.com/adamenko_photography/", external: true },
       { id: "facebook", label: "Facebook", value: "Adamenko Photography", href: "https://www.facebook.com/profile.php?id=100011367545612", external: true },
-      { id: "telegram", label: "Telegram", value: "@AdamenkoIr", href: "https://t.me/AdamenkoIr", external: true },
     ],
   },
 
@@ -625,8 +658,8 @@ export const en: DeepPartial<Dictionary> = {
     ],
     availability: {
       base: "Lyon, France",
-      scope: "Family and maternity in Lyon · weddings throughout France.",
-      note: "Based in Lyon; travelling throughout France for weddings.",
+      scope: "Families, maternity and couples in and around Lyon and beyond · weddings throughout France.",
+      note: "Based in Lyon; travelling across the region and, for weddings, throughout France.",
     },
     portrait: {
       alt: "Irina Adamenko, photographer in Lyon, a film camera in her hands.",

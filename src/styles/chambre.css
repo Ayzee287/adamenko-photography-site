@@ -543,6 +543,7 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 .ch-ar-cine { aspect-ratio: 21 / 9; }
 .ch-ar-frame { aspect-ratio: 3 / 2; }
 .ch-ar-tall { aspect-ratio: 4 / 5; }
+.ch-ar-portrait { aspect-ratio: 2 / 3; }
 .ch-ar-sq { aspect-ratio: 1 / 1; }
 
 /* ── Layout: movements + silence ────────────────────────────────────────────── */
@@ -558,6 +559,57 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 .ch-plates { display: grid; gap: clamp(1.25rem, 3vw, 2rem); grid-template-columns: 1fr; }
 @media (min-width: 52rem) { .ch-plates { grid-template-columns: 1fr 1fr; } }
 .ch-span-full { grid-column: 1 / -1; }
+
+/* ── The genre index (home M·04) — an editorial, varied-proportion composition ─────
+   NOT five identical cards. A wide FEATURE row (a landscape + a portrait) over a TRIO
+   row (landscape · portrait · landscape). Each row's columns are proportioned to the
+   frames' aspect ratios (landscape 3:2 → 1.5fr, portrait 2:3 → 0.667fr), so every
+   frame in a row lands at the SAME height with no forced crop, landscape reads as
+   landscape, and the feature row (fewer columns) is naturally larger than the trio —
+   giving hierarchy. Below 52rem the frames stack, each true to its own proportion. */
+.ch-genres { display: flex; flex-direction: column; gap: clamp(1.1rem, 2.6vw, 2rem); }
+.ch-genres-row { display: grid; gap: clamp(1rem, 2.2vw, 1.7rem); grid-template-columns: 1fr; }
+@media (min-width: 52rem) {
+  .ch-genres-row--feature { grid-template-columns: 1.5fr 0.667fr; align-items: start; }
+  .ch-genres-row--trio { grid-template-columns: 1.5fr 0.667fr 1.5fr; align-items: start; }
+}
+.ch-index-item { display: block; text-decoration: none; color: inherit; min-width: 0; }
+.ch-index-meta { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.95rem; }
+.ch-index-name {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--content-primary);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.ch-index-name .ch-arrow {
+  font-size: 0.72em;
+  color: var(--ch-ember);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.4s var(--ch-ease), transform 0.4s var(--ch-ease);
+}
+.ch-index-item:hover .ch-index-name .ch-arrow,
+.ch-index-item:focus-visible .ch-index-name .ch-arrow { opacity: 1; transform: none; }
+.ch-index-line {
+  font-family: var(--font-sans);
+  font-size: 0.83rem;
+  font-weight: 340;
+  line-height: 1.4;
+  color: var(--content-secondary);
+  max-width: 24ch;
+}
+/* The whole cell is the link, so the plate's own (a.ch-plate) hover rules can't fire —
+   reproduce the exposure-lift here: the print leans a hair into the light, its vignette
+   pulls back, the plaque ember (none here) stays quiet. */
+.ch-index-item:hover .ch-plate-img,
+.ch-index-item:focus-visible .ch-plate-img { transform: scale(1.03); }
+.ch-index-item:hover .ch-plate-vig,
+.ch-index-item:focus-visible .ch-plate-vig { opacity: 0.62; }
 /* Gallery wall — a curated exhibition hang: one featured print above a supporting
    strip, so five albums read as composed, never as a 2-column grid with an orphan. */
 .ch-gallery-wall { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.7rem); }
@@ -574,7 +626,10 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   grid-template-columns: 1fr;
 }
 @media (min-width: 52rem) {
-  .ch-voices-rail { grid-template-columns: repeat(3, 1fr); }
+  /* Two quiet columns, so an even set of real reviews balances (a 3-up left the
+     fourth review orphaned on its own row). Each quote gets a comfortable measure
+     for the "read more" expansion. */
+  .ch-voices-rail { grid-template-columns: repeat(2, 1fr); gap: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4.5rem); }
 }
 @media (max-width: 51.99rem) {
   .ch-voices-rail {
@@ -591,8 +646,11 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
     scroll-padding-inline: var(--ch-edge);
   }
   .ch-voices-rail::-webkit-scrollbar { display: none; }
+  /* One review, clearly. The card takes almost the whole width so only a thin sliver of
+     the next one shows (a swipe hint, never a second column competing for the eye). The
+     readable single-card typography lives at the end of the voices block (source order). */
   .ch-voices-rail > .ch-voice {
-    flex: 0 0 84%;
+    flex: 0 0 90%;
     scroll-snap-align: center;
     max-width: none;
   }
@@ -625,13 +683,46 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   margin-bottom: 1rem;
 }
 .ch-voice-stars .on { color: var(--ch-ember); }
+.ch-voice-quote { position: relative; }
+/* The toggles under a review — read more / see the original. Quiet mono affordances,
+   the ember only on engage, so they never compete with the words above. */
+.ch-voice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin-top: 0.9rem;
+}
+.ch-voice-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--ch-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  border-bottom: 1px solid var(--border-hairline);
+  transition: color 0.4s var(--ch-ease), border-color 0.4s var(--ch-ease);
+}
+.ch-voice-toggle:hover,
+.ch-voice-toggle:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
 .ch-voice-cite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   font-family: var(--ch-mono);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: var(--content-primary);
+  margin-top: 1.3rem;
+}
+/* The source + date sit under the name, dimmer — proof without noise. */
+.ch-voice-meta {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
   color: var(--content-secondary);
-  margin-top: 1.1rem;
 }
 .ch-voices-agg {
   margin-top: clamp(1.75rem, 4vh, 2.5rem);
@@ -658,6 +749,26 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   padding-bottom: clamp(1.5rem, 4vh, 2.75rem);
 }
 .ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: 1.2rem; }
+/* A tight opening (e.g. /tarifs): clears the header but drops the full-screen
+   statement, so the page's primary content — the prices — is reached almost at once.
+   Smaller title, far less clearance above and below. */
+.ch-chapter--tight {
+  padding-top: calc(var(--size-header) + clamp(1.25rem, 3.5vh, 2.25rem));
+  padding-bottom: 0;
+}
+.ch-chapter--tight .ch-chapter-title {
+  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  margin-top: 0.9rem;
+}
+.ch-chapter--tight .ch-lead { margin-top: 1.1rem; }
+/* the first movement right after a tight opening pulls its content up close */
+.ch-movement--tight-top { padding-top: clamp(1.75rem, 4vh, 2.75rem); }
+/* /tarifs is an information page with several stacked registers (sessions · weddings ·
+   options · FAQ). At the full movement beat the join between registers left ~160px of
+   dead space; a tighter beat here rebalances the rhythm — still calm, no longer sparse.
+   Scoped to the page root so the tight opening (explicit padding-top) and every other
+   page keep their own spacing. */
+.ch-tarifs { --ch-beat: clamp(2.5rem, 6vh, 4.5rem); }
 .ch-lead {
   max-width: 42rem;
   margin-top: 1.6rem;
@@ -707,7 +818,7 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 @media (min-width: 52rem) { .ch-split { grid-template-columns: 1fr 1fr; } .ch-split.narrow-media { grid-template-columns: 0.8fr 1.2fr; } }
 /* a quiet dark price card */
 .ch-card { border: 1px solid var(--border-hairline); padding: clamp(1.6rem, 3vw, 2.4rem); background: var(--surface-deep); }
-.ch-price { font-family: var(--ch-mono); font-size: 1.1rem; letter-spacing: 0.02em; color: var(--content-primary); font-variant-numeric: tabular-nums; }
+.ch-price { font-family: var(--ch-mono); font-size: 1.2rem; letter-spacing: 0.02em; color: var(--content-primary); font-variant-numeric: tabular-nums; }
 
 /* ── Pricing — sessions + wedding packages (the /tarifs registers) ──────────────
    A three-up hang of offer cards. Each card is a slow flex column so its CTA and
@@ -749,9 +860,23 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   color: var(--content-secondary);
 }
 .ch-price--lg { font-size: 1.55rem; letter-spacing: 0.01em; }
-/* an exact offer: "220 € · 1 heure" — the hour carries the same weight as the price */
-.ch-price-sep { color: var(--content-disabled); margin: 0 0.5rem; }
-.ch-price-duration { color: var(--content-primary); }
+/* The session length is SUPPORTING information — deliberately quieter than the price
+   (a small labelled caption beneath the headline), never a second figure competing with it. */
+.ch-offer-duration {
+  margin-top: -0.1rem;
+  font-family: var(--ch-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  color: var(--content-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.ch-offer-duration-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.64rem;
+  color: var(--content-disabled);
+  margin-right: 0.6rem;
+}
 .ch-offer-summary { color: var(--content-secondary); font-size: 0.98rem; line-height: 1.55; }
 
 /* hairline-separated inclusion list, tighter than .ch-list */
@@ -770,8 +895,8 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 .ch-package-spec > div { display: flex; flex-direction: column; gap: 0.15rem; }
 .ch-package-spec dt {
   font-family: var(--ch-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.22em;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--content-secondary);
 }
@@ -999,23 +1124,37 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
 }
 .ch-faq[data-open="true"] .ch-faq-a-body { opacity: 1; transform: none; }
 
-/* the offer stated plainly at the top of a service dossier: "220 € · 1 heure" */
+/* the offer stated plainly at the top of a service dossier: the price is the headline,
+   the session length a quieter caption on the line below (never a second price). */
 .ch-service-meta {
   font-family: var(--ch-mono);
-  font-size: 0.9rem;
+  font-size: 1rem;
   letter-spacing: 0.06em;
   color: var(--content-primary);
   font-variant-numeric: tabular-nums;
   padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
 }
-
-/* ── Contact aside — a warm frame + the direct channels, closing the column ─────── */
-.ch-contact-aside {
-  margin-top: clamp(2.25rem, 5vh, 3.5rem);
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.5rem, 3vh, 2.25rem);
+.ch-service-duration {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  color: var(--content-secondary);
 }
+
+/* ── Contact — the form is the hero; reassurance + channels support it (no photo) ── */
+.ch-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  align-items: start;
+}
+@media (min-width: 52rem) {
+  .ch-contact-grid { grid-template-columns: 1.25fr 0.85fr; }
+}
+.ch-contact-form { max-width: 40rem; }
+.ch-contact-side { display: flex; flex-direction: column; gap: clamp(2rem, 4vh, 2.75rem); }
+.ch-contact-direct { border-top: 1px solid var(--border-hairline); padding-top: clamp(1.5rem, 3vh, 2rem); }
 .ch-contact-channels li {
   display: flex;
   align-items: baseline;
@@ -1219,13 +1358,30 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
 .ch-voice { max-width: 34rem; }
 .ch-voice-quote {
   font-family: var(--font-serif);
-  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
-  line-height: 1.35;
+  /* A firmer floor so a phone never drops the quote to its smallest size. */
+  font-size: clamp(1.32rem, 2.2vw, 1.6rem);
+  line-height: 1.4;
   color: var(--content-primary);
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+/* Expanded ("read more"): lift the visual line-clamp so the full words actually show —
+   otherwise the JS text grows but the box still crops it to four lines. */
+.ch-voice-quote.is-open {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+/* On a phone the review is a single card, so its mono metadata is lifted a step off the
+   desktop micro-caption sizes — proof that reads as considered, never fine print. */
+@media (max-width: 51.99rem) {
+  .ch-voice-cite { font-size: 0.72rem; }
+  .ch-voice-meta { font-size: 0.68rem; }
+  .ch-voice-toggle { font-size: 0.72rem; }
+  .ch-voices-agg { font-size: 0.72rem; }
+  .ch-voice-stars { font-size: 0.92rem; }
 }
 
 /* ── Page transition — the new chapter develops in on navigation ────────────── */

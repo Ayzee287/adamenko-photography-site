@@ -43,11 +43,15 @@ export default async function TarifsPage({
   const faq = dict.faq;
 
   return (
-    <ChambreScene>
-      <ChapterOpening kicker={p.eyebrow} title={p.title} intro={p.intro} mark="§" />
+    <ChambreScene className="ch-tarifs">
+      {/* A visitor clicking "Tarifs" wants the prices, not a full-screen statement:
+          the opening is TIGHT and the page-level intro is dropped (the sessions
+          register below carries the one short framing line), so the first price
+          cards reach the top of the viewport. */}
+      <ChapterOpening tight kicker={p.eyebrow} title={p.title} mark="§" />
 
-      {/* ── Sessions — family & maternity as distinct services, each from 220 € ───── */}
-      <section className="ch-movement ch-wrap">
+      {/* ── Sessions — the three fixed 220 € sessions, pulled up under the opening ── */}
+      <section className="ch-movement ch-wrap ch-movement--tight-top">
         <Develop>
           <p className="ch-mono ch-kicker"><span className="n">§</span> {p.sessions.eyebrow}</p>
           <h2 className="ch-title" style={{ marginTop: "1.2rem" }}>{p.sessions.title}</h2>
@@ -59,20 +63,12 @@ export default async function TarifsPage({
               <article className="ch-card ch-offer">
                 <header className="ch-offer-head">
                   <h3 className="ch-offer-name">{s.name}</h3>
-                  {/* An exact, client-fixed offer states its price and its hour plainly; a
-                      genuinely variable one is honest about being a starting point. */}
+                  {/* The PRICE is the headline. An exact, client-fixed offer states it
+                      plainly; a genuinely variable one is honest about being a starting
+                      point. The session length is supporting information, not a second
+                      price — it sits quietly beneath (see the duration line below). */}
                   {s.exactPrice ? (
-                    <p className="ch-price">
-                      {formatPrice(s.price, active)}
-                      {s.duration && (
-                        <>
-                          <span className="ch-price-sep" aria-hidden>
-                            ·
-                          </span>
-                          <span className="ch-price-duration">{s.duration}</span>
-                        </>
-                      )}
-                    </p>
+                    <p className="ch-price">{formatPrice(s.price, active)}</p>
                   ) : (
                     <p className="ch-price">
                       <span className="ch-price-from">{p.fromLabel}</span>{" "}
@@ -80,6 +76,12 @@ export default async function TarifsPage({
                     </p>
                   )}
                 </header>
+                {s.duration && (
+                  <p className="ch-offer-duration">
+                    <span className="ch-offer-duration-label">{p.sessions.durationLabel}</span>
+                    {s.duration}
+                  </p>
+                )}
                 <p className="ch-offer-summary">{s.summary}</p>
                 <ul className="ch-spec-list">
                   {s.includes.map((inc, j) => (
@@ -87,7 +89,7 @@ export default async function TarifsPage({
                   ))}
                 </ul>
                 <Link className="ch-go ch-offer-cta" href={link(active, { page: "genre", genre: s.slug as GenreSlug })}>
-                  Voir la galerie <span className="ch-arrow" aria-hidden>→</span>
+                  {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
                 </Link>
               </article>
             </Develop>
@@ -138,7 +140,7 @@ export default async function TarifsPage({
         <Develop>
           <div style={{ marginTop: "clamp(2rem,5vh,3rem)" }}>
             <Link className="ch-go" href={link(active, { page: "contact" })}>
-              Demander une date <span className="ch-arrow" aria-hidden>→</span>
+              {dict.ui.actions.requestDate} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </div>
         </Develop>
@@ -181,7 +183,7 @@ export default async function TarifsPage({
         <Develop>
           <div style={{ marginTop: "clamp(2.5rem,6vh,4rem)" }}>
             <Link className="ch-go" href={link(active, { page: "contact" })}>
-              Demander un devis <span className="ch-arrow" aria-hidden>→</span>
+              {dict.ui.actions.requestQuote} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </div>
         </Develop>

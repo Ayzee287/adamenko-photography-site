@@ -45,7 +45,7 @@ export const faq = {
     {
       category: "seance",
       q: "Où ont lieu les séances ?",
-      a: "À Lyon et dans les environs, chez vous ou en extérieur, pour les séances famille et grossesse. Pour les mariages, je me déplace dans toute la France.",
+      a: "Chez vous ou en extérieur, en région lyonnaise le plus souvent, mais aussi ailleurs selon votre projet. Pour les mariages, je me déplace dans toute la France.",
     },
     {
       category: "seance",
