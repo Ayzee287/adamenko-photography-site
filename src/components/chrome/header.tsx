@@ -10,8 +10,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
-import { link } from "@/lib/routes";
+import { link, refFromPathname } from "@/lib/routes";
+import { scrollToTop } from "@/lib/scroll-to-top";
 import { cn } from "@/lib/utils/cn";
 import { Navigation } from "./navigation";
 import { MenuDialog, type MenuDialogLabels } from "./menu-dialog";
@@ -33,6 +35,11 @@ export function Header(props: {
   const { locale, showSeances, chrome, socials } = props;
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname() ?? "/";
+  // The wordmark is the home control: on any other page it returns to the homepage of the
+  // current locale (the Link href does that, FR→FR / EN→EN); already on the homepage it
+  // smoothly returns to the top, reusing the site's one scroll-to-top mechanism.
+  const isHome = refFromPathname(pathname)?.page === "home";
 
   useEffect(() => {
     // A tiny threshold: at the very top the bar floats on scrim alone (over the hero);
@@ -59,7 +66,16 @@ export function Header(props: {
         <div className="ch-nav-scrim" aria-hidden />
         <div className="ch-nav-fill" aria-hidden />
         <div className="ch-nav-inner">
-          <Link href={link(locale, { page: "home" })} className="ch-wordmark">
+          <Link
+            href={link(locale, { page: "home" })}
+            className="ch-wordmark"
+            onClick={(e) => {
+              if (isHome) {
+                e.preventDefault();
+                scrollToTop();
+              }
+            }}
+          >
             {chrome.brand}
           </Link>
 

@@ -42,7 +42,7 @@ export function Footer(props: { showSeances: boolean }) {
                 <Link
                   key={item.id}
                   href={link(locale, { page: item.id })}
-                  className="w-fit py-1 text-nav text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+                  className="ch-foot-link w-fit py-1 text-nav"
                 >
                   {item.label[lang]}
                 </Link>
@@ -67,11 +67,18 @@ export function Footer(props: { showSeances: boolean }) {
                 />
               )}
             </div>
+            {/* An intentional "email me" action — a mail glyph makes it read as a contact
+                control, not a stray line of text, while the address stays visible and
+                copyable (accessibility + a real mailto). */}
             <a
               href={`mailto:${dict.photographer.contact.email}`}
-              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="ch-foot-email w-fit py-1 text-small"
             >
-              {dict.photographer.contact.email}
+              <svg viewBox="0 0 24 24" aria-hidden width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m3 7 9 6 9-6" />
+              </svg>
+              <span className="ch-foot-email-addr">{dict.photographer.contact.email}</span>
             </a>
           </div>
         </div>
@@ -84,13 +91,13 @@ export function Footer(props: { showSeances: boolean }) {
           <nav aria-label={ui.nav.legal} className="flex gap-6">
             <Link
               href={link(locale, { page: "mentions-legales" })}
-              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="ch-foot-link w-fit py-1 text-small"
             >
               {dict.site.legalNav[0].label}
             </Link>
             <Link
               href={link(locale, { page: "confidentialite" })}
-              className="w-fit py-1 text-small text-ink-secondary underline-offset-4 hover:text-ink hover:underline"
+              className="ch-foot-link w-fit py-1 text-small"
             >
               {dict.site.legalNav[1].label}
             </Link>

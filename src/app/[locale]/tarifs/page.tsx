@@ -50,8 +50,9 @@ export default async function TarifsPage({
       {/* A visitor clicking "Tarifs" wants the prices, not a full-screen statement:
           the opening is TIGHT and the page-level intro is dropped (the sessions
           register below carries the one short framing line), so the first price
-          cards reach the top of the viewport. */}
-      <ChapterOpening tight kicker={p.eyebrow} title={p.title} mark="§" />
+          cards reach the top of the viewport. The "Investissement" eyebrow was retired
+          (it labelled a chapter whose body no longer exists) — the title stands alone. */}
+      <ChapterOpening tight title={p.title} mark="§" />
 
       {/* ── Sessions — the three fixed 220 € sessions, pulled up under the opening ── */}
       <section className="ch-movement ch-wrap ch-movement--tight-top">
@@ -135,13 +136,34 @@ export default async function TarifsPage({
                     <li key={j}>{inc}</li>
                   ))}
                 </ul>
-                {pkg.note && <p className="ch-package-note">{pkg.note}</p>}
               </article>
             </Develop>
           ))}
         </div>
+        {/* Package-specific availability caveats live as a shared footnote under the grid,
+            not inside one card — so the three cards keep one clean baseline (a per-card note
+            made Essentiel taller and left the others with dead space). */}
+        {p.wedding.packages.some((pkg) => pkg.note) && (
+          <Develop>
+            <p className="ch-package-conditions">
+              {p.wedding.packages
+                .filter((pkg) => pkg.note)
+                .map((pkg) => (
+                  <span key={pkg.name}>
+                    <span className="ch-package-conditions-name">{pkg.name}</span> — {pkg.note}
+                  </span>
+                ))}
+            </p>
+          </Develop>
+        )}
+        {/* Pricing → the relevant work, with minimal friction: one shared path to the
+            wedding gallery for the whole section (not a button per card), beside the booking
+            action. */}
         <Develop>
-          <div style={{ marginTop: "clamp(2rem,5vh,3rem)" }}>
+          <div className="ch-tarifs-actions" style={{ marginTop: "clamp(2rem,5vh,3rem)" }}>
+            <Link className="ch-go" href={link(active, { page: "genre", genre: "mariages" })}>
+              {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
+            </Link>
             <Link className="ch-go" href={link(active, { page: "contact" })}>
               {dict.ui.actions.requestDate} <span className="ch-arrow" aria-hidden>→</span>
             </Link>

@@ -101,7 +101,63 @@ body:has([data-chambre]) footer {
   white-space: nowrap;
   transition: opacity 0.4s var(--ch-ease);
 }
-.ch-wordmark:hover { opacity: 0.72; }
+/* Hover only on fine-pointer devices — a tap on a phone must not leave the wordmark dimmed. */
+@media (hover: hover) {
+  .ch-wordmark:hover { opacity: 0.72; }
+}
+.ch-wordmark:focus-visible { outline: 2px solid var(--content-primary); outline-offset: 4px; border-radius: 2px; }
+
+/* ── Footer links — the same quiet interaction language as the rest of the site: a
+   smooth colour lift with an underline that fades in (not the old hard hover:underline),
+   and no sticky state on touch. ─────────────────────────────────────────────────────── */
+.ch-foot-link {
+  color: var(--content-secondary);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: color 0.4s var(--ch-ease), text-decoration-color 0.4s var(--ch-ease);
+}
+@media (hover: hover) {
+  .ch-foot-link:hover { color: var(--content-primary); text-decoration-color: currentColor; }
+}
+.ch-foot-link:focus-visible {
+  color: var(--content-primary);
+  text-decoration-color: currentColor;
+  outline: 2px solid var(--content-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* The email as a deliberate contact action: a mail glyph beside the address. */
+.ch-foot-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--content-secondary);
+  text-decoration: none;
+  transition: color 0.4s var(--ch-ease);
+}
+.ch-foot-email svg { flex: none; opacity: 0.8; transition: opacity 0.4s var(--ch-ease); }
+.ch-foot-email-addr {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.4s var(--ch-ease);
+}
+@media (hover: hover) {
+  .ch-foot-email:hover { color: var(--content-primary); }
+  .ch-foot-email:hover svg { opacity: 1; }
+  .ch-foot-email:hover .ch-foot-email-addr { text-decoration-color: currentColor; }
+}
+.ch-foot-email:focus-visible {
+  color: var(--content-primary);
+  outline: 2px solid var(--content-primary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.ch-foot-email:focus-visible .ch-foot-email-addr { text-decoration-color: currentColor; }
+
 .ch-navrow { display: flex; align-items: center; gap: clamp(1.4rem, 2.1vw, 2.3rem); }
 .ch-navlink {
   position: relative;
@@ -147,6 +203,50 @@ body:has([data-chambre]) footer {
   border: 0;
   cursor: pointer;
   padding: 0.6rem 0.1rem;
+  transition: opacity 0.4s var(--ch-ease);
+}
+@media (hover: hover) {
+  .ch-nav-trigger:hover { opacity: 0.7; }
+}
+
+/* ── Mobile menu — a cinematic open: the obsidian surface develops in, and its
+   destinations arrive one after another in the CHAMBRE motion language; it fades back out
+   on close (modern discrete-transition — older engines simply show/hide instantly). ──── */
+#menu-dialog {
+  opacity: 0;
+  transition:
+    opacity 0.42s var(--ch-ease),
+    overlay 0.45s allow-discrete,
+    display 0.45s allow-discrete;
+}
+#menu-dialog[open] {
+  opacity: 1;
+}
+@starting-style {
+  #menu-dialog[open] {
+    opacity: 0;
+  }
+}
+#menu-dialog nav a {
+  transition: opacity 0.35s var(--ch-ease);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Destinations arrive in sequence once the surface is in. */
+  #menu-dialog[open] nav a {
+    animation: ch-menu-in 0.65s var(--ch-ease) backwards;
+  }
+  #menu-dialog[open] nav a:nth-child(1) { animation-delay: 0.14s; }
+  #menu-dialog[open] nav a:nth-child(2) { animation-delay: 0.21s; }
+  #menu-dialog[open] nav a:nth-child(3) { animation-delay: 0.28s; }
+  #menu-dialog[open] nav a:nth-child(4) { animation-delay: 0.35s; }
+  #menu-dialog[open] nav a:nth-child(5) { animation-delay: 0.42s; }
+}
+@keyframes ch-menu-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (hover: hover) {
+  #menu-dialog nav a:hover { opacity: 0.6; }
 }
 
 /* The film clips its own decorative overflow (safelight glows) horizontally —
@@ -620,78 +720,101 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
    The three-high stack was a long wall of text on a phone. On mobile the rail scrolls
    horizontally, one review at a time, the next peeking to invite a swipe; dots below
    show how many and jump between them. Native scroll-snap = native touch feel. */
-.ch-voices-rail {
-  display: grid;
-  gap: clamp(1.75rem, 4vw, 3rem);
-  grid-template-columns: 1fr;
-}
-@media (min-width: 52rem) {
-  /* Two quiet columns, so an even set of real reviews balances (a 3-up left the
-     fourth review orphaned on its own row). Each quote gets a comfortable measure
-     for the "read more" expansion. */
-  .ch-voices-rail { grid-template-columns: repeat(2, 1fr); gap: clamp(2rem, 4vw, 3.5rem) clamp(2.5rem, 5vw, 4.5rem); }
-}
-@media (max-width: 51.99rem) {
-  .ch-voices-rail {
-    display: flex;
-    grid-template-columns: none;
-    gap: 1rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    /* the rail bleeds to the screen edges so a card can sit centred with a peek each side */
-    margin-inline: calc(-1 * var(--ch-edge));
-    padding-inline: var(--ch-edge);
-    scroll-padding-inline: var(--ch-edge);
-  }
-  .ch-voices-rail::-webkit-scrollbar { display: none; }
-  /* One review, clearly. The card takes almost the whole width so only a thin sliver of
-     the next one shows (a swipe hint, never a second column competing for the eye). The
-     readable single-card typography lives at the end of the voices block (source order). */
-  .ch-voices-rail > .ch-voice {
-    flex: 0 0 90%;
-    scroll-snap-align: center;
-    max-width: none;
-  }
-}
-.ch-voices-dots { display: none; }
-@media (max-width: 51.99rem) {
-  .ch-voices-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.55rem;
-    margin-top: 1.5rem;
-  }
-  .ch-voices-dots button {
-    width: 7px;
-    height: 7px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: var(--content-disabled);
-    cursor: pointer;
-    transition: background-color 0.4s var(--ch-ease), transform 0.4s var(--ch-ease);
-  }
-  .ch-voices-dots button.on { background: var(--ch-ember); transform: scale(1.25); }
-}
-.ch-voice-stars {
-  display: inline-flex;
-  gap: 0.15rem;
-  font-size: 0.8rem;
-  color: var(--content-disabled);
-  margin-bottom: 1rem;
-}
-.ch-voice-stars .on { color: var(--ch-ember); }
-.ch-voice-quote { position: relative; }
-/* The toggles under a review — read more / see the original. Quiet mono affordances,
-   the ember only on engage, so they never compete with the words above. */
-.ch-voice-actions {
+/* ── Voices — the reviews as an editorial reader (one full quote at a time) ──────
+   The stage is a single grid cell every quote shares (grid-area 1/1), so its height is
+   always the TALLEST review's: moving between reviews cross-fades in place and never
+   nudges the page. Same system on every width — no separate card/carousel design. */
+.ch-voices { max-width: 52rem; margin-inline: auto; }
+.ch-quotes { position: relative; display: flex; flex-direction: column; align-items: center; }
+.ch-quotes-stage { display: grid; width: 100%; touch-action: pan-y; }
+.ch-quote {
+  grid-area: 1 / 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem 1.4rem;
-  margin-top: 0.9rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.65s var(--ch-ease), transform 0.65s var(--ch-ease);
+  pointer-events: none;
 }
+.ch-quote[data-active="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+.ch-quote-body {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.35rem, 1.05rem + 1.5vw, 2rem);
+  line-height: 1.42;
+  letter-spacing: -0.005em;
+  color: var(--content-primary);
+  max-width: 40rem;
+  text-wrap: pretty;
+}
+.ch-quote-cite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: var(--ch-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+.ch-quote-name { color: var(--content-primary); }
+.ch-quote-date { color: var(--content-secondary); font-size: 0.64rem; letter-spacing: 0.16em; }
+.ch-quote-toggle { margin-top: 0.5rem; }
+
+/* Navigation — quiet paddles either side of a row of dots. */
+.ch-quotes-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-top: clamp(1.75rem, 4vh, 2.75rem);
+}
+.ch-quotes-paddle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-hairline);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--content-secondary);
+  cursor: pointer;
+  transition: color 0.4s var(--ch-ease), border-color 0.4s var(--ch-ease), transform 0.3s var(--ch-ease);
+}
+.ch-quotes-paddle:active { transform: scale(0.92); }
+.ch-quotes-paddle:focus-visible { outline: 2px solid var(--content-primary); outline-offset: 3px; color: var(--content-primary); }
+.ch-quotes-dots { display: flex; align-items: center; gap: 0.55rem; }
+.ch-quotes-dots button {
+  width: 7px; height: 7px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--content-disabled); cursor: pointer;
+  transition: background-color 0.4s var(--ch-ease), transform 0.4s var(--ch-ease);
+}
+.ch-quotes-dots button.on { background: var(--ch-ember); transform: scale(1.3); }
+.ch-quotes-dots button:focus-visible { outline: 2px solid var(--content-primary); outline-offset: 3px; }
+
+/* Hover feedback ONLY where a fine pointer exists — so a tap on a phone never leaves a
+   control stuck in its ember/hover state (the "stuck orange" mobile bug). */
+@media (hover: hover) {
+  .ch-quotes-paddle:hover { color: var(--content-primary); border-color: rgba(237, 230, 218, 0.28); }
+  .ch-quotes-dots button:hover { background: var(--content-secondary); }
+}
+
+.ch-voice-stars { display: inline-flex; gap: 0.15rem; font-size: 0.9rem; color: var(--content-disabled); }
+.ch-voice-stars .on { color: var(--ch-ember); }
+
+/* Translation toggle — quiet mono; ember only on engage (fine pointer / keyboard focus). */
 .ch-voice-toggle {
   padding: 0;
   border: 0;
@@ -705,33 +828,23 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   border-bottom: 1px solid var(--border-hairline);
   transition: color 0.4s var(--ch-ease), border-color 0.4s var(--ch-ease);
 }
-.ch-voice-toggle:hover,
-.ch-voice-toggle:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
-.ch-voice-cite {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-family: var(--ch-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--content-primary);
-  margin-top: 1.3rem;
+.ch-voice-toggle:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); outline: none; }
+@media (hover: hover) {
+  .ch-voice-toggle:hover { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
 }
-/* The source + date sit under the name, dimmer — proof without noise. */
-.ch-voice-meta {
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  color: var(--content-secondary);
-}
+
+/* Aggregate — the Google proof, established once for the whole section. */
 .ch-voices-agg {
-  margin-top: clamp(1.75rem, 4vh, 2.5rem);
+  margin-top: clamp(2rem, 5vh, 3rem);
   font-family: var(--ch-mono);
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--content-secondary);
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 .ch-voices-agg-link {
   color: var(--content-primary);
@@ -739,9 +852,16 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   border-bottom: 1px solid var(--border-hairline);
   transition: border-color 0.4s var(--ch-ease), color 0.4s var(--ch-ease);
 }
-.ch-voices-agg-link:hover,
-.ch-voices-agg-link:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
-@media (min-width: 52rem) { .ch-voices-agg { text-align: left; } }
+.ch-voices-agg-link:focus-visible { color: var(--ch-ember); border-bottom-color: var(--ch-ember); outline: none; }
+@media (hover: hover) {
+  .ch-voices-agg-link:hover { color: var(--ch-ember); border-bottom-color: var(--ch-ember); }
+}
+/* Below ~40rem the two clauses stack: the "·" that used to orphan onto its own line is
+   dropped and "Voir tous les avis" becomes its own centred action line. */
+@media (max-width: 40rem) {
+  .ch-voices-agg { flex-direction: column; gap: 0.7rem; }
+  .ch-voices-agg-sep { display: none; }
+}
 
 /* interior chapters — the opening title page clears the floating header */
 .ch-chapter {
@@ -908,6 +1028,23 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   border-top: 1px solid var(--border-hairline);
   padding-top: 0.9rem;
 }
+/* Shared availability caveat under the wedding grid (relocated out of the cards). */
+.ch-package-conditions {
+  margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
+  max-width: 44rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--content-secondary);
+}
+.ch-package-conditions-name {
+  font-family: var(--ch-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--content-primary);
+}
+/* Shared section actions (see the work · book) — one row, not a button per card. */
+.ch-tarifs-actions { display: flex; flex-wrap: wrap; gap: 1.4rem 2.4rem; align-items: center; }
 
 /* the recommended package — the light settles on it */
 .ch-package { position: relative; }
@@ -918,9 +1055,9 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
     linear-gradient(to bottom, rgba(200, 107, 60, 0.05), transparent 40%),
     var(--surface-deep);
 }
-@media (min-width: 62rem) {
-  .ch-package-cell.is-featured { transform: translateY(-14px); }
-}
+/* The recommended package is marked by its badge, warm border and glow — it no longer
+   sits physically higher than the others (the old -14px lift read as a misaligned card
+   rather than an intentional highlight; the three now share one clean baseline). */
 .ch-package--featured:hover { border-color: rgba(200, 107, 60, 0.7); }
 .ch-package-badge {
   position: absolute;
@@ -1357,12 +1494,19 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
   width: 100%;
   max-width: 82rem;
   margin-inline: auto;
-  padding: 0 var(--ch-edge) clamp(3rem, 10vh, 7rem);
+  /* The bottom padding must clear the centered scroll cue (~5rem of footprint pinned to
+     the viewport bottom) at EVERY height: on short phones the old 10vh collapsed and the
+     headline dropped onto "Faites défiler". A fixed ~6.5rem floor keeps the title above
+     the cue regardless of viewport height; it opens up to a poster margin on tall screens. */
+  padding: 0 var(--ch-edge) clamp(6.5rem, 12vh, 8.5rem);
 }
 /* The first-frame headline. Line length capped for the poster balance; on phones the
    size steps down and the measure narrows so the longest word-pair wraps rather than
    overflowing the frame (which clips it — the hero hides its overflow). */
-.ch-hero-title { max-width: 17ch; }
+/* A hair smaller than the full display scale: at the widest sizes the 7.5rem headline
+   crowded the frame and pressed on the scroll cue. ~6.4rem keeps it a poster headline
+   while giving the composition room to breathe. (Phones keep their own step below.) */
+.ch-hero-title { max-width: 17ch; font-size: clamp(2.8rem, 7.8vw, 6.4rem); }
 @media (max-width: 40rem) {
   .ch-hero-title {
     font-size: clamp(2.4rem, 10.5vw, 3.6rem);
@@ -1402,35 +1546,6 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
   50%      { opacity: 1; transform: scaleY(1); }
 }
 
-/* ── Voices — reviews as quiet fragments overheard in the dark ───────────────── */
-.ch-voice { max-width: 34rem; }
-.ch-voice-quote {
-  font-family: var(--font-serif);
-  /* A firmer floor so a phone never drops the quote to its smallest size. */
-  font-size: clamp(1.32rem, 2.2vw, 1.6rem);
-  line-height: 1.4;
-  color: var(--content-primary);
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-/* Expanded ("read more"): lift the visual line-clamp so the full words actually show —
-   otherwise the JS text grows but the box still crops it to four lines. */
-.ch-voice-quote.is-open {
-  display: block;
-  -webkit-line-clamp: unset;
-  overflow: visible;
-}
-/* On a phone the review is a single card, so its mono metadata is lifted a step off the
-   desktop micro-caption sizes — proof that reads as considered, never fine print. */
-@media (max-width: 51.99rem) {
-  .ch-voice-cite { font-size: 0.72rem; }
-  .ch-voice-meta { font-size: 0.68rem; }
-  .ch-voice-toggle { font-size: 0.72rem; }
-  .ch-voices-agg { font-size: 0.72rem; }
-  .ch-voice-stars { font-size: 0.92rem; }
-}
 
 /* ── Page transition — the new chapter develops in on navigation ────────────── */
 .ch-page-enter { animation: ch-page-enter 600ms var(--ch-ease) backwards; }

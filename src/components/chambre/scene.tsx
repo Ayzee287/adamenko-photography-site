@@ -23,7 +23,9 @@ export function ChambreScene({
 }
 
 export function ChapterOpening(props: {
-  kicker: string;
+  /** Optional mono eyebrow above the title. Omit for a clean, title-only opening
+   *  (e.g. /tarifs, where the "Investissement" chapter label was retired). */
+  kicker?: string;
   title: React.ReactNode;
   intro?: string;
   /** The mono index mark before the eyebrow. */
@@ -36,9 +38,11 @@ export function ChapterOpening(props: {
   const { kicker, title, intro, mark = "§", tight = false } = props;
   return (
     <div className={cn("ch-movement ch-wrap ch-chapter", tight && "ch-chapter--tight")}>
-      <p className="ch-mono ch-kicker">
-        <span className="n">{mark}</span> {kicker}
-      </p>
+      {kicker && (
+        <p className="ch-mono ch-kicker">
+          <span className="n">{mark}</span> {kicker}
+        </p>
+      )}
       <h1 className="ch-display ch-chapter-title">{title}</h1>
       {intro && <p className="ch-lead">{intro}</p>}
     </div>

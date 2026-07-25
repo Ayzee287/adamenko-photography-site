@@ -12,6 +12,7 @@
 
 import { useEffect, useState } from "react";
 import { subscribeScroll } from "@/lib/scroll";
+import { scrollToTop } from "@/lib/scroll-to-top";
 
 export function ToTop({ label }: { label: string }) {
   const [shown, setShown] = useState(false);
@@ -26,20 +27,10 @@ export function ToTop({ label }: { label: string }) {
     });
   }, []);
 
-  const toTop = () => {
-    const reduce =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-    // Hand focus back to the top of the document (the main landmark is tabindex=-1),
-    // without letting the focus call fight the smooth scroll.
-    document.getElementById("main")?.focus({ preventScroll: true });
-  };
-
   return (
     <button
       type="button"
-      onClick={toTop}
+      onClick={scrollToTop}
       aria-label={label}
       className="ch-totop"
       data-shown={shown ? "true" : "false"}

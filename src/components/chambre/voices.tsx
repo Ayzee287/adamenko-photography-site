@@ -1,31 +1,32 @@
 "use client";
 
-// voices — the reviews, told two ways. On a wide screen they hang as quiet quotes side by
-// side (the photography stays the hero; the words are overheard in the dark). On a phone that
-// same wall was a long scroll of text, so there they become a horizontal, snap-scrolling
-// carousel: one review at a time, the next one peeking to invite a swipe, dots to show how many
-// there are and let you jump. Each quote is REAL — the verbatim Google review. When Google
-// wrote it in another language the card shows its translation with a one-tap toggle back to the
-// original; a long review clamps to a glance with "read more"; the star rating, the source and
-// the date carry the proof, and the aggregate links out to the full profile. Nothing invented.
+// voices — the reviews as an editorial reader: ONE real Google review at a time, its full
+// words shown (never truncated), held in a fixed "stage" that is always as tall as the
+// LONGEST review — so moving between reviews cross-fades in place and never shifts the page.
+// Quiet paddles, position dots and a horizontal swipe move between them; a review written in
+// another language shows its translation with a one-tap toggle back to the verbatim original.
+// The section heading and the aggregate line below carry the Google attribution once, so each
+// quote needs only a name and a date. Nothing invented.
+//
+// Why a reader, not the old card carousel: it removes — structurally — the problems the cards
+// had (uneven heights, the section jumping when a card expanded, long reviews truncated with
+// "…", and per-card "Avis Google" repetition). Touch hover-stick is avoided by gating hover
+// styling to fine-pointer devices (chambre.css).
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 type Voice = {
   /** The words in their ORIGINAL language (verbatim). */
   quote: string;
-  /** BCP-47 language of `quote` — sets the correct lang attribute + drives the toggle. */
+  /** BCP-47 language of `quote`. */
   language?: string;
   /** Google's per-locale machine translations of `quote`. */
   translations?: Partial<Record<string, string>>;
   name: string;
   rating?: number;
-  /** ISO YYYY-MM of the session — shown quietly on the card. */
+  /** ISO YYYY-MM of the session. */
   date?: string;
 };
-
-/** Clamp long reviews to a glance; the full words stay one tap away (never truncated data). */
-const CLAMP_CHARS = 210;
 
 function Stars({ n }: { n: number }) {
   return (
@@ -53,81 +54,14 @@ function formatDate(ym: string | undefined, locale: string): string | null {
   }
 }
 
-function VoiceCard(props: {
-  voice: Voice;
-  locale: string;
-  attribution: string;
-  readMore: string;
-  readLess: string;
-  viewOriginal: string;
-  viewTranslation: string;
-}) {
-  const { voice, locale, attribution, readMore, readLess, viewOriginal, viewTranslation } = props;
-  const [showOriginal, setShowOriginal] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-
-  const translation = voice.translations?.[locale];
-  const hasTranslation = Boolean(translation && translation !== voice.quote);
-  const showingTranslation = hasTranslation && !showOriginal;
-
-  const text = showingTranslation ? (translation as string) : voice.quote;
-  const lang = showingTranslation ? locale : voice.language;
-
-  const isLong = text.length > CLAMP_CHARS;
-  const display = !isLong || expanded ? text : `${text.slice(0, CLAMP_CHARS).trimEnd()}…`;
-  const date = formatDate(voice.date, locale);
-
-  return (
-    <figure className="ch-voice">
-      {voice.rating ? <Stars n={voice.rating} /> : null}
-      <blockquote className={`ch-voice-quote${expanded ? " is-open" : ""}`} lang={lang}>
-        « {display} »
-      </blockquote>
-
-      {(isLong || hasTranslation) && (
-        <div className="ch-voice-actions">
-          {isLong && (
-            <button
-              type="button"
-              className="ch-voice-toggle"
-              aria-expanded={expanded}
-              onClick={() => setExpanded((v) => !v)}
-            >
-              {expanded ? readLess : readMore}
-            </button>
-          )}
-          {hasTranslation && (
-            <button
-              type="button"
-              className="ch-voice-toggle"
-              onClick={() => setShowOriginal((v) => !v)}
-            >
-              {showingTranslation ? viewOriginal : viewTranslation}
-            </button>
-          )}
-        </div>
-      )}
-
-      <figcaption className="ch-voice-cite">
-        {voice.name}
-        <span className="ch-voice-meta">
-          {attribution}
-          {date ? ` · ${date}` : ""}
-        </span>
-      </figcaption>
-    </figure>
-  );
-}
-
 export function Voices(props: {
   items: Voice[];
   locale: string;
-  attribution: string;
   carouselLabel: string;
-  readMore: string;
-  readLess: string;
   viewOriginal: string;
   viewTranslation: string;
+  prevLabel: string;
+  nextLabel: string;
   aggregate?: { rating: number; count: number } | null;
   aggregateTemplate?: string;
   viewAllLabel?: string;
@@ -136,39 +70,55 @@ export function Voices(props: {
   const {
     items,
     locale,
-    attribution,
     carouselLabel,
-    readMore,
-    readLess,
     viewOriginal,
     viewTranslation,
+    prevLabel,
+    nextLabel,
     aggregate,
     aggregateTemplate,
     viewAllLabel,
     viewAllHref,
   } = props;
-  const railRef = useRef<HTMLDivElement>(null);
+  const n = items.length;
   const [active, setActive] = useState(0);
+  // Per-view toggle: show the verbatim original instead of the locale translation. Reset on move.
+  const [showOriginal, setShowOriginal] = useState(false);
 
-  const onScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const center = el.scrollLeft + el.clientWidth / 2;
-    let best = 0;
-    let bestD = Infinity;
-    Array.from(el.children).forEach((c, i) => {
-      const child = c as HTMLElement;
-      const d = Math.abs(child.offsetLeft + child.offsetWidth / 2 - center);
-      if (d < bestD) {
-        bestD = d;
-        best = i;
-      }
-    });
-    setActive(best);
+  const go = useCallback(
+    (delta: number) => {
+      if (n < 2) return;
+      setActive((a) => (a + delta + n) % n);
+      setShowOriginal(false);
+    },
+    [n],
+  );
+  const jump = useCallback((i: number) => {
+    setActive(i);
+    setShowOriginal(false);
+  }, []);
+
+  // Horizontal swipe (touch/pen) → previous / next. Mouse uses the paddles + arrow keys.
+  const drag = useRef<{ x: number; active: boolean }>({ x: 0, active: false });
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") return;
+    drag.current = { x: e.clientX, active: true };
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!drag.current.active) return;
+    drag.current.active = false;
+    const dx = e.clientX - drag.current.x;
+    if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
   };
 
-  const toCard = (i: number) => {
-    const child = railRef.current?.children[i] as HTMLElement | undefined;
-    child?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      go(-1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      go(1);
+    }
   };
 
   const aggregateLine =
@@ -181,45 +131,94 @@ export function Voices(props: {
   return (
     <div className="ch-voices">
       <div
-        className="ch-voices-rail"
-        ref={railRef}
-        onScroll={onScroll}
+        className="ch-quotes"
         role="group"
+        aria-roledescription="carousel"
         aria-label={carouselLabel}
+        onKeyDown={n > 1 ? onKeyDown : undefined}
       >
-        {items.map((v, i) => (
-          <VoiceCard
-            key={i}
-            voice={v}
-            locale={locale}
-            attribution={attribution}
-            readMore={readMore}
-            readLess={readLess}
-            viewOriginal={viewOriginal}
-            viewTranslation={viewTranslation}
-          />
-        ))}
-      </div>
-
-      {items.length > 1 && (
-        <div className="ch-voices-dots" role="tablist" aria-label={carouselLabel}>
-          {items.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              className={i === active ? "on" : ""}
-              aria-label={`${i + 1} / ${items.length}`}
-              aria-selected={i === active}
-              role="tab"
-              onClick={() => toCard(i)}
-            />
-          ))}
+        <div
+          className="ch-quotes-stage"
+          onPointerDown={n > 1 ? onPointerDown : undefined}
+          onPointerUp={n > 1 ? onPointerUp : undefined}
+          onPointerCancel={() => {
+            drag.current.active = false;
+          }}
+        >
+          {items.map((v, i) => {
+            const isActive = i === active;
+            const translation = v.translations?.[locale];
+            const hasTranslation = Boolean(translation && translation !== v.quote);
+            const showingTranslation = hasTranslation && !(isActive && showOriginal);
+            const text = showingTranslation ? (translation as string) : v.quote;
+            const lang = showingTranslation ? locale : v.language;
+            const date = formatDate(v.date, locale);
+            return (
+              <figure key={i} className="ch-quote" data-active={isActive} aria-hidden={!isActive}>
+                {v.rating ? <Stars n={v.rating} /> : null}
+                <blockquote className="ch-quote-body" lang={lang}>
+                  « {text} »
+                </blockquote>
+                <figcaption className="ch-quote-cite">
+                  <span className="ch-quote-name">{v.name}</span>
+                  {date ? <span className="ch-quote-date">{date}</span> : null}
+                </figcaption>
+                {hasTranslation && isActive && (
+                  <button
+                    type="button"
+                    className="ch-voice-toggle ch-quote-toggle"
+                    onClick={() => setShowOriginal((s) => !s)}
+                  >
+                    {showingTranslation ? viewOriginal : viewTranslation}
+                  </button>
+                )}
+              </figure>
+            );
+          })}
         </div>
-      )}
+
+        {n > 1 && (
+          <div className="ch-quotes-nav">
+            <button
+              type="button"
+              className="ch-quotes-paddle"
+              aria-label={prevLabel}
+              onClick={() => go(-1)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 5l-7 7 7 7" />
+              </svg>
+            </button>
+            <div className="ch-quotes-dots" role="tablist" aria-label={carouselLabel}>
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={i === active ? "on" : ""}
+                  role="tab"
+                  aria-selected={i === active}
+                  aria-label={`${i + 1} / ${n}`}
+                  onClick={() => jump(i)}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="ch-quotes-paddle"
+              aria-label={nextLabel}
+              onClick={() => go(1)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
 
       {(aggregateLine || viewAllHref) && (
         <p className="ch-voices-agg">
-          {aggregateLine}
+          {aggregateLine && <span className="ch-voices-agg-note">{aggregateLine}</span>}
           {aggregateLine && viewAllHref ? (
             <span className="ch-voices-agg-sep" aria-hidden>
               {" · "}

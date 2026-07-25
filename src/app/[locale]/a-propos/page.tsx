@@ -61,9 +61,8 @@ export default async function AboutPage({
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <p className="ch-mono" style={{ marginTop: "1.8rem" }}>
-              {dict.home.about.values.join("   ·   ")}
-            </p>
+            {/* One clear primary action at the end of the story — contacting Irina. The
+                abstract value words were removed (the biography carries them concretely). */}
             <div style={{ marginTop: "2.4rem" }}>
               <Link className="ch-go" href={link(active, { page: "contact" })}>
                 {dict.copy.about.cta} <span className="ch-arrow" aria-hidden>→</span>
@@ -75,15 +74,15 @@ export default async function AboutPage({
 
       <section className="ch-movement ch-wrap">
         <Develop>
+          {/* Secondary exploration only — the work and the prices. "Contact" was dropped
+              here: it duplicated the primary CTA above the bio, leaving four near-identical
+              actions piled together. Two quiet next-steps read as intentional. */}
           <nav aria-label={dict.copy.about.crosslinks.label} className="ch-crosslinks">
             <Link className="ch-go" href={link(active, { page: "galeries" })}>
               {dict.copy.about.crosslinks.work} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "tarifs" })}>
               {dict.copy.about.crosslinks.pricing} <span className="ch-arrow" aria-hidden>→</span>
-            </Link>
-            <Link className="ch-go" href={link(active, { page: "contact" })}>
-              {dict.copy.about.crosslinks.contact} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </nav>
         </Develop>

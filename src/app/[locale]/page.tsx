@@ -127,9 +127,9 @@ export default async function HomePage({
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <p className="ch-mono" style={{ marginTop: "1.8rem" }}>
-              {home.about.values.join("   ·   ")}
-            </p>
+            {/* The abstract value words (Chaleur · Sincérité · …) were removed: the
+                first-person biography conveys those qualities concretely, and the mood-word
+                strip read as a manufactured brand slogan against an otherwise authentic voice. */}
             <div style={{ marginTop: "2.2rem" }}>
               <Link className="ch-go" href={link(active, { page: "a-propos" })}>
                 {home.about.cta.label} <span className="ch-arrow" aria-hidden>→</span>
@@ -166,15 +166,16 @@ export default async function HomePage({
                 key={slug}
                 className="ch-index-item"
                 href={link(active, { page: "genre", genre: scene.slug as GenreSlug })}
-                aria-label={`${scene.title} — ${scene.caption}`}
               >
                 <Plate src={scene.src} alt="" ratio={ratio} sizes={sizes} />
+                {/* Name + arrow only. The per-genre caption was removed: its varying length
+                    made the row of frames read unevenly, and the photograph + name already
+                    name the séance. The fuller description lives on the gallery itself. */}
                 <span className="ch-index-meta">
                   <span className="ch-index-name">
                     {scene.title}
                     <span className="ch-arrow" aria-hidden>→</span>
                   </span>
-                  <span className="ch-index-line">{scene.caption}</span>
                 </span>
               </Link>
             );
@@ -218,12 +219,11 @@ export default async function HomePage({
             <Voices
               items={voices}
               locale={active}
-              attribution={home.testimonials.attribution}
               carouselLabel={home.testimonials.carouselLabel}
-              readMore={home.testimonials.readMore}
-              readLess={home.testimonials.readLess}
               viewOriginal={home.testimonials.viewOriginal}
               viewTranslation={home.testimonials.viewTranslation}
+              prevLabel={dict.ui.testimonials.prev}
+              nextLabel={dict.ui.testimonials.next}
               aggregate={googleRating}
               aggregateTemplate={home.testimonials.summary}
               viewAllLabel={home.testimonials.viewAllOnGoogle}
