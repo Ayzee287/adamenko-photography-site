@@ -32,6 +32,8 @@ export type WeddingPackage = {
   coverage: string;
   /** Approx. edited-photo count, e.g. "Environ 300 photographies retouchées". */
   photos: string;
+  /** One introductory line naming who the package is for (client copy). */
+  description?: string;
   /** Deliverables beyond coverage/photos (gallery, prints…). */
   includes: string[];
   /** Turnaround, e.g. "3 à 4 semaines". */
@@ -125,17 +127,20 @@ export const pricing = {
     photosLabel: "Photographies",
     packages: [
       {
-        name: "Essentiel",
+        name: "Pack essentiel / Mini",
         price: 650,
-        coverage: "Jusqu'à 5 heures",
+        description:
+          "Idéale pour les mariages civils, petites cérémonies ou journées en semaine.",
+        coverage: "Jusqu'à 3 heures",
         photos: "Environ 300 photographies retouchées",
         includes: ["Galerie privée en ligne"],
         delivery: "3 à 4 semaines",
-        note: "En semaine, hors haute saison, ou en réservation de dernière minute, selon les disponibilités.",
       },
       {
-        name: "Signature",
+        name: "Pack classique",
         price: 1100,
+        description:
+          "Une couverture idéale pour capturer les moments clés de votre mariage en toute simplicité.",
         coverage: "Jusqu'à 8 heures",
         photos: "Environ 450 photographies retouchées",
         includes: ["Galerie privée en ligne"],
@@ -144,6 +149,8 @@ export const pricing = {
       {
         name: "Grand jour",
         price: 1600,
+        description:
+          "La couverture idéale pour vivre votre mariage sereinement du début de journée jusqu'au début de soirée (23:00).",
         coverage: "Jusqu'à 10 heures",
         photos: "Environ 600 photographies retouchées",
         includes: ["Galerie privée en ligne"],

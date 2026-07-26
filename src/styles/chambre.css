@@ -990,6 +990,15 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 .ch-package-cell { display: flex; }
 .ch-package-cell > .ch-package { width: 100%; }
 
+/* Reserve the summary's height while the packages sit SIDE BY SIDE.
+   The three introductions run 2, 3 and 4 lines, which pushed "Couverture" to 203 / 227 /
+   252px down their cards — the cards matched in height while every label inside them sat
+   at a different level. Reserving four lines re-aligns the spec rows across the row. Once
+   the cards stack there is nothing to align against, so the reservation lifts. */
+@media (min-width: 62rem) {
+  .ch-package .ch-offer-summary { min-height: calc(4 * 1.55em); }
+}
+
 .ch-offer {
   display: flex;
   flex-direction: column;

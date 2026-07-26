@@ -16,7 +16,10 @@ import type { ValidContact } from "@/lib/contact";
 // being auto-inverted by dark-mode clients. Copy is French.
 
 const BRAND = "Adamenko Photography";
-const BRAND_TAGLINE = "Photographe de famille à Lyon";
+// Matches the site footer's positioning. The old line ("Photographe de famille à Lyon")
+// named one of four services and left weddings — the largest of them, shot across France —
+// out of every message the business sends.
+const BRAND_TAGLINE = "Famille, grossesse, couple et mariage · Lyon et toute la France";
 
 // Brand palette (mirrors src/styles/globals.css @theme — inlined for email clients).
 const COLOR = {
@@ -24,7 +27,17 @@ const COLOR = {
   paper: "#faf6f0",
   muted: "#6f655c",
   line: "#e7ddd0",
+  /** Decorative clay — rules, the quote bar, the arrow. Never carries text. */
   clay: "#b07159",
+  /**
+   * The same accent, darkened for anything a person has to READ.
+   *
+   * `clay` is 3.64:1 on this cream, which fails WCAG AA for normal text — and it was
+   * being used for the 11px brand eyebrow and the mailto links, the two smallest pieces
+   * of type in the message. This is the site's own `--color-clay-ink` (globals.css), which
+   * exists for exactly this reason, and measures 5.37:1 here.
+   */
+  clayInk: "#96543d",
   sand: "#f3ece1",
 } as const;
 
@@ -99,7 +112,7 @@ function renderShell(opts: {
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${COLOR.paper};border:1px solid ${COLOR.line};border-radius:10px;">
             <tr>
               <td style="padding:32px 36px 0;">
-                <p style="margin:0;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:${COLOR.clay};">${BRAND}</p>
+                <p style="margin:0;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:${COLOR.clayInk};">${BRAND}</p>
                 <h1 style="margin:14px 0 0;font-family:${SERIF};font-size:23px;font-weight:400;line-height:1.3;color:${COLOR.ink};">${opts.heading}</h1>
                 ${intro}
               </td>
@@ -174,7 +187,7 @@ export function buildOwnerNotification(
                 <hr style="border:none;border-top:1px solid ${COLOR.line};margin:0 0 4px;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   ${row("Nom", eName)}
-                  ${row("E-mail", `<a href="mailto:${eEmail}" style="color:${COLOR.clay};text-decoration:none;">${eEmail}</a>`)}
+                  ${row("E-mail", `<a href="mailto:${eEmail}" style="color:${COLOR.clayInk};text-decoration:none;">${eEmail}</a>`)}
                   ${row("Type de séance", eOccasion)}
                   ${optRow("Période envisagée", period)}
                   ${optRow("Lieu", place)}
@@ -192,7 +205,7 @@ export function buildOwnerNotification(
               <td style="padding:26px 36px 0;">
                 <a href="mailto:${eEmail}" style="font-size:15px;color:${COLOR.ink};text-decoration:none;">
                   <span style="text-decoration:underline;text-decoration-color:${COLOR.clay};text-underline-offset:3px;">Répondre à ${eName}</span>
-                  <span style="color:${COLOR.clay};">&nbsp;&rarr;</span>
+                  <span style="color:${COLOR.clayInk};">&nbsp;&rarr;</span>
                 </a>
               </td>
             </tr>`;
@@ -261,7 +274,7 @@ const VISITOR_CONFIRMATION: Record<
     ],
     signoff: "Best regards,",
     signature: "Irina",
-    brandTagline: "Family photographer in Lyon",
+    brandTagline: "Family, maternity, couples and weddings · Lyon and across France",
     footerNote:
       "You are receiving this email because you submitted the contact form on the website.",
   },

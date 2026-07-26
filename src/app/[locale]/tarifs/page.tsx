@@ -117,6 +117,10 @@ export default async function TarifsPage({
                   <h3 className="ch-offer-name">{pkg.name}</h3>
                   <p className="ch-price ch-price--lg">{formatPrice(pkg.price, active)}</p>
                 </header>
+                {/* One line naming who the package is for, above the hard specs — the same
+                    summary treatment the session cards already use, so the two registers on
+                    this page read as one system. */}
+                {pkg.description && <p className="ch-offer-summary">{pkg.description}</p>}
                 <dl className="ch-package-spec">
                   <div>
                     <dt>{p.coverageLabel}</dt>
@@ -142,7 +146,9 @@ export default async function TarifsPage({
         </div>
         {/* Package-specific availability caveats live as a shared footnote under the grid,
             not inside one card — so the three cards keep one clean baseline (a per-card note
-            made Essentiel taller and left the others with dead space). */}
+            made the first package taller and left the others with dead space). No wedding
+            package carries a caveat today, so this renders nothing; the mechanism stays for
+            the next one that does. */}
         {p.wedding.packages.some((pkg) => pkg.note) && (
           <Develop>
             <p className="ch-package-conditions">
