@@ -75,3 +75,119 @@ Collection slugs are currently `familles · grossesse · couples · portraits ·
 (they match the gallery routes and the service slugs). Adding a new one means adding it to
 `ORDER` in `scripts/photos-build.mjs`, to `GenreSlug` in `src/types/gallery.ts`, and to the
 route registry — the curation sheet alone cannot invent a route.
+
+---
+
+# Stories — one shoot, its own page
+
+A genre wall answers *"what does a wedding by this photographer look like?"*. A **story**
+answers *"what happened at this one?"*. Both exist; neither replaces the other.
+
+```
+STORY LIBRARY                              WEBSITE
+<library>/<category>/<slug>/*.jpg   →      /galeries/<category>/<slug>
+             + story.txt (the edit)        (the category page becomes their index)
+```
+
+The story layer sits **alongside** `curation/collections.txt`, which still owns the genre
+walls. A category with no stories behaves exactly as before.
+
+## The two commands
+
+| Command | What it does |
+|---|---|
+| `npm run stories:check` | Validates every story folder and writes nothing. |
+| `npm run stories:build` | Creates/updates each `story.txt`, optimises what changed, regenerates `src/content/stories.generated.ts`. |
+
+The library defaults to `C:\Users\Administrator\Documents\photos-stories`; override with
+`STORY_LIBRARY`. `npm run photos:publish` runs stories, galleries and blur placeholders in
+one go.
+
+## Publishing a shoot
+
+1. **Make a folder** — `<library>/mariages/lucie-et-thomas/` — and drop the selected
+   photographs in. The folder name is the URL; the parent folder is the category.
+2. `npm run stories:build` — writes a `story.txt` listing every frame, and reports what it
+   still needs.
+3. **Edit `story.txt`**: a title, alt text per frame, and the order you want them walked.
+   Set `visibility: portfolio` when it is ready.
+4. `npm run stories:build` again — it publishes.
+
+## Visibility — nothing is public by being found
+
+| State | Meaning |
+|---|---|
+| `private` | Never built, never exported, never deployed. |
+| `draft` | Exported to `public/stories-draft/` (**gitignored**) so `next dev` can show it. Not published. |
+| `portfolio` | Public. Requires a title and alt text on **every** frame, or the build refuses. |
+
+A newly discovered folder starts at `draft`. Promoting a story moves its files into
+`public/stories/`; demoting one **removes** them from there — the route gate hides a page,
+not a JPEG, so the two roots are the real boundary.
+
+## Derived vs editorial — never type what the computer can read
+
+**Derived** (read off the photographs on every run, never stored in `story.txt`):
+dimensions · aspect ratio · orientation · capture date · content hash · integrity ·
+duplicate detection · ordering default · frame count.
+
+**Editorial** (yours; the tool creates these fields empty and never rewrites them):
+title · description · alt text · cover · explicit order · visibility · location.
+
+The tool only ever **appends** newly-found frames to `story.txt`. A frame you delete or
+`#`-comment stays gone.
+
+## Privacy
+
+- Published exports carry **no EXIF, ICC, XMP or IPTC** — the re-encode drops all of it, so
+  no GPS coordinate can reach the site. Asserted in `tests/unit/story-pipeline.test.ts`.
+- The pipeline has **no GPS reader at all**; it parses one EXIF tag (capture time).
+- `location:` is opt-in free text. Empty unless you type it — a venue can identify a
+  private event.
+- `date:` is published at **month precision**.
+- Client names are never inferred. A story is called whatever you call it.
+
+## Performance
+
+Measured on a 52-frame story (Fast 4G, production build):
+
+| | initial cost | full scroll |
+|---|---|---|
+| mobile 390 / dpr3 | 12 images · 562 KB · load 1.9 s | 53 images · 3.4 MB |
+| desktop 1440 | 28 images · 637 KB · load 2.4 s | 55 images · 1.1 MB |
+
+CLS **0** at every viewport. Entering a category costs its story **covers only** — a
+category holding three 50-frame weddings still loads three covers, not 150 photographs.
+
+---
+
+# Client delivery (Pixieset) — deliberately a separate pipeline
+
+**Pixieset has no public API.** Verified 2026-07-26 against `pixieset.com/apps` and the
+Pixieset help centre: the entire official integration surface is the **Lightroom Classic
+publish plug-in**, the Studio Manager mobile app, and the Photo Editor. Searching their help
+centre for "API" returns PayPal's API and an Instagram feed. There is no upload API, no
+webhooks and no official Zapier app. Community reverse-engineered endpoints exist and are
+explicitly unaffiliated and unstable — client deliverables will not be built on them.
+
+That is not a gap to work around. The client gallery and the public portfolio are **different
+products**: one is the complete take, private, downloadable, proofed; the other is a small
+curated edit that exists to be seen. Synchronising them would mean constantly separating
+things that were never meant to be together.
+
+**So the two pipelines share only the Lightroom catalogue, and nothing else:**
+
+```
+Lightroom  ──→  Pixieset Publish Service  ──→  client gallery   (complete take, private)
+        └──→  export selects to <STORY_LIBRARY>/<cat>/<slug>/  ──→  stories:build  ──→  website
+```
+
+If a shoot is already exported to a folder rather than sitting in Lightroom:
+
+```
+npm run delivery:prepare -- --from <folder> --collection "Lucie & Thomas" --set "Ceremonie"
+```
+
+It copies (never moves) into `client-delivery/<Collection>/<Set>/` numbered in **capture-time
+order**, skips unreadable files, and writes a `MANIFEST.txt` mapping delivery numbers back to
+original filenames. The remaining human action is one drag into the Pixieset uploader.

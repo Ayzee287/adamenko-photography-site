@@ -58,7 +58,12 @@ export type PageRef =
   | { page: StaticPageId }
   | { page: "service"; service: ServiceSlug }
   | { page: "genre"; genre: GenreSlug }
-  | { page: "story"; slug: string };
+  | { page: "story"; slug: string }
+  // A story lives UNDER its category: /galeries/mariages/lucie-et-thomas. The nesting is
+  // the point — it states the hierarchy the portfolio actually has, gives the genre page a
+  // natural role as the index, and clusters a wedding's page with its category for search.
+  // The story slug is shared across locales (it is the folder name on disk).
+  | { page: "genreStory"; genre: GenreSlug; story: string };
 
 export const pageIds = Object.keys(staticPages) as StaticPageId[];
 
@@ -82,6 +87,11 @@ export function link(locale: Locale, ref: PageRef): string {
       const base = staticPages.galeries[locale === "fr" ? "fr" : "en"];
       const slug = locale === "fr" ? ref.genre : genreSlugs[ref.genre];
       return prefix(locale, `${base}/${slug}`);
+    }
+    case "genreStory": {
+      const base = staticPages.galeries[locale === "fr" ? "fr" : "en"];
+      const genre = locale === "fr" ? ref.genre : genreSlugs[ref.genre];
+      return prefix(locale, `${base}/${genre}/${ref.story}`);
     }
     case "story": {
       const base = staticPages.seances[locale === "fr" ? "fr" : "en"];
@@ -174,6 +184,17 @@ export function refFromPathname(pathname: string): PageRef | null {
     }
     if (head === "seances" || head === "stories") {
       return { page: "story", slug: tail };
+    }
+  }
+
+  // /galeries/<genre>/<story> — the only three-segment shape on the site.
+  if (segments.length === 3) {
+    const [head, genreSeg, story] = segments;
+    if (head === "galeries" || head === "galleries") {
+      const genre = (genreSlugs[genreSeg as GenreSlug] ? genreSeg : genreFromEn[genreSeg]) as
+        | GenreSlug
+        | undefined;
+      return genre && story ? { page: "genreStory", genre, story } : null;
     }
   }
 

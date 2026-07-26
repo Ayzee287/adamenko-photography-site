@@ -19,7 +19,11 @@
     "validate:content": "node scripts/validate-content.mjs",
     "lhci": "lhci autorun",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "stories:check": "node scripts/stories-build.mjs --check",
+    "stories:build": "node scripts/stories-build.mjs",
+    "photos:publish": "node scripts/stories-build.mjs && node scripts/photos-build.mjs && node scripts/gen-blur.mjs",
+    "delivery:prepare": "node scripts/delivery-prepare.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
