@@ -49,37 +49,35 @@ export function Footer(props: { showSeances: boolean }) {
               ))}
           </nav>
 
-          {/* Group C — suivre */}
-          <div className="flex flex-col gap-3">
-            <div className="-ml-2 flex">
-              {dict.site.social.instagram && (
-                <IconLink
-                  icon="instagram"
-                  href={dict.site.social.instagram}
-                  label={ui.nav.instagram}
-                />
-              )}
-              {dict.site.social.facebook && (
-                <IconLink
-                  icon="facebook"
-                  href={dict.site.social.facebook}
-                  label={ui.nav.facebook}
-                />
-              )}
-            </div>
-            {/* An intentional "email me" action — a mail glyph makes it read as a contact
-                control, not a stray line of text, while the address stays visible and
-                copyable (accessibility + a real mailto). */}
-            <a
-              href={`mailto:${dict.photographer.contact.email}`}
-              className="ch-foot-email w-fit py-1 text-small"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2" />
-                <path d="m3 7 9 6 9-6" />
-              </svg>
-              <span className="ch-foot-email-addr">{dict.photographer.contact.email}</span>
-            </a>
+          {/* Group C — one contact group: Instagram · Facebook · Email.
+              The three are the SAME kind of control (a way to reach her), so they are the
+              same kind of object: three 44px icon targets in one row. The address used to
+              sit beside the group as a visible line of text, which split one group into
+              two and made the email look like a caption rather than an action. The glyph
+              carries a real mailto and an explicit aria-label, so nothing is lost by
+              dropping the visible string — and the contact page still spells it out. */}
+          <div className="-ml-2 flex items-center">
+            {dict.site.social.instagram && (
+              <IconLink
+                icon="instagram"
+                href={dict.site.social.instagram}
+                label={ui.nav.instagram}
+              />
+            )}
+            {dict.site.social.facebook && (
+              <IconLink
+                icon="facebook"
+                href={dict.site.social.facebook}
+                label={ui.nav.facebook}
+              />
+            )}
+            {dict.photographer.contact.email && (
+              <IconLink
+                icon="email"
+                href={`mailto:${dict.photographer.contact.email}`}
+                label={ui.nav.email}
+              />
+            )}
           </div>
         </div>
 

@@ -23,6 +23,25 @@ const nextConfig: NextConfig = {
        (and a new blur entry), so a stale-after-swap window never arises. */
     minimumCacheTTL: 2678400,
   },
+
+  /* Portrait was retired as a business category (the photographer very rarely shoots
+     standalone portrait sessions, so presenting it as one of the main services
+     misrepresented the business). Its URLs were indexed and linked, so they are
+     permanently redirected rather than left to 404 — a dead URL loses whatever authority
+     the page had and strands anyone holding the link.
+
+     Sessions go to /tarifs, matching the precedent set when /prestations folded into it
+     (D095). The gallery goes to the gallery INDEX rather than a sibling category: guessing
+     which surviving category a visitor wanted would be a content decision, and the index
+     lets them choose. */
+  async redirects() {
+    return [
+      { source: "/galeries/portraits", destination: "/galeries", permanent: true },
+      { source: "/en/galleries/portraits", destination: "/en/galleries", permanent: true },
+      { source: "/prestations/portrait", destination: "/tarifs", permanent: true },
+      { source: "/en/services/portrait", destination: "/en/pricing", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

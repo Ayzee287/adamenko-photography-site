@@ -85,7 +85,6 @@ export default async function ContactPage({
     { value: "grossesse", label: ol.Grossesse },
     { value: "couple", label: ol.Couple },
     { value: "mariage", label: ol.Mariage },
-    { value: "portrait", label: ol.Portrait },
   ];
 
   return (

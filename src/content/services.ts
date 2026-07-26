@@ -97,21 +97,5 @@ export const services = {
       idealFor:
         "Mariages civils, cérémonies laïques, élopements et célébrations intimes.",
     },
-    {
-      slug: "portraits",
-      title: "Portrait",
-      tagline: "Un portrait simple, à la lumière du jour.",
-      description: [
-        "Un portrait franc, sans artifice : un échange plus qu'une pose. On cherche votre expression la plus naturelle, à la lumière du jour.",
-        "Pour un usage personnel comme professionnel, en couleur ou en noir et blanc.",
-      ],
-      approach: [
-        "En studio improvisé, chez vous ou en extérieur",
-        "Une mise en confiance avant tout",
-        "Noir et blanc ou couleur, selon l'intention",
-      ],
-      idealFor:
-        "Portraits personnels, artistiques ou professionnels.",
-    },
   ] satisfies Service[],
 } as const;

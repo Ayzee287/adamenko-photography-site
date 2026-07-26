@@ -21,7 +21,6 @@ const occasionLabels: Record<ContactOccasion, string> = {
   Famille: "Famille",
   Grossesse: "Grossesse",
   Couple: "Couple",
-  Portrait: "Portrait",
   Mariage: "Mariage",
 };
 

@@ -38,8 +38,12 @@ export default async function GaleriesPage({
 
       <section className="ch-movement ch-wrap">
         {(() => {
-          // Curated hang: one featured print (the wedding cover — the most cinematic)
-          // above a four-print supporting strip, so five albums read as composed.
+          // Curated hang for FOUR albums: one featured cinematic print above a strip of
+          // three. The previous composition put four narrow plates under the feature —
+          // correct when there were five albums, but with four remaining that strip goes
+          // to three, which lets each supporting plate breathe at a third of the wall
+          // instead of a quarter. A 2×2 was the alternative and was rejected: it reads as
+          // a grid of equals and throws away the hierarchy the feature print creates.
           const albums = dict.galleries.filter((gg) => gg.cover?.src);
           const featured = albums.find((gg) => gg.slug === "mariages") ?? albums[0];
           const supporting = albums.filter((gg) => gg !== featured);
@@ -58,7 +62,7 @@ export default async function GaleriesPage({
               </Develop>
               <div className="ch-gallery-support">
                 {supporting.map((gallery, i) => (
-                  <Develop key={gallery.slug} delay={(i % 4) * 70}>
+                  <Develop key={gallery.slug} delay={(i % 3) * 70}>
                     <Plate
                       href={link(active, { page: "genre", genre: gallery.slug as GenreSlug })}
                       src={gallery.cover!.src!}
@@ -66,7 +70,7 @@ export default async function GaleriesPage({
                       ratio="tall"
                       plaque={g.view}
                       caption={gallery.title}
-                      sizes="(min-width: 64rem) 23vw, (min-width: 40rem) 46vw, 100vw"
+                      sizes="(min-width: 64rem) 31vw, (min-width: 40rem) 46vw, 100vw"
                     />
                   </Develop>
                 ))}

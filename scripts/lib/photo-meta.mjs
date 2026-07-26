@@ -123,6 +123,22 @@ export async function readPhoto(absPath) {
   return { ...base, ok: true, error: null };
 }
 
+/**
+ * Capture time only, WITHOUT decoding the pixels.
+ *
+ * `readPhoto` forces a full decode to prove integrity, which is far too expensive to run
+ * over a whole library just to put a folder in order. This reads the header alone, so a
+ * 900-frame library can be sequenced in seconds.
+ */
+export async function readCaptureTime(absPath) {
+  try {
+    const meta = await sharp(absPath).metadata();
+    return parseCaptureDate(meta.exif);
+  } catch {
+    return null;
+  }
+}
+
 /** Landscape / portrait / square — derived, never declared. */
 export function orientationOf(width, height) {
   const ar = width / height;

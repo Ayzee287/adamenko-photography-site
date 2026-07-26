@@ -1,5 +1,5 @@
-// Tarifs — the investment chapter. Two honest registers: portrait SESSIONS (family,
-// maternity, couple & portrait — each from 220 €) and the three WEDDING packages (flat
+// Tarifs — the investment chapter. Two honest registers: the SESSIONS (family, maternity,
+// couple & portrait — each from 220 €) and the three WEDDING packages (flat
 // prices, the studio's real coverage/deliverables/turnaround; package 3 recommended).
 
 import Link from "next/link";

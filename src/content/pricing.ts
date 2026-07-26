@@ -55,11 +55,12 @@ export const pricing = {
   // Teaser → the tarifs hub (no prices on the homepage).
   overviewCta: { label: "Voir les tarifs", href: "/tarifs" },
 
-  // ── Portrait sessions — family & maternity are two independent services (clearer
-  //    choice, more premium), couple & portrait share the same honest starting point.
+  // ── The three SESSIONS — family, maternity and couple are independent services at the
+  //    same honest starting point. (Portrait was retired as a standalone category; the
+  //    couple session still covers a portrait, which is why its NAME keeps the word.)
   sessions: {
     eyebrow: "Séances",
-    title: "Famille, maternité & portrait.",
+    title: "Famille, maternité & couple.",
     intro:
       "Trois séances distinctes, au même tarif. On choisit ensemble le lieu et le rythme : chez vous, en extérieur, là où vous serez le plus à l'aise.",
     durationLabel: "Durée",

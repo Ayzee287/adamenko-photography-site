@@ -6,7 +6,6 @@ export type GenreSlug =
   | "familles"
   | "grossesse"
   | "couples"
-  | "portraits"
   | "mariages";
 
 export type GalleryImage = {
