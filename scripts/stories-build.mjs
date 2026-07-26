@@ -22,7 +22,7 @@ import {
   readdirSync, existsSync, mkdirSync, statSync, writeFileSync, readFileSync, rmSync,
 } from "node:fs";
 import path from "node:path";
-import { readPhoto, orientationOf } from "./lib/photo-meta.mjs";
+import { readPhoto, readCaptureTime, orientationOf } from "./lib/photo-meta.mjs";
 import { parseStorySheet, syncStorySheet } from "./lib/story-sheet.mjs";
 
 const SRC = process.env.STORY_LIBRARY || "c:/Users/Administrator/Documents/photos-stories";
@@ -44,7 +44,7 @@ const LONG_EDGE = 2200; // matches the galleries' web master
 const QUALITY = 82;
 
 const checkOnly = process.argv.includes("--check");
-const CATEGORIES = ["familles", "grossesse", "couples", "portraits", "mariages"];
+const CATEGORIES = ["familles", "grossesse", "couples", "mariages"];
 const IMAGE_RE = /\.(jpe?g|png)$/i;
 
 const problems = [];
@@ -82,6 +82,21 @@ function discover() {
   return found;
 }
 
+// Order a folder's frames by when the shutter fired, falling back to filename for anything
+// without a readable capture time (those sort last, so an undated frame never silently
+// jumps to the front of a shoot).
+async function chronological(dir, files) {
+  const stamped = [];
+  for (const f of files) stamped.push({ f, t: await readCaptureTime(path.join(dir, f)) });
+  stamped.sort((a, b) => {
+    if (a.t && b.t) return a.t.localeCompare(b.t) || a.f.localeCompare(b.f);
+    if (a.t) return -1;
+    if (b.t) return 1;
+    return a.f.localeCompare(b.f);
+  });
+  return stamped.map((s) => s.f);
+}
+
 // ── per-story read ───────────────────────────────────────────────────────────────
 async function readStory(story) {
   const sheetPath = path.join(story.dir, "story.txt");
@@ -92,8 +107,15 @@ async function readStory(story) {
   }
 
   // Create or top up the human's sheet. This is the ONE write into the source library.
+  //
+  // A NEW sheet is written in CAPTURE-TIME order, not filename order. Camera filenames
+  // (096A1687.jpg) usually happen to sort chronologically, but any frame renamed by hand
+  // sorts to an arbitrary place and lands somewhere it was never shot. Chronological is the
+  // one order that is both deterministic and meaningful — a shoot walks forwards — and it is
+  // a STARTING order, not a claim about the edit: the sheet is the human's to re-order.
   if (!checkOnly) {
-    const { created, appended } = syncStorySheet(sheetPath, story.category, story.slug, story.files);
+    const ordered = await chronological(story.dir, story.files);
+    const { created, appended } = syncStorySheet(sheetPath, story.category, story.slug, ordered);
     if (created) notes.push(`${story.category}/${story.slug}: created story.txt (${story.files.length} frames) — add a title and alt text`);
     else if (appended.length) notes.push(`${story.category}/${story.slug}: appended ${appended.length} new frame(s) to story.txt`);
   } else if (!existsSync(sheetPath)) {
@@ -133,7 +155,15 @@ async function readStory(story) {
       continue;
     }
     if (byHash.has(meta.hash)) {
-      problems.push(`${story.category}/${story.slug}: "${p.file}" is byte-identical to "${byHash.get(meta.hash)}"`);
+      // A BYTE-IDENTICAL file is an accidental copy ("photo (1).jpg"), never a selection —
+      // nobody chooses to hang the same bytes twice. Excluding it is de-duplication, not an
+      // editorial decision, so it is reported loudly and skipped rather than failing the
+      // whole build. (Listing a DIFFERENT photograph twice in the sheet is still an error:
+      // that one is ambiguous, and only a human can say which position was meant.)
+      notes.push(
+        `${story.category}/${story.slug}: skipped "${p.file}" — byte-identical to ` +
+          `"${byHash.get(meta.hash)}" (duplicate file, kept once)`,
+      );
       continue;
     }
     byHash.set(meta.hash, p.file);

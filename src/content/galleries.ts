@@ -72,24 +72,6 @@ export const galleries: Gallery[] = [
     ],
   },
   {
-    slug: "portraits",
-    title: "Portraits",
-    intro: "Un portrait simple et sincère, à la lumière du jour.",
-    cover: {
-      src: "/galleries/portraits/portraits-a00.jpg",
-      width: 1467, height: 2200, ratio: "aspect-[2/3]",
-      alt: "Portrait d'une jeune femme en dentelle, lumière douce de fenêtre.",
-    },
-    images: [
-      { src: "/galleries/portraits/portraits-a01.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Une mariée dans un champ de lavande, robe brodée, regard baissé." },
-      { src: "/galleries/portraits/portraits-a02.jpg", width: 1479, height: 2200, ratio: "aspect-[2/3]", alt: "Portrait d'une mariée à la fenêtre, voile et dentelle, lumière douce." },
-      { src: "/galleries/portraits/portraits-a03.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Un portrait en dentelle, en noir et blanc, à la fenêtre." },
-      { src: "/galleries/portraits/portraits-a04.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Portrait franc d'une mariée, épaules dénudées, lumière de sous-bois." },
-      { src: "/galleries/portraits/portraits-a05.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Une mariée devant une porte ancienne, bouquet à la main." },
-      { src: "/galleries/portraits/portraits-a06.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Portrait de profil, un collier de perles, regard au loin." },
-    ],
-  },
-  {
     slug: "mariages",
     title: "Mariages",
     intro: "Le récit d'une journée, de Lyon aux côtes de Bretagne. L'émotion plutôt que la mise en scène.",
@@ -121,7 +103,6 @@ export const featured: GalleryImage[] = [
   { src: "/galleries/familles/familles-a07.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Une maman et son tout-petit dans une rue de Lyon, front contre front." },
   { src: "/galleries/grossesse/grossesse-a00.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Future maman devant les colonnes d'un palais lyonnais." },
   { src: "/galleries/couples/couples-a07.jpg", width: 2200, height: 1479, ratio: "aspect-[3/2]", alt: "Un couple sur une terrasse dominant la vallée, au crépuscule." },
-  { src: "/galleries/portraits/portraits-a01.jpg", width: 1467, height: 2200, ratio: "aspect-[2/3]", alt: "Une mariée dans un champ de lavande, robe brodée, regard baissé." },
   { src: "/galleries/mariages/mariages-a07.jpg", width: 2200, height: 1467, ratio: "aspect-[3/2]", alt: "Les mariés marchent sur la plage, la robe portée par le vent." },
 ];
 

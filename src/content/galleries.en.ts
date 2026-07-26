@@ -58,19 +58,6 @@ export const galleryText: Record<
       "A couple on a terrace overlooking the valley, at twilight.",
     ],
   },
-  portraits: {
-    title: "Portraits",
-    intro: "A simple, sincere portrait, in daylight.",
-    coverAlt: "Portrait of a young woman in lace, soft window light.",
-    alts: [
-      "A bride in a lavender field, embroidered dress, eyes lowered.",
-      "A portrait of a bride by the window, veil and lace, soft light.",
-      "A portrait in lace, in black and white, by the window.",
-      "A candid portrait of a bride, bare shoulders, woodland light.",
-      "A bride before an old doorway, bouquet in hand.",
-      "A profile portrait, a string of pearls, gazing into the distance.",
-    ],
-  },
   mariages: {
     title: "Weddings",
     intro: "The story of a day, from Lyon to the Brittany coast. Emotion over staging.",
@@ -98,6 +85,5 @@ export const featuredAlts: string[] = [
   "A mother and her little one in a Lyon street, forehead to forehead.",
   "A mother-to-be before the columns of a Lyon palace.",
   "A couple on a terrace overlooking the valley, at twilight.",
-  "A bride in a lavender field, embroidered dress, eyes lowered.",
   "The newlyweds walk on the beach, the dress carried by the wind.",
 ];

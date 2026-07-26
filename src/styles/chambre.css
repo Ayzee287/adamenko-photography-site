@@ -670,8 +670,13 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 .ch-genres { display: flex; flex-direction: column; gap: clamp(1.1rem, 2.6vw, 2rem); }
 .ch-genres-row { display: grid; gap: clamp(1rem, 2.2vw, 1.7rem); grid-template-columns: 1fr; }
 @media (min-width: 52rem) {
+  /* FOUR séances, composed as two rows that ANSWER each other rather than as a 2×2 grid.
+     The wide frame leads row one and closes row two, so the eye crosses the page instead
+     of running down two even columns, and the second row is set slightly narrower so the
+     rows differ in scale. A symmetric 2×2 of equal tiles is the one arrangement that would
+     make four photographs read as a product grid. */
   .ch-genres-row--feature { grid-template-columns: 1.5fr 0.667fr; align-items: start; }
-  .ch-genres-row--trio { grid-template-columns: 1.5fr 0.667fr 1.5fr; align-items: start; }
+  .ch-genres-row--counter { grid-template-columns: 0.62fr 1.42fr; align-items: start; }
 }
 .ch-index-item { display: block; text-decoration: none; color: inherit; min-width: 0; }
 .ch-index-meta { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.95rem; }
@@ -715,26 +720,37 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 /* Story index — the doors into a category's individual shoots. Same plate language and
    the same gap clock as the galleries wall; deliberately NOT a new card system. Three
    across on a wide wall, two on a tablet, one on a phone. */
+/* A lead plate and its strip share the gallery wall's vertical clock. */
+.ch-story-wall { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.7rem); }
+
+/* On a phone the lead plate drops its cinematic 21:9. At 350px wide that ratio is a 150px
+   letterbox — SHORTER than the 234px plates beneath it, which inverts the hierarchy the
+   lead exists to create. A 3:2 lead reads as the largest thing on the wall at every width;
+   the cinematic crop returns once there is room for it to mean something. */
+@media (max-width: 47.99rem) {
+  .ch-story-wall > * .ch-ar-cine { aspect-ratio: 3 / 2; }
+}
+
 .ch-story-index {
   display: grid;
   gap: clamp(1rem, 2.4vw, 1.7rem);
   grid-template-columns: 1fr;
 }
-/* Two share the wall from tablet up; three or more become the grid. A LONE story keeps
-   the single column at every width and hangs as a wide cinematic plate — never a third
-   of a row with nothing beside it. */
+/* The strip carries at most three, so it never orphans: a fourth story becomes the lead
+   plate above instead of a lone tile under a row of three. One story stays a single column
+   at every width and hangs as a wide cinematic plate. */
 @media (min-width: 40rem) {
-  .ch-story-index[data-count="2"],
-  .ch-story-index[data-count="many"] { grid-template-columns: 1fr 1fr; }
-}
-@media (min-width: 64rem) {
-  .ch-story-index[data-count="many"] { grid-template-columns: repeat(3, 1fr); }
+  .ch-story-index[data-count="2"] { grid-template-columns: 1fr 1fr; }
+  /* A strip of three goes three-across as soon as it leaves the phone. Stepping through
+     two columns on the way would strand the third on its own row — the same orphan the
+     lead-plate split exists to avoid, reintroduced at tablet width. */
+  .ch-story-index[data-count="3"] { grid-template-columns: repeat(3, 1fr); }
 }
 
 .ch-gallery-wall { display: flex; flex-direction: column; gap: clamp(1rem, 2.4vw, 1.7rem); }
 .ch-gallery-support { display: grid; gap: clamp(1rem, 2.4vw, 1.7rem); grid-template-columns: 1fr; }
 @media (min-width: 40rem) { .ch-gallery-support { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 64rem) { .ch-gallery-support { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 64rem) { .ch-gallery-support { grid-template-columns: repeat(3, 1fr); } }
 /* ── Voices — desktop: three quiet quotes side by side; mobile: a snap carousel ──
    The three-high stack was a long wall of text on a phone. On mobile the rail scrolls
    horizontally, one review at a time, the next peeking to invite a swipe; dots below
@@ -973,6 +989,15 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 @media (min-width: 62rem) { .ch-price-grid { grid-template-columns: repeat(3, 1fr); } }
 .ch-package-cell { display: flex; }
 .ch-package-cell > .ch-package { width: 100%; }
+
+/* Reserve the summary's height while the packages sit SIDE BY SIDE.
+   The three introductions run 2, 3 and 4 lines, which pushed "Couverture" to 203 / 227 /
+   252px down their cards — the cards matched in height while every label inside them sat
+   at a different level. Reserving four lines re-aligns the spec rows across the row. Once
+   the cards stack there is nothing to align against, so the reservation lifts. */
+@media (min-width: 62rem) {
+  .ch-package .ch-offer-summary { min-height: calc(4 * 1.55em); }
+}
 
 .ch-offer {
   display: flex;

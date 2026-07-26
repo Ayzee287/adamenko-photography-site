@@ -111,7 +111,10 @@ test("footer: contentinfo with pages, socials, email and legal links", async ({
   await expect(
     footer.getByRole("link", { name: "Mentions légales" }),
   ).toHaveAttribute("href", "/mentions-legales");
+  // Email joined Instagram and Facebook as a third icon control, so the address is no
+  // longer printed: the accessible name is what identifies it now.
   await expect(
-    footer.getByRole("link", { name: "adamenkoiu@gmail.com" }),
+    footer.getByRole("link", { name: "Envoyer un e-mail" }),
   ).toHaveAttribute("href", "mailto:adamenkoiu@gmail.com");
+  await expect(footer).not.toContainText("adamenkoiu@gmail.com");
 });

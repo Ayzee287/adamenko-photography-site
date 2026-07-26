@@ -24,14 +24,12 @@ export const serviceSlugs = {
   grossesse: "maternity",
   couple: "couple",
   mariage: "wedding",
-  portrait: "portrait",
 } as const;
 
 export const genreSlugs = {
   familles: "families",
   grossesse: "maternity",
   couples: "couples",
-  portraits: "portraits",
   mariages: "weddings",
 } as const;
 

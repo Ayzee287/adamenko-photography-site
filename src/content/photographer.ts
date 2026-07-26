@@ -79,7 +79,7 @@ export const photographer: Photographer = {
     scope: "Familles, grossesses et couples en région lyonnaise et au-delà · mariages dans toute la France.",
     note: "Basée à Lyon ; je me déplace en région et, pour les mariages, dans toute la France.",
   },
-  specialties: ["Famille", "Grossesse", "Couple", "Portrait", "Mariage"],
+  specialties: ["Famille", "Grossesse", "Couple", "Mariage"],
   // Rewritten (2026-06-24) from the photographer's OWN words on her previous site,
   // keeping only DURABLE facts (Ukrainian; based in Lyon; trained in law, then
   // photography; mother of three; documentary, minimal-posing approach). The original

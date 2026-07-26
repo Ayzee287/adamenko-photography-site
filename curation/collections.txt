@@ -77,19 +77,6 @@ IMG_3395 | Une femme respire un bouquet blanc, son compagnon à ses côtés. | A
 IMG_3410 | Deux amoureux rient ensemble, assis sur des marches de pierre. | Two lovers laughing together, sitting on stone steps.
 IMG_4507 | Un couple sur une terrasse dominant la vallée, au crépuscule. | A couple on a terrace overlooking the valley, at twilight.
 
-[portraits]
-title: Portraits
-title.en: Portraits
-intro: Un portrait simple et sincère, à la lumière du jour.
-intro.en: A simple, sincere portrait, in daylight.
-cover: IMG_4565 | Portrait d'une jeune femme en dentelle, lumière douce de fenêtre. | Portrait of a young woman in lace, soft window light.
-IMG_4533 | Une mariée dans un champ de lavande, robe brodée, regard baissé. | A bride in a lavender field, embroidered dress, eyes lowered.
-IMG_4566 | Portrait d'une mariée à la fenêtre, voile et dentelle, lumière douce. | A portrait of a bride by the window, veil and lace, soft light.
-IMG_4569 | Un portrait en dentelle, en noir et blanc, à la fenêtre. | A portrait in lace, in black and white, by the window.
-IMG_8344 | Portrait franc d'une mariée, épaules dénudées, lumière de sous-bois. | A candid portrait of a bride, bare shoulders, woodland light.
-IMG_8756 | Une mariée devant une porte ancienne, bouquet à la main. | A bride before an old doorway, bouquet in hand.
-IMG_8761 | Portrait de profil, un collier de perles, regard au loin. | A profile portrait, a string of pearls, gazing into the distance.
-
 [mariages]
 title: Mariages
 title.en: Weddings

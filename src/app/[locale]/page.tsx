@@ -186,10 +186,9 @@ export default async function HomePage({
                 {cell("familles", "frame", "(min-width: 52rem) 58vw, 100vw")}
                 {cell("grossesse", "portrait", "(min-width: 52rem) 26vw, 100vw")}
               </Develop>
-              <Develop delay={90} className="ch-genres-row ch-genres-row--trio">
-                {cell("couples", "frame", "(min-width: 52rem) 38vw, 100vw")}
-                {cell("portraits", "portrait", "(min-width: 52rem) 18vw, 100vw")}
-                {cell("mariages", "frame", "(min-width: 52rem) 38vw, 100vw")}
+              <Develop delay={90} className="ch-genres-row ch-genres-row--counter">
+                {cell("couples", "portrait", "(min-width: 52rem) 26vw, 100vw")}
+                {cell("mariages", "frame", "(min-width: 52rem) 58vw, 100vw")}
               </Develop>
             </div>
           );

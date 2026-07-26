@@ -6,7 +6,6 @@ export const CONTACT_OCCASIONS = [
   "Famille",
   "Grossesse",
   "Couple",
-  "Portrait",
   "Mariage",
 ] as const;
 export type ContactOccasion = (typeof CONTACT_OCCASIONS)[number];
