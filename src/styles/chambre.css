@@ -1165,9 +1165,11 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
 .lb-prev { left: clamp(0.6rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); }
 .lb-next { right: clamp(0.6rem, 2vw, 1.6rem); top: 50%; transform: translateY(-50%); }
 .lb-prev:active, .lb-next:active { transform: translateY(-50%) scale(0.92); }
-/* on touch the edge paddles are redundant with swipe — keep them but smaller/quieter */
+/* On touch the edge paddles are secondary to swipe, so they recede — but they recede in
+   WEIGHT, not in size. They are the fallback for exactly the visitors who cannot swipe
+   comfortably, so the target stays at 44px; only the fill gets quieter. */
 @media (max-width: 640px) {
-  .lb-prev, .lb-next { width: 40px; min-width: 40px; height: 40px; min-height: 40px; background: rgba(18, 15, 13, 0.3); }
+  .lb-prev, .lb-next { background: rgba(18, 15, 13, 0.3); }
 }
 /* auto-hide: fade the whole chrome away on stillness (photo alone), back on move */
 .lb[data-chrome="off"] .lb-btn,

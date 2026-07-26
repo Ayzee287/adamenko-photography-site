@@ -23,8 +23,8 @@ export type ExhibitItem = {
 type Dim = { i: number; w: number; h: number };
 type Row = { items: Dim[]; partial: boolean };
 
-// Target row height by available width — a few frames per row on a wide wall, two on a
-// phone. The justify pass then scales each row to fill the width exactly.
+// Target row height by available width — a few frames per row on a wide wall, one or two on
+// a phone. The justify pass then scales each row to fill the width exactly.
 function targetRowHeight(w: number): number {
   if (w < 560) return Math.max(200, w * 0.62);
   if (w < 900) return 300;
@@ -32,8 +32,20 @@ function targetRowHeight(w: number): number {
   return 384;
 }
 
-// Greedy justified rows: accumulate frames until the row overflows the width at the target
-// height, then solve the height that makes that row fill the width exactly.
+// A frame wider than this reads as landscape; below it as portrait/square. Used only by the
+// phone rhythm below, where the two orientations genuinely cannot share a row.
+const WIDE = 1.2;
+
+// Greedy justified rows, but the break is CHOSEN rather than stumbled into.
+//
+// The naive greedy pass (accumulate until the row overflows the width at the target height,
+// then solve) has a failure mode that is invisible on a wide wall and disfiguring on a phone:
+// the frame that tips the row over may overshoot badly, and the solved height then collapses
+// far BELOW the target. Measured on a 390px viewport, two portraits (Σar 1.34, solving to
+// 254px) took a third landscape frame (Σar 2.84) and the whole row dropped to 118px — three
+// postage stamps in a wall whose other rows were 157px. So: grow the row while it is still
+// taller than the target, then keep whichever of the last two candidates sits CLOSER to the
+// target (compared in log space, so "40% too short" and "40% too tall" weigh the same).
 //
 // Rows are returned EXPLICITLY (never left to flex-wrap): the container width is fractional
 // once a scrollbar exists, and a row whose rounded widths sum to even 0.2px more than the
@@ -42,49 +54,75 @@ function targetRowHeight(w: number): number {
 //
 // A sparse final row is not blown up to full width (one landscape frame would tower); it keeps
 // a near-target height and is centred, so the closing frame reads as deliberate.
-function justify(ars: number[], containerW: number, targetH: number, gap: number): Row[] {
+function justify(
+  ars: number[],
+  containerW: number,
+  targetH: number,
+  gap: number,
+  phone: boolean,
+): Row[] {
   const rows: Row[] = [];
-  let row: number[] = [];
-  let startIndex = 0;
-  let rowAr = 0;
+  const n = ars.length;
 
-  const flush = (isLast: boolean) => {
-    if (row.length === 0) return;
-    const gaps = gap * (row.length - 1);
+  // Solved height for frames [from, to) laid edge to edge across the wall.
+  const heightFor = (from: number, to: number) => {
+    let sum = 0;
+    for (let k = from; k < to; k++) sum += ars[k];
+    const avail = Math.floor(containerW) - gap * (to - from - 1) - 1;
+    return avail / sum;
+  };
+  const deviation = (h: number) => Math.abs(Math.log(h / targetH));
+
+  // How many frames may share this row, starting at `i`.
+  //
+  // On a phone the honest answer is dictated by orientation, not by arithmetic: a landscape
+  // frame needs the full width to stay legible, and pairing one with a portrait squeezes the
+  // portrait to ~106px. So a wide frame takes the row alone, and portraits pair only with
+  // portraits. That yields a real phone rhythm — full-width wide frames, portrait diptychs,
+  // the occasional centred portrait plate — instead of a squeezed mosaic.
+  const rowCap = (i: number) => {
+    if (!phone) return 5;
+    if (ars[i] >= WIDE) return 1;
+    return i + 1 < n && ars[i + 1] < WIDE ? 2 : 1;
+  };
+
+  let i = 0;
+  while (i < n) {
+    const cap = rowCap(i);
+    let end = i + 1;
+    // grow while the row is still TALLER than the target and we may still add frames
+    while (end < n && end - i < cap && heightFor(i, end) > targetH) end++;
+    // `end` now undershoots (or hit a cap / the last frame). Prefer the closer candidate.
+    if (end - i > 1 && heightFor(i, end) < targetH) {
+      if (deviation(heightFor(i, end - 1)) < deviation(heightFor(i, end))) end -= 1;
+    }
+
+    const count = end - i;
+    const gaps = gap * (count - 1);
     const avail = Math.floor(containerW) - gaps - 1; // 1px safety against sub-pixel widths
-    let h = avail / rowAr;
+    let h = heightFor(i, end);
     let partial = false;
-    if (isLast && h > targetH * 1.18) {
-      // Sparse closing row: don't blow it to full width (a wide frame would tower). A LONE
-      // closing frame is enlarged into a deliberate final print — larger than the mosaic
-      // above so it reads as a conclusion, not a leftover tile; a 2+ frame partial row
-      // keeps the target height. Both are centred (.is-partial).
-      h = row.length === 1 ? Math.min(h, targetH * 1.35) : targetH;
+
+    // A row that still overshoots the target once we have run out of frames is a sparse
+    // closing row — or, on a phone, a lone portrait that would otherwise tower over the
+    // viewport. Cap it and centre it so it reads as a chosen plate, not a leftover.
+    const lone = count === 1;
+    if (h > targetH * 1.18 && (end === n || (phone && lone))) {
+      h = lone ? Math.min(h, targetH * (phone ? 1.62 : 1.35)) : targetH;
       partial = true;
     }
+
     const height = Math.round(h);
-    const items: Dim[] = row.map((ar, k) => ({
-      i: startIndex + k,
-      w: Math.floor(ar * height),
-      h: height,
-    }));
+    const items: Dim[] = [];
+    for (let k = i; k < end; k++) items.push({ i: k, w: Math.floor(ars[k] * height), h: height });
     if (!partial) {
       // hand the rounding remainder to the last frame so the row fills the width exactly
-      const used = items.reduce((n, it) => n + it.w, 0);
+      const used = items.reduce((acc, it) => acc + it.w, 0);
       items[items.length - 1].w += avail - used;
     }
     rows.push({ items, partial });
-    startIndex += row.length;
-    row = [];
-    rowAr = 0;
-  };
-
-  for (const ar of ars) {
-    row.push(ar);
-    rowAr += ar;
-    if (rowAr * targetH + gap * (row.length - 1) >= containerW) flush(false);
+    i = end;
   }
-  flush(true);
   return rows;
 }
 
@@ -107,7 +145,7 @@ export function Exhibition(props: {
     const w = el.getBoundingClientRect().width;
     if (w <= 0) return;
     const gap = w < 560 ? 8 : 14;
-    setRows(justify(ars, w, targetRowHeight(w), gap));
+    setRows(justify(ars, w, targetRowHeight(w), gap, w < 560));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -152,7 +190,23 @@ export function Exhibition(props: {
     return () => io.disconnect();
   }, [rows]);
 
-  const tile = (i: number, style: React.CSSProperties) => {
+  // Once the rows are solved every tile knows its EXACT rendered width, and saying so is the
+  // difference between a phone downloading a 1080px master for a 170px frame and fetching what
+  // it will actually paint — a justified wall cannot be described by a viewport formula.
+  //
+  // The first paint matters too: the server-rendered band is in the HTML and the browser may
+  // start fetching from it before hydration solves the rows. What it must NOT do is disagree
+  // with the solved width — a fallback that predicts a different size than the row solver
+  // lands on costs a SECOND request for the same frame (measured: a landscape gallery went
+  // from 7 requests to 14). So the fallback predicts the same thing the solver will do, using
+  // the one fact available server-side — orientation: wide frames end up spanning the wall,
+  // tall ones end up sharing it.
+  const fallbackSizes = (ar: number) =>
+    ar >= WIDE
+      ? "(min-width: 75rem) 40vw, (min-width: 45rem) 50vw, 92vw"
+      : "(min-width: 75rem) 20vw, (min-width: 45rem) 25vw, 46vw";
+
+  const tile = (i: number, style: React.CSSProperties, sizes: string) => {
     const it = items[i];
     return (
       <button
@@ -163,7 +217,7 @@ export function Exhibition(props: {
         onClick={() => setOpenIndex(i)}
         aria-label={`${labels.enlarge} : ${it.alt}`}
       >
-        <Photo src={it.src} alt="" sizes="(min-width: 75rem) 34vw, (min-width: 45rem) 46vw, 92vw" />
+        <Photo src={it.src} alt="" sizes={sizes} />
       </button>
     );
   };
@@ -175,16 +229,22 @@ export function Exhibition(props: {
           ? // pre-measurement (SSR + first paint): one wrapping band, ratio-proportioned
             <div className="ex-row is-fallback">
               {items.map((_, i) =>
-                tile(i, {
-                  flexGrow: ars[i],
-                  flexBasis: `calc(${ars[i].toFixed(3)} * var(--ex-row))`,
-                  height: "var(--ex-row)",
-                }),
+                tile(
+                  i,
+                  {
+                    flexGrow: ars[i],
+                    flexBasis: `calc(${ars[i].toFixed(3)} * var(--ex-row))`,
+                    height: "var(--ex-row)",
+                  },
+                  fallbackSizes(ars[i]),
+                ),
               )}
             </div>
           : rows.map((row, r) => (
               <div key={r} className={`ex-row${row.partial ? " is-partial" : ""}`}>
-                {row.items.map((d) => tile(d.i, { width: d.w, height: d.h, flex: "0 0 auto" }))}
+                {row.items.map((d) =>
+                  tile(d.i, { width: d.w, height: d.h, flex: "0 0 auto" }, `${d.w}px`),
+                )}
               </div>
             ))}
       </div>

@@ -213,13 +213,21 @@ export function Lightbox(props: {
       >
         <div className="lb-stage" ref={stageRef} data-backdrop="true">
           <figure key={index} className="lb-slide" data-dir={dir}>
-            {current && (
+            {/* Only while OPEN. The viewer sits closed on every gallery page, and rendering its
+                first frame regardless made `priority` emit a preload for a 100vw photograph
+                nobody had asked to see — a wasted full-width download on each visit, and (at
+                DPR 1) an unused preload the page then waited on, so `load` never fired. */}
+            {open && current && (
               <Image
                 src={current.src}
                 alt={current.alt}
                 fill
                 sizes="100vw"
-                quality={88}
+                // 85 is the quality `next.config.ts` reserves for this surface. It must be a
+                // value from `images.qualities`: an unlisted one (this asked for 88) is not
+                // silently clamped — the optimizer answers 400 and the viewer is left holding
+                // a preload that never resolves.
+                quality={85}
                 className="lb-img"
                 priority
                 {...(blurMap[current.src]
