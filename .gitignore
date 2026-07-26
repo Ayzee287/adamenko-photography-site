@@ -49,3 +49,11 @@ test-results/
 
 # curation contact sheets are disposable review output (regenerate: npm run photos:sheets)
 curation/sheets/
+
+# Draft story exports — photographs of shoots nobody has approved for the public site.
+# `stories:build` writes drafts here instead of public/stories/ so a story that has not
+# been promoted to `portfolio` can be reviewed with `next dev` but can never be committed
+# or deployed. Promote the story (visibility: portfolio) and it moves to public/stories/.
+/public/stories-draft/
+# Local idempotency cache: maps source-photo hashes to already-encoded exports.
+/.story-ingest-state.json

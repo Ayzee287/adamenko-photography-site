@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { INDEXABLE_PATHS } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 import { alternatesForPath, allGenreParams, allServiceParams } from "@/lib/routes";
+import { visibleStories } from "@/lib/stories";
 
 // Every indexable path with its hreflang alternates — built from the same
 // alternatesForPath() seam that buildMetadata() uses per page, so the sitemap URLs and
@@ -12,6 +13,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...INDEXABLE_PATHS,
     ...allGenreParams.map((g) => `/galeries/${g}`),
     ...allServiceParams.map((s) => `/prestations/${s}`),
+    // Story pages, read through the same publish gate as the routes themselves — a draft
+    // has no page, so it must not have a sitemap entry either. In a production build
+    // `visibleStories` is portfolio-only, so this cannot advertise an unpublished shoot.
+    ...visibleStories.map((s) => `/galeries/${s.category}/${s.slug}`),
   ];
 
   return paths.map((path) => {
