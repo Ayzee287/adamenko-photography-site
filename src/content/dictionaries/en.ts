@@ -423,17 +423,20 @@ export const en: DeepPartial<Dictionary> = {
       photosLabel: "Photographs",
       packages: [
         {
-          name: "Essential",
+          name: "Essential / Mini",
           price: 650,
-          coverage: "Up to 5 hours",
+          description:
+            "Made for civil weddings, small ceremonies and weekday celebrations.",
+          coverage: "Up to 3 hours",
           photos: "Around 300 edited photographs",
           includes: ["Private online gallery"],
           delivery: "3 to 4 weeks",
-          note: "Weekdays, outside high season, or as a last-minute booking, subject to availability.",
         },
         {
-          name: "Signature",
+          name: "Classic",
           price: 1100,
+          description:
+            "Enough coverage for the moments that matter, without complicating the day.",
           coverage: "Up to 8 hours",
           photos: "Around 450 edited photographs",
           includes: ["Private online gallery"],
@@ -442,6 +445,8 @@ export const en: DeepPartial<Dictionary> = {
         {
           name: "The whole day",
           price: 1600,
+          description:
+            "The coverage to live your wedding unhurried, from the morning through to the start of the evening (11 pm).",
           coverage: "Up to 10 hours",
           photos: "Around 600 edited photographs",
           includes: ["Private online gallery"],

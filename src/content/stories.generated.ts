@@ -18,7 +18,7 @@ export const stories: Story[] = [
     description: { fr: "Les quais, les façades ocre et les vieilles portes, à deux.", en: "The riverbanks, the ochre facades and the old doorways, together." },
     date: "2022-01-11",
     location: "",
-    cover: "/stories/couples/couples-1/couples-1-31.jpg",
+    cover: "/stories/couples/couples-1/couples-1-18.jpg",
     images: [
       { src: "/stories/couples/couples-1/couples-1-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Un jour à Lyon — 1 / 43", altEn: "A Day in Lyon — 1 / 43" },
       { src: "/stories/couples/couples-1/couples-1-02.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Un jour à Lyon — 2 / 43", altEn: "A Day in Lyon — 2 / 43" },
@@ -73,7 +73,7 @@ export const stories: Story[] = [
     description: { fr: "Un grand parc, un bassin, et une fin de journée à l'intérieur.", en: "A wide park, a lily pond, and the end of the day indoors." },
     date: "2021-11-21",
     location: "",
-    cover: "/stories/couples/couples-2/couples-2-45.jpg",
+    cover: "/stories/couples/couples-2/couples-2-57.jpg",
     images: [
       { src: "/stories/couples/couples-2/couples-2-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "À deux, au domaine — 1 / 89", altEn: "At the Manor — 1 / 89" },
       { src: "/stories/couples/couples-2/couples-2-02.jpg", width: 1526, height: 2200, orientation: "portrait", alt: "À deux, au domaine — 2 / 89", altEn: "At the Manor — 2 / 89" },
@@ -175,7 +175,7 @@ export const stories: Story[] = [
     description: { fr: "La côte, le vent, et un café de village pour finir.", en: "The coast, the wind, and a village bar to finish." },
     date: "2026-05-09",
     location: "",
-    cover: "/stories/couples/couples-3/couples-3-34.jpg",
+    cover: "/stories/couples/couples-3/couples-3-16.jpg",
     images: [
       { src: "/stories/couples/couples-3/couples-3-01.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Au bord de la mer — 1 / 66", altEn: "By the Sea — 1 / 66" },
       { src: "/stories/couples/couples-3/couples-3-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Au bord de la mer — 2 / 66", altEn: "By the Sea — 2 / 66" },
@@ -254,7 +254,7 @@ export const stories: Story[] = [
     description: { fr: "L'arrivée d'un bébé dans une maison où l'on est déjà plusieurs.", en: "A baby arriving in a house that is already full." },
     date: "2025-08-29",
     location: "",
-    cover: "/stories/familles/familles-1/familles-1-80.jpg",
+    cover: "/stories/familles/familles-1/familles-1-18.jpg",
     images: [
       { src: "/stories/familles/familles-1/familles-1-01.jpg", width: 2200, height: 1619, orientation: "landscape", alt: "Les premiers jours — 1 / 108", altEn: "The First Days — 1 / 108" },
       { src: "/stories/familles/familles-1/familles-1-02.jpg", width: 2200, height: 1619, orientation: "landscape", alt: "Les premiers jours — 2 / 108", altEn: "The First Days — 2 / 108" },
@@ -375,7 +375,7 @@ export const stories: Story[] = [
     description: { fr: "Les tout premiers jours, en gros plans et en douceur.", en: "The very first days, close up and quiet." },
     date: "2026-06-26",
     location: "",
-    cover: "/stories/familles/familles-2/familles-2-33.jpg",
+    cover: "/stories/familles/familles-2/familles-2-06.jpg",
     images: [
       { src: "/stories/familles/familles-2/familles-2-01.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Tout petit — 1 / 65", altEn: "Very New — 1 / 65" },
       { src: "/stories/familles/familles-2/familles-2-02.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Tout petit — 2 / 65", altEn: "Very New — 2 / 65" },
@@ -453,7 +453,7 @@ export const stories: Story[] = [
     description: { fr: "Une matinée à trois, dans les rues et sur les places de la ville.", en: "A morning for three, through the streets and squares of the city." },
     date: "2022-09-11",
     location: "",
-    cover: "/stories/familles/familles-3/familles-3-36.jpg",
+    cover: "/stories/familles/familles-3/familles-3-19.jpg",
     images: [
       { src: "/stories/familles/familles-3/familles-3-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "En famille, dans Lyon — 1 / 70", altEn: "A Family Day in Lyon — 1 / 70" },
       { src: "/stories/familles/familles-3/familles-3-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "En famille, dans Lyon — 2 / 70", altEn: "A Family Day in Lyon — 2 / 70" },
@@ -536,7 +536,7 @@ export const stories: Story[] = [
     description: { fr: "Dehors, dans les herbes hautes, sans rien de prévu.", en: "Outside, in the tall grass, with nothing planned." },
     date: "2022-04-19",
     location: "",
-    cover: "/stories/familles/familles-4/familles-4-42.jpg",
+    cover: "/stories/familles/familles-4/familles-4-35.jpg",
     images: [
       { src: "/stories/familles/familles-4/familles-4-01.jpg", width: 1501, height: 2200, orientation: "portrait", alt: "Au grand air — 1 / 82", altEn: "Out in the Open — 1 / 82" },
       { src: "/stories/familles/familles-4/familles-4-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Au grand air — 2 / 82", altEn: "Out in the Open — 2 / 82" },
@@ -631,7 +631,7 @@ export const stories: Story[] = [
     description: { fr: "Les semaines d'avant, chez soi, dans la lumière de l'après-midi.", en: "The weeks before, at home, in the afternoon light." },
     date: "2026-07-04",
     location: "",
-    cover: "/stories/grossesse/grossesse-1/grossesse-1-20.jpg",
+    cover: "/stories/grossesse/grossesse-1/grossesse-1-06.jpg",
     images: [
       { src: "/stories/grossesse/grossesse-1/grossesse-1-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "L'attente, à la maison — 1 / 39", altEn: "Waiting, at Home — 1 / 39" },
       { src: "/stories/grossesse/grossesse-1/grossesse-1-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "L'attente, à la maison — 2 / 39", altEn: "Waiting, at Home — 2 / 39" },
@@ -683,7 +683,7 @@ export const stories: Story[] = [
     description: { fr: "L'attente portée dehors, entre les pierres et les colonnes.", en: "The wait carried outdoors, among stone and columns." },
     date: "2026-05-03",
     location: "",
-    cover: "/stories/grossesse/grossesse-2/grossesse-2-38.jpg",
+    cover: "/stories/grossesse/grossesse-2/grossesse-2-23.jpg",
     images: [
       { src: "/stories/grossesse/grossesse-2/grossesse-2-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "L'attente, en ville — 1 / 39", altEn: "Waiting, in the City — 1 / 39" },
       { src: "/stories/grossesse/grossesse-2/grossesse-2-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "L'attente, en ville — 2 / 39", altEn: "Waiting, in the City — 2 / 39" },
@@ -735,7 +735,7 @@ export const stories: Story[] = [
     description: { fr: "Une journée en noir et blanc, entre pierre et jardins.", en: "A day in black and white, between stone and gardens." },
     date: "2026-06-16",
     location: "",
-    cover: "/stories/mariages/mariages-1/mariages-1-12.jpg",
+    cover: "/stories/mariages/mariages-1/mariages-1-15.jpg",
     images: [
       { src: "/stories/mariages/mariages-1/mariages-1-01.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Mariage au château — 1 / 23", altEn: "A Chateau Wedding — 1 / 23" },
       { src: "/stories/mariages/mariages-1/mariages-1-02.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Mariage au château — 2 / 23", altEn: "A Chateau Wedding — 2 / 23" },
@@ -771,7 +771,7 @@ export const stories: Story[] = [
     description: { fr: "De l'église à la piste de danse, la journée racontée d'un bout à l'autre.", en: "From the church to the dance floor, the day told end to end." },
     date: "2025-09-06",
     location: "",
-    cover: "/stories/mariages/mariages-2/mariages-2-28.jpg",
+    cover: "/stories/mariages/mariages-2/mariages-2-80.jpg",
     images: [
       { src: "/stories/mariages/mariages-2/mariages-2-01.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Une journée entière — 1 / 105", altEn: "The Whole Day — 1 / 105" },
       { src: "/stories/mariages/mariages-2/mariages-2-02.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Une journée entière — 2 / 105", altEn: "The Whole Day — 2 / 105" },
@@ -889,7 +889,7 @@ export const stories: Story[] = [
     description: { fr: "Pierre chaude, oliviers et lavande, jusqu'à la lumière du soir.", en: "Warm stone, olive trees and lavender, into the evening light." },
     date: "2025-06-23",
     location: "",
-    cover: "/stories/mariages/mariages-3/mariages-3-63.jpg",
+    cover: "/stories/mariages/mariages-3/mariages-3-51.jpg",
     images: [
       { src: "/stories/mariages/mariages-3/mariages-3-01.jpg", width: 2200, height: 1426, orientation: "landscape", alt: "Un mariage d'été — 1 / 85", altEn: "A Summer Wedding — 1 / 85" },
       { src: "/stories/mariages/mariages-3/mariages-3-02.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Un mariage d'été — 2 / 85", altEn: "A Summer Wedding — 2 / 85" },
@@ -987,7 +987,7 @@ export const stories: Story[] = [
     description: { fr: "Une célébration qui a duré deux jours, de la chapelle à la nuit.", en: "A celebration that ran for two days, from the chapel into the night." },
     date: "2019-11-18",
     location: "",
-    cover: "/stories/mariages/mariages-4/mariages-4-39.jpg",
+    cover: "/stories/mariages/mariages-4/mariages-4-66.jpg",
     images: [
       { src: "/stories/mariages/mariages-4/mariages-4-01.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Deux jours de fête — 1 / 77", altEn: "A Two-Day Celebration — 1 / 77" },
       { src: "/stories/mariages/mariages-4/mariages-4-02.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Deux jours de fête — 2 / 77", altEn: "A Two-Day Celebration — 2 / 77" },
