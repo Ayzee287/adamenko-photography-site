@@ -21,7 +21,6 @@ const occasionLabels: Record<ContactOccasion, string> = {
   Famille: "Family",
   Grossesse: "Maternity",
   Couple: "Couple",
-  Portrait: "Portrait",
   Mariage: "Wedding",
 };
 // Gallery text overlay — AUTO-GENERATED from curation/collections.txt by
@@ -44,7 +43,7 @@ const enFeatured = frFeatured.map((img, i) => ({ ...img, alt: enFeaturedAlts[i] 
 export const en: DeepPartial<Dictionary> = {
   site: {
     tagline:
-      "Family, portrait, maternity, couple and wedding photographer, in Lyon and beyond.",
+      "Family, maternity, couple and wedding photographer, in Lyon and beyond.",
     // Hrefs stay canonical (French paths); the chrome prefixes them per locale.
     nav: [
       { href: "/galeries", label: "Galleries" },
@@ -159,6 +158,7 @@ export const en: DeepPartial<Dictionary> = {
       language: "Language",
       instagram: "Instagram",
       facebook: "Facebook",
+      email: "Send an email",
       backToTop: "Back to top",
     },
     gallery: {
@@ -293,14 +293,6 @@ export const en: DeepPartial<Dictionary> = {
           src: "/galleries/mariages/mariages-a00.jpg",
           alt: "The newlyweds facing the sea, she in lace, he in a white tuxedo.",
         },
-        {
-          slug: "portraits",
-          title: "Portraits",
-          cta: "View the gallery",
-          caption: "A simple, honest portrait, in daylight.",
-          src: "/galleries/portraits/portraits-a00.jpg",
-          alt: "Portrait of a young woman in lace, soft window light.",
-        },
       ],
       cta: { label: "View all galleries", href: "/galeries" },
     },
@@ -368,7 +360,7 @@ export const en: DeepPartial<Dictionary> = {
     overviewCta: { label: "See the pricing", href: "/tarifs" },
     sessions: {
       eyebrow: "Sessions",
-      title: "Family, maternity & portrait.",
+      title: "Family, maternity & couple.",
       intro:
         "Three separate sessions, all at the same rate. We settle the place and the pace together: at home, outdoors, wherever you feel most at ease.",
       durationLabel: "Duration",
@@ -539,21 +531,6 @@ export const en: DeepPartial<Dictionary> = {
         idealFor:
           "Civil weddings, secular ceremonies, elopements and intimate celebrations.",
       },
-      {
-        slug: "portraits",
-        title: "Portrait",
-        tagline: "A simple portrait, in daylight.",
-        description: [
-          "A candid portrait, without artifice: a conversation more than a pose. We look for your most natural expression, in daylight.",
-          "For personal or professional use, in colour or black and white.",
-        ],
-        approach: [
-          "In an improvised studio, at home or outdoors",
-          "Putting you at ease, above all",
-          "Black and white or colour, depending on the intention",
-        ],
-        idealFor: "Personal, artistic or professional portraits.",
-      },
     ],
   },
 
@@ -649,7 +626,7 @@ export const en: DeepPartial<Dictionary> = {
 
   photographer: {
     // Name / legal name / brand / location label are proper nouns — kept as French.
-    specialties: ["Family", "Maternity", "Couple", "Portrait", "Wedding"],
+    specialties: ["Family", "Maternity", "Couple", "Wedding"],
     biography: [
       "I'm Irina, a family and maternity photographer in Lyon. I also photograph weddings, throughout France.",
       "I'm Ukrainian; I settled in Lyon with my family. A lawyer by training, I came to photography almost by chance, and then I couldn't do without it.",

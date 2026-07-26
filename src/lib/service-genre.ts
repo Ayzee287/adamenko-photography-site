@@ -10,7 +10,6 @@ export const serviceForGenre: Record<GenreSlug, ServiceSlug> = {
   couples: "couple",
   grossesse: "grossesse",
   mariages: "mariage",
-  portraits: "portrait",
 };
 
 export const genreForService: Record<ServiceSlug, GenreSlug> = {
@@ -18,5 +17,4 @@ export const genreForService: Record<ServiceSlug, GenreSlug> = {
   couple: "couples",
   grossesse: "grossesse",
   mariage: "mariages",
-  portrait: "portraits",
 };

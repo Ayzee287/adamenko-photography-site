@@ -83,49 +83,70 @@ export default async function GenrePage({
         mark="§ Série"
       />
 
-      {/* Stories, when this category has any. They are hung ABOVE the genre wall and
-          carry only their covers — entering a category must never download every story
-          it contains. Each cover is a door to that shoot's own exhibition. */}
+      {/* A category is an INDEX OF ITS SHOOTS, not a wall of photographs.
+          Now that the categories hold real days — several of them over 100 frames — opening
+          one can no longer mean "here are 300 pictures". It means "here are the days", and
+          each door opens that day's own exhibition. The index carries covers ONLY, so
+          entering a category costs four images rather than four hundred.
+          The loose genre wall below is the fallback for a category that has no stories yet. */}
       {stories.length > 0 && (
         <section className="ch-movement ch-wrap">
-          {/* The index composes to its OWN count rather than dropping every count into a
-              three-column grid — one story in a 3-col grid is a plate beside two dead
-              columns. One story hangs full-bleed and cinematic, two share the wall, three
-              or more become the grid. Same failure the galleries index already avoids
-              with its featured-plus-supporting hang. */}
-          <div className="ch-story-index" data-count={stories.length >= 3 ? "many" : stories.length}>
-            {stories.map((s, i) => {
-              const when = storyDateLabel(s, active);
-              const lone = stories.length === 1;
-              return (
-                <Develop key={s.id} delay={(i % 3) * 70}>
-                  <Plate
-                    href={link(active, {
-                      page: "genreStory",
-                      genre: genre as GenreSlug,
-                      story: s.slug,
-                    })}
-                    src={s.cover}
-                    alt={storyTitle(s, active)}
-                    ratio={lone ? "cine" : "frame"}
-                    plaque={when || undefined}
-                    caption={storyTitle(s, active)}
-                    sizes={
-                      lone
-                        ? "(min-width: 82rem) 1312px, 100vw"
-                        : stories.length === 2
-                          ? "(min-width: 40rem) 46vw, 92vw"
-                          : "(min-width: 64rem) 31vw, (min-width: 40rem) 46vw, 92vw"
-                    }
-                  />
-                </Develop>
-              );
-            })}
-          </div>
+          {(() => {
+            // The index composes to its OWN count. Dropping every count into one grid is
+            // what produces orphans — a single story beside two dead columns, or a fourth
+            // stranded alone under a row of three.
+            //
+            //   1  a full-bleed cinematic plate
+            //   2  two across
+            //   3  three across
+            //   4  a lead plate over a strip of three  (the /galeries hang, which composes
+            //      four cleanly and gives the most recent day the weight it deserves)
+            //
+            // Stories arrive newest-first, so the lead plate is the latest shoot.
+            const n = stories.length;
+            const lead = n === 1 || n === 4 ? stories[0] : null;
+            const strip = lead ? stories.slice(1) : stories;
+            const stripCount = strip.length;
+
+            const plate = (s: (typeof stories)[number], isLead: boolean, i: number) => (
+              <Develop key={s.id} delay={isLead ? 0 : (i % 3) * 70}>
+                <Plate
+                  href={link(active, {
+                    page: "genreStory",
+                    genre: genre as GenreSlug,
+                    story: s.slug,
+                  })}
+                  src={s.cover}
+                  alt={storyTitle(s, active)}
+                  ratio={isLead ? "cine" : "frame"}
+                  plaque={storyDateLabel(s, active) || undefined}
+                  caption={storyTitle(s, active)}
+                  sizes={
+                    isLead
+                      ? "(min-width: 82rem) 1312px, 100vw"
+                      : stripCount === 2
+                        ? "(min-width: 40rem) 46vw, 92vw"
+                        : "(min-width: 64rem) 31vw, (min-width: 40rem) 46vw, 92vw"
+                  }
+                />
+              </Develop>
+            );
+
+            return (
+              <div className="ch-story-wall">
+                {lead && plate(lead, true, 0)}
+                {stripCount > 0 && (
+                  <div className="ch-story-index" data-count={Math.min(stripCount, 3)}>
+                    {strip.map((s, i) => plate(s, false, i))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </section>
       )}
 
-      {items.length > 0 && (
+      {stories.length === 0 && items.length > 0 && (
         <section className="ch-movement">
           <Exhibition items={items} serie={gallery.title} labels={labels} />
         </section>

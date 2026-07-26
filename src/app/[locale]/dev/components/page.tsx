@@ -268,7 +268,7 @@ export default function ComponentsGallery() {
             priceIntro="à partir de"
             priceFrom={290}
             locale="fr"
-            description="Famille, grossesse, couple ou portrait, chez vous ou en extérieur."
+            description="Famille, grossesse ou couple, chez vous ou en extérieur."
             inclusions={[
               "1 à 2 heures, un lieu",
               "Préparation et repérage ensemble",
@@ -365,7 +365,6 @@ export default function ComponentsGallery() {
               { value: "grossesse", label: "Grossesse" },
               { value: "couple", label: "Couple" },
               { value: "mariage", label: "Mariage" },
-              { value: "portrait", label: "Portrait" },
             ]}
             prefilledSessionType="grossesse"
             origin="/dev/components"
@@ -399,7 +398,7 @@ export default function ComponentsGallery() {
               priceIntro="à partir de"
               priceFrom={290}
               locale="fr"
-              description="Famille, grossesse, couple ou portrait."
+              description="Famille, grossesse ou couple."
               inclusions={["1 à 2 heures, un lieu", "Galerie privée en ligne", "Photographies retouchées"]}
             />,
           ]}

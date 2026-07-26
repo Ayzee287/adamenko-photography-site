@@ -19,11 +19,26 @@ const ROOT = process.cwd();
 const PUBLIC_DIR = path.join(ROOT, "public");
 const OUT_FILE = path.join(ROOT, "src", "lib", "image-blur.ts");
 
-/** All JPEG files under `dir`, recursively. */
+// Story frames are deliberately EXCLUDED from the blur map.
+//
+// This map is imported by the lightbox, which is a client component, so every entry ships
+// in the JS bundle. Measured with the real portfolio: including the ~890 story frames took
+// image-blur.ts from 25 KB to 538 KB of inline base64 — half a megabyte of client JavaScript
+// to soften the arrival of images that are lazy-loaded anyway, inside an Exhibition that
+// already reserves each frame's exact box (CLS 0) and reveals it out of the dark.
+//
+// The curated surfaces that DO get a placeholder are the ones a visitor meets immediately:
+// gallery covers, the homepage, the about portrait. next/image simply omits the placeholder
+// when a key is missing, so exclusion degrades gracefully.
+const EXCLUDED = /^(stories|stories-draft)\//;
+
+/** All JPEG files under `dir`, recursively, minus the excluded roots. */
 async function collectJpegs(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
+    const rel = path.relative(PUBLIC_DIR, p).split(path.sep).join("/");
+    if (EXCLUDED.test(rel)) continue;
     if (entry.isDirectory()) out.push(...(await collectJpegs(p)));
     else if (/\.jpe?g$/i.test(entry.name)) out.push(p);
   }

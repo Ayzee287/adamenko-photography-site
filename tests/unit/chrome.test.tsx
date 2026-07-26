@@ -256,10 +256,18 @@ describe("Footer", () => {
       a.getAttribute("href"),
     );
     expect(legalHrefs).toEqual(["/mentions-legales", "/confidentialite"]);
-    // The email is a deliberate action: the address sits in a <span> inside the mailto <a>.
-    expect(
-      screen.getByText("adamenkoiu@gmail.com").closest("a")?.getAttribute("href"),
-    ).toBe("mailto:adamenkoiu@gmail.com");
+    // Instagram · Facebook · Email are ONE contact group of icon-only controls. The address
+    // is deliberately not printed here (it split the group in two and read as a caption);
+    // it still lives on the contact page. Icon-only means the accessible name is load-bearing,
+    // so each control is found BY that name, not by a visible string.
+    const email = screen.getByRole("link", { name: "Envoyer un e-mail" });
+    expect(email.getAttribute("href")).toBe("mailto:adamenkoiu@gmail.com");
+    // a mailto hands off to a mail client — a new tab would strand a blank window
+    expect(email.getAttribute("target")).toBeNull();
+    expect(footer.textContent).not.toContain("adamenkoiu@gmail.com");
+    for (const name of ["Instagram", "Facebook"]) {
+      expect(screen.getByRole("link", { name })).toBeTruthy();
+    }
   });
 });
 

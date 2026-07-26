@@ -9,9 +9,26 @@
 
 import { expect, test, type Page } from "@playwright/test";
 
-const GENRES = ["familles", "grossesse", "couples", "portraits", "mariages"] as const;
+// The wall now lives on STORY pages: a category page became an index of shoots, so it
+// hangs covers rather than an exhibition. These invariants follow the wall to where it is.
+// One story per category keeps the matrix meaningful without re-testing 890 frames.
+import { stories } from "../../src/content/stories.generated";
 
-/** Scroll the whole wall so every tile has developed and settled at its final size. */
+const WALLS = ["familles", "grossesse", "couples", "mariages"]
+  .map((c) => stories.find((s) => s.category === c && s.visibility === "portfolio"))
+  .filter((s): s is NonNullable<typeof s> => Boolean(s))
+  .map((s) => ({ name: s.id, url: `/galeries/${s.category}/${s.slug}` }));
+
+/**
+ * Scroll the whole wall, then wait for the layout to actually STOP MOVING.
+ *
+ * The row solver runs from a ResizeObserver, so scrolling (which can show or hide a
+ * scrollbar, changing the container width by a few pixels) can schedule one more pass.
+ * Sampling geometry immediately after the scroll therefore reads a frame mid-relayout —
+ * which showed up as tests failing on a different story on each parallel run and never
+ * twice on the same one. Waiting for two identical consecutive measurements asserts the
+ * settled wall, which is the thing the invariants are actually about.
+ */
 async function settle(page: Page) {
   await page.waitForSelector(".ex-row .ex-tile");
   await page.evaluate(async () => {
@@ -21,7 +38,22 @@ async function settle(page: Page) {
       await new Promise((r) => setTimeout(r, 80));
     }
     window.scrollTo(0, 0);
-    await new Promise((r) => setTimeout(r, 200));
+
+    const measure = () =>
+      [...document.querySelectorAll(".ex-tile")]
+        .map((t) => {
+          const b = t.getBoundingClientRect();
+          return `${Math.round(b.width)}x${Math.round(b.height)}`;
+        })
+        .join(",");
+
+    let previous = "";
+    for (let i = 0; i < 40; i++) {
+      await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 50)));
+      const now = measure();
+      if (now === previous && now !== "") return;
+      previous = now;
+    }
   });
 }
 
@@ -43,30 +75,45 @@ async function tiles(page: Page): Promise<Tile[]> {
   );
 }
 
-for (const genre of GENRES) {
+for (const { name: genre, url: wallUrl } of WALLS) {
   test(`${genre}: no row collapses far below its neighbours`, async ({ page }) => {
-    await page.goto(`/galeries/${genre}`);
+    await page.goto(wallUrl);
     await settle(page);
     const all = await tiles(page);
     expect(all.length).toBeGreaterThan(0);
 
     // The defect this guards: a greedy row break that overshoots leaves one row a fraction of
     // the height of the rest. Compare the shortest row against the median row height.
-    const heights = all.map((t) => t.h).sort((a, b) => a - b);
-    const median = heights[Math.floor(heights.length / 2)];
-    expect(heights[0], `shortest tile ${heights[0]}px vs median ${median}px`).toBeGreaterThan(
-      median * 0.5,
-    );
+    // Polled for the same reason as the width check: read the settled wall, not a frame of
+    // it mid-relayout.
+    await expect
+      .poll(
+        async () => {
+          const hs = (await tiles(page)).map((t) => t.h).sort((a, b) => a - b);
+          return hs[0] / hs[Math.floor(hs.length / 2)];
+        },
+        { message: "a row collapsed far below the median row height", timeout: 5000 },
+      )
+      .toBeGreaterThan(0.5);
+    expect(all.length).toBeGreaterThan(0);
   });
 
   test(`${genre}: every frame is legible and uncropped`, async ({ page }) => {
-    await page.goto(`/galeries/${genre}`);
+    await page.goto(wallUrl);
     await settle(page);
-    const all = await tiles(page);
 
+    // Polled: the narrowest frame is read from a live layout, and a relayout landing between
+    // the scroll and the read would otherwise fail a wall that is correct once settled.
+    // A frame small enough to be a thumbnail is never the right answer on a photography wall.
+    await expect
+      .poll(
+        async () => Math.min(...(await tiles(page)).map((t) => t.w)),
+        { message: "narrowest frame is a postage stamp", timeout: 5000 },
+      )
+      .toBeGreaterThanOrEqual(150);
+
+    const all = await tiles(page);
     for (const t of all) {
-      // A frame small enough to be a thumbnail is never the right answer on a photography wall.
-      expect(t.w, `tile ${t.w}x${t.h} is a postage stamp`).toBeGreaterThanOrEqual(150);
       // The wall hangs true aspect ratios; object-cover would silently crop a mismatch.
       expect(t.ar).toBeGreaterThan(0.3);
       expect(t.ar).toBeLessThan(3.5);
@@ -74,16 +121,23 @@ for (const genre of GENRES) {
   });
 
   test(`${genre}: the wall never overflows its viewport`, async ({ page }) => {
-    await page.goto(`/galeries/${genre}`);
+    await page.goto(wallUrl);
     await settle(page);
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - window.innerWidth,
-    );
-    expect(overflow, "horizontal overflow").toBeLessThanOrEqual(0);
+    // The invariant is "the wall does not overflow AT REST". Sampling once can catch the
+    // instant between a ResizeObserver relayout and the row solver's next pass, where a
+    // sub-pixel width briefly exceeds the container — polling asserts the settled state
+    // instead of racing it. (Confirmed a race, not an overflow: it failed on a different
+    // story on each parallel run and never twice on the same one.)
+    await expect
+      .poll(
+        () => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth),
+        { message: "horizontal overflow at rest", timeout: 5000 },
+      )
+      .toBeLessThanOrEqual(0);
   });
 
   test(`${genre}: delivery is declared at the size actually painted`, async ({ page }) => {
-    await page.goto(`/galeries/${genre}`);
+    await page.goto(wallUrl);
     await settle(page);
     const all = await tiles(page);
 
@@ -100,7 +154,7 @@ for (const genre of GENRES) {
 test("the lightbox opens, navigates by keyboard, and returns focus to its frame", async ({
   page,
 }) => {
-  await page.goto("/galeries/mariages");
+  await page.goto(WALLS[WALLS.length - 1].url);
   await settle(page);
 
   const third = page.locator(".ex-tile").nth(2);
@@ -124,7 +178,7 @@ test("the lightbox opens, navigates by keyboard, and returns focus to its frame"
 });
 
 test("lightbox controls meet the 44px touch target on every viewport", async ({ page }) => {
-  await page.goto("/galeries/mariages");
+  await page.goto(WALLS[WALLS.length - 1].url);
   await settle(page);
   await page.locator(".ex-tile").first().click();
   await expect(page.locator("dialog.lb")).toBeVisible();

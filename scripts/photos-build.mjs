@@ -26,7 +26,7 @@ const LONG_EDGE = 2200; // web master; next/image derives the responsive set fro
 const QUALITY = 82;
 const checkOnly = process.argv.includes("--check");
 
-const ORDER = ["familles", "grossesse", "couples", "portraits", "mariages"];
+const ORDER = ["familles", "grossesse", "couples", "mariages"];
 
 // ── parse ─────────────────────────────────────────────────────────────────────────
 if (!existsSync(SHEET)) {
@@ -172,7 +172,7 @@ for (const slug of ORDER) {
   body += g.images.map((o) => imgLit(o, "      ")).join("\n") + "\n    ],\n  },\n";
 }
 
-const feat = [built.mariages.cover, built.familles.images[6], built.grossesse.cover, built.couples.images[6], built.portraits.images[0], built.mariages.images[6]].filter(Boolean);
+const feat = [built.mariages.cover, built.familles.images[6], built.grossesse.cover, built.couples.images[6], built.mariages.images[6]].filter(Boolean);
 
 writeFileSync(
   path.resolve("src/content/galleries.ts"),
