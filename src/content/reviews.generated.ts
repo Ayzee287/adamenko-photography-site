@@ -7,7 +7,7 @@
 import type { GoogleReview, GoogleRatingSummary, GoogleProfileLinks } from "@/types/reviews";
 
 /** Aggregate profile rating at the last sync, or null before the first sync. */
-export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 5 };
+export const googleRating: GoogleRatingSummary | null = { rating: 5, count: 4 };
 
 /** Official Google Maps deep-links for the profile, or null before the first sync. */
 export const googleProfile: GoogleProfileLinks | null = {
@@ -53,12 +53,5 @@ export const googleReviews: GoogleReview[] = [
     originalLanguage: "fr",
     translations: {"en":"The photoshoot with Irina was simply exceptional! She made us feel comfortable and guided us perfectly. The photos are stunning. We highly recommend her. Thank you so much!"},
     publishTime: "2026-06-30T21:38:07.908150483Z",
-  },
-  {
-    id: "places/ChIJf1b8fdnMDiMRSk52HrLiTVw/reviews/Ci9DQUlRQUNvZENodHljRjlvT2pWdVFYSXlTa1ZCZUUxWGQxazBiSHB2TnpsTlltYxAB",
-    author: "Sergey Adamenko",
-    rating: 5,
-    originalText: "",
-    publishTime: "2026-06-30T21:10:52.554073186Z",
   },
 ];
