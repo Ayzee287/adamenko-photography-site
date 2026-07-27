@@ -173,10 +173,14 @@ export function buildOwnerNotification(
   const eOccasion = escapeHtml(occasion);
   const eMessage = escapeHtml(message).replace(/\r?\n/g, "<br>");
 
+  // Both cells top-align. On a phone the declared 130px label column collapses (measured:
+  // 71px — a long email address wins the auto table layout), so labels like "Vous a trouvée
+  // via" wrap to two lines. A `middle`-aligned value then floats between them instead of
+  // sitting beside the label's first line.
   const row = (label: string, value: string) => `
                   <tr>
                     <td style="padding:7px 0;font-size:12px;letter-spacing:0.04em;color:${COLOR.muted};width:130px;vertical-align:top;">${label}</td>
-                    <td style="padding:7px 0;font-size:15px;line-height:1.5;color:${COLOR.ink};">${value}</td>
+                    <td style="padding:7px 0;font-size:15px;line-height:1.5;color:${COLOR.ink};vertical-align:top;">${value}</td>
                   </tr>`;
   const optRow = (label: string, value: string) =>
     value ? row(label, escapeHtml(value)) : "";
