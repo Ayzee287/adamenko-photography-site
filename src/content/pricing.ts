@@ -165,11 +165,11 @@ export const pricing = {
     eyebrow: "Options",
     title: "Pour aller plus loin.",
     items: [
-      { title: "Heures supplémentaires", body: "Plus de temps ensemble, pour ne rien précipiter." },
-      { title: "Lieux additionnels", body: "Un second décor qui compte pour vous." },
-      { title: "Séance d'engagement", body: "Une séance à deux avant le mariage, pour être à l'aise le jour J." },
-      { title: "Livraison express", body: "Vos images en priorité, sous quelques jours." },
-      { title: "Sur mesure", body: "Une idée particulière ? Parlons-en, on s'adapte." },
+      { id: "heures", title: "Heures supplémentaires", body: "Plus de temps ensemble, pour ne rien précipiter." },
+      { id: "lieux", title: "Lieux additionnels", body: "Un second décor qui compte pour vous." },
+      { id: "engagement", title: "Séance d'engagement", body: "Une séance à deux avant le mariage, pour être à l'aise le jour J." },
+      { id: "express", title: "Livraison express", body: "Vos images en priorité, sous quelques jours." },
+      { id: "sur-mesure", title: "Sur mesure", body: "Une idée particulière ? Parlons-en, on s'adapte." },
     ],
   },
 } as const;

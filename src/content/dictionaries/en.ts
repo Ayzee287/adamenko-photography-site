@@ -460,12 +460,90 @@ export const en: DeepPartial<Dictionary> = {
       eyebrow: "Options",
       title: "To go further.",
       items: [
-        { title: "Extra hours", body: "More time together, so nothing feels rushed." },
-        { title: "Additional locations", body: "A second setting that means something to you." },
-        { title: "Engagement session", body: "A shoot for two before the wedding, so you're at ease on the day." },
-        { title: "Express delivery", body: "Your images first, within a few days." },
-        { title: "Bespoke", body: "Something particular in mind? Let's talk, I'll adapt." },
+        { id: "heures", title: "Extra hours", body: "More time together, so nothing feels rushed." },
+        { id: "lieux", title: "Additional locations", body: "A second setting that means something to you." },
+        { id: "engagement", title: "Engagement session", body: "A shoot for two before the wedding, so you're at ease on the day." },
+        { id: "express", title: "Express delivery", body: "Your images first, within a few days." },
+        { id: "sur-mesure", title: "Bespoke", body: "Something particular in mind? Let's talk, I'll adapt." },
       ],
+    },
+  },
+
+  // The dossier's connective tissue. MUST be overridden in full: the dictionary deep-merges
+  // over French, so any key left out here would render French on an English page. Nothing
+  // factual lives in it — prices, coverage, questions and shoots are read from the modules
+  // that own them and localise through their own entries.
+  serviceDossier: {
+    work: {
+      eyebrow: "The work",
+      title: "Recent sessions.",
+      lead: "Every session has its own page — the photographs, in the order they were made.",
+      weddingTitle: "Recent weddings.",
+      weddingLead:
+        "Every wedding has its own page — the day told in order, from the preparations to the celebration.",
+      all: "See the whole gallery",
+    },
+    included: {
+      eyebrow: "What's included",
+      title: "What the session includes.",
+      weddingTitle: "The three packages.",
+      weddingLead: "Three clear packages, each photographed as a reportage.",
+      allPricing: "See all the rates",
+    },
+    process: { eyebrow: "How it runs", title: "How it goes." },
+    coverage: { eyebrow: "Where", title: "Where I photograph." },
+    questions: {
+      eyebrow: "Questions",
+      title: "What people ask me.",
+      all: "All the questions",
+    },
+    steps: {
+      shared: [
+        {
+          n: "01",
+          title: "We talk",
+          body:
+            "You write to me with the date, the place and what you have in mind. We talk it through, I send you a tailored quote, and the date is held once you book.",
+        },
+        {
+          n: "02",
+          title: "We prepare",
+          body:
+            "I send you a few simple tips beforehand — what to wear, the place, the time of day. Nothing complicated: mostly it's about being yourselves.",
+        },
+      ],
+      daySession: "The session",
+      dayWedding: "The day itself",
+      onTheDay: {
+        familles:
+          "An hour together, at your home or outdoors. I stay in the background and let you be a family; children forget the camera very quickly.",
+        grossesse:
+          "An hour, at your own pace, at home or outdoors. We take our time; nothing is rushed, and we stop whenever you'd like.",
+        couples:
+          "An hour outdoors, often late in the day for the light. We walk, we talk: the right images arrive in the movement.",
+        mariages:
+          "From three to ten hours depending on the package, from the preparations to the celebration. I'm there, attentive, without interrupting what unfolds.",
+      },
+      delivery: {
+        n: "04",
+        title: "You receive your photographs",
+        body:
+          "A quick preview, then the full private gallery in high resolution within a few weeks, depending on the season. You download your images and keep them for good.",
+      },
+    },
+    // Ids, not text — identical in both locales by design, and the labels they resolve to
+    // are already translated in their own modules.
+    addons: {
+      familles: ["heures", "lieux", "express"],
+      grossesse: ["heures", "lieux", "express"],
+      couples: ["heures", "lieux", "engagement"],
+      mariages: [],
+    },
+    faq: {
+      familles: ["confiance", "style", "poses", "delai-reservation"],
+      grossesse: ["confiance", "style", "poses", "delai-reservation"],
+      couples: ["confiance", "style", "poses", "delai-reservation"],
+      mariages: ["confiance", "style", "poses", "deplacement"],
     },
   },
 
@@ -586,51 +664,61 @@ export const en: DeepPartial<Dictionary> = {
       "A few answers to help you plan. Another question? Write to me, I'm always happy to reply.",
     items: [
       {
+        id: "reserver",
         category: "reservation",
         q: "How do I book a session?",
         a: "Write to me through the contact form with the date, the place and what you have in mind. We talk it through, then I send you a tailored quote; the date is held once you book.",
       },
       {
+        id: "delai-reservation",
         category: "reservation",
         q: "How far in advance should I book?",
         a: "For a session, a few weeks is usually enough. For a wedding, it's best to plan several months ahead, especially in high season.",
       },
       {
+        id: "confiance",
         category: "approche",
         q: "What if we're not comfortable in front of the camera?",
         a: "That's true of almost everyone, and putting you at ease is my job. We move gently, without stiff poses; the real images arrive once you forget the camera.",
       },
       {
+        id: "style",
         category: "approche",
         q: "What is your photography style?",
         a: "A documentary approach, in natural light: I favour real moments and honest interactions over perfect poses. I work in colour as readily as in black and white.",
       },
       {
+        id: "poses",
         category: "approche",
         q: "Do you take posed photos?",
         a: "Very few, and always gently. A few posed portraits are possible (the two of you at a wedding, for instance), but the heart of it stays the moments as they happen.",
       },
       {
+        id: "lieux",
         category: "seance",
         q: "Where do the sessions take place?",
         a: "At your home or outdoors, most often in and around Lyon, but elsewhere too depending on your project. For weddings, I travel throughout France.",
       },
       {
+        id: "preparation",
         category: "seance",
         q: "What should we prepare for the session?",
         a: "Mostly, just be yourselves. I send you a few simple tips beforehand (what to wear, the place, the time of day); nothing complicated.",
       },
       {
+        id: "delai-livraison",
         category: "livraison",
         q: "When do we receive the photos?",
         a: "You get a quick preview, then the full gallery within a few weeks, depending on the season. Express delivery is available as an option.",
       },
       {
+        id: "livraison",
         category: "livraison",
         q: "How are the photos delivered?",
         a: "In a private online gallery, in high resolution. You download your photos and keep them for good.",
       },
       {
+        id: "deplacement",
         category: "deplacement",
         q: "Do you travel for weddings?",
         a: "Yes, throughout France. I'm based in Lyon; for weddings, travel costs are agreed together, transparently.",
