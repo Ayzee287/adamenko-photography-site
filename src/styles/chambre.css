@@ -1052,7 +1052,17 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   line-height: 1.4;
   color: var(--content-primary);
 }
-.ch-offer-cta { margin-top: auto; padding-top: 0.4rem; }
+/* The card's exits. Was a single link; a price card now offers both the work and the
+   offer, so this is a stack rather than one anchor. Left-aligned because `.ch-go` is an
+   inline-flex affordance and a flex child would otherwise stretch the full column. */
+.ch-offer-cta {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
 
 /* wedding spec (coverage · photos · delivery) — a labelled micro-table */
 .ch-package-spec { margin: 0; display: flex; flex-direction: column; gap: 0.7rem; }

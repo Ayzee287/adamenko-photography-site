@@ -149,6 +149,7 @@ export const en: DeepPartial<Dictionary> = {
       manifesto: "Manifesto",
     },
     nav: {
+      home: "Home",
       primary: "Main navigation",
       footer: "Footer",
       legal: "Legal links",
@@ -476,8 +477,12 @@ export const en: DeepPartial<Dictionary> = {
     items: [
       {
         slug: "familles",
-        title: "Family",
+        title: "Family photographer in Lyon",
+        linkLabel: "The family session",
+        shortTitle: "Family",
         tagline: "Your everyday life, just as it is.",
+        metaDescription:
+          "Family photography in Lyon, at home or outdoors: one hour, €220. A documentary approach in natural light, with no stiff poses.",
         description: [
           "A family session isn't a session of poses. We meet at your home or outdoors, and I let you simply be together: the games, the cuddles, the tender mess of everyday life.",
           "I work quietly, in daylight, so the children forget the camera and the real interactions return on their own.",
@@ -492,8 +497,15 @@ export const en: DeepPartial<Dictionary> = {
       },
       {
         slug: "couples",
-        title: "Couple",
+        // "Couples photographer" is the idiomatic English form of this search, where the
+        // French says "photographe de couple" — the EN copy follows English usage rather
+        // than mirroring the French word for word.
+        title: "Couples photographer in Lyon",
+        linkLabel: "The couple session",
+        shortTitle: "Couple",
         tagline: "The two of you, at ease.",
+        metaDescription:
+          "Couple photography in Lyon, outdoors: one hour, €220. Movement and closeness rather than the pose, often late in the day for the light.",
         description: [
           "No stiff poses or forced looks at the lens. We walk, we talk, I let you find each other again. That's where the right images arrive, in the movement.",
           "A couple session is also a good way to feel at ease before a wedding, if that's what lies ahead.",
@@ -507,8 +519,12 @@ export const en: DeepPartial<Dictionary> = {
       },
       {
         slug: "grossesse",
-        title: "Maternity",
+        title: "Maternity photographer in Lyon",
+        linkLabel: "The maternity session",
+        shortTitle: "Maternity",
         tagline: "The weeks before the birth.",
+        metaDescription:
+          "Maternity photography in Lyon, at home or outdoors: one hour, €220. An unhurried pace, in natural light — gentle and modest.",
         description: [
           "A gentle, modest maternity session, by a window's light or outdoors. We take our time; nothing is rushed.",
           "The idea isn't to stage anything, but to keep an honest trace of this time: on your own, as a couple, or with the older ones.",
@@ -522,8 +538,12 @@ export const en: DeepPartial<Dictionary> = {
       },
       {
         slug: "mariages",
-        title: "Wedding",
+        title: "Wedding photographer in Lyon",
+        linkLabel: "Wedding coverage",
+        shortTitle: "Wedding",
         tagline: "Your day, told the way you lived it.",
+        metaDescription:
+          "Documentary wedding reportage, from the preparations to the celebration. Based in Lyon, photographing weddings throughout France. Packages from €650.",
         description: [
           "I approach a wedding like a reportage: I'm there, attentive, telling the thread of the day from the preparations to the celebration, without interrupting what unfolds.",
           "A few posed portraits of the two of you if you'd like, but the heart of it is in the real moments, in natural light as much as possible.",
@@ -650,6 +670,17 @@ export const en: DeepPartial<Dictionary> = {
   },
 
   galleries: enGalleries,
+  // MUST be overridden, not inherited: an unset key deep-merges to the French value, which
+  // would put "Photos de mariage" in the <title> of an English page. English keeps the same
+  // two-register split as the French — "… photography" is the work (the gallery), "…
+  // photographer in Lyon" is the hire (the dossier) — which is idiomatic English rather
+  // than a transposition of the French phrasing.
+  galleryMeta: {
+    familles: { metaTitle: "Family photography" },
+    grossesse: { metaTitle: "Maternity photography" },
+    couples: { metaTitle: "Couple photography" },
+    mariages: { metaTitle: "Wedding photography" },
+  },
   featured: enFeatured,
 
   legal: {

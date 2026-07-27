@@ -28,7 +28,10 @@ export async function generateMetadata({
   const item = getDictionary(active).services.items.find((it) => it.slug === genre);
   return buildMetadata({
     title: item?.title ?? "Prestation",
-    description: item?.tagline,
+    // The SERP promise, not the page lead: `tagline` is an editorial line for a reader
+    // who has already arrived, `metaDescription` states the offer for someone still
+    // choosing a result. Falls back to the tagline if a service ever lacks one.
+    description: item?.metaDescription ?? item?.tagline,
     path: `/prestations/${service}`,
     locale: active,
   });
@@ -91,9 +94,11 @@ export default async function ServicePage({
           <Develop>
             <Plate
               src={cover.src}
-              alt={`${item.title} — ${item.tagline}`}
+              alt={`${item.shortTitle} — ${item.tagline}`}
               ratio="cine"
-              plaque={item.title}
+              // The plaque is a caption on a photograph, so it takes the SHORT label.
+              // The heading above already carries the full "Photographe de … à Lyon".
+              plaque={item.shortTitle}
               priority
               sizes="(min-width: 82rem) 1312px, 100vw"
             />

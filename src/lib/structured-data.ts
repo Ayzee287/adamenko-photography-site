@@ -83,3 +83,41 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
 
   return business;
 }
+
+/** FAQPage for the questions actually rendered on /tarifs.
+ *
+ *  Sourced from the same `dict.faq` the accordion renders, so the markup can never
+ *  describe a question the visitor cannot see — which is precisely the condition
+ *  Google's FAQ guidelines impose. Emitted ONLY on the page that shows the FAQ;
+ *  duplicating it site-wide would mark up content that is not on the page. */
+export function faqPageJsonLd(locale: Locale = defaultLocale): JsonLdObject {
+  const { items } = getDictionary(locale).faq;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+/** BreadcrumbList for a nested page.
+ *
+ *  The hierarchy is already real — a story lives under its category, a dossier under
+ *  its section — so this only states in machine-readable form what the URL already
+ *  says. Positions are 1-based and the trail always starts at the localized home.
+ *  `url` values must be absolute for Google to resolve them. */
+export function breadcrumbJsonLd(trail: ReadonlyArray<{ name: string; path: string }>): JsonLdObject {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((crumb, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: crumb.name,
+      item: absoluteUrl(crumb.path),
+    })),
+  };
+}

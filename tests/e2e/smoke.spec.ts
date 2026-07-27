@@ -50,8 +50,12 @@ test("unknown dynamic slugs 404 (dynamicParams=false)", async ({ page }) => {
 test("service + gallery pages render for both locales through the proxy", async ({
   page,
 }) => {
+  // The dossier H1 names the service AND the city — it is the commercial landing page,
+  // and the bare noun it used to carry ("Famille") said nothing to a reader arriving from
+  // a search. The gallery H1 deliberately stays the plain genre noun: it sits under the
+  // Galeries chapter kicker, which supplies the context a <title> cannot.
   await page.goto("/prestations/famille");
-  await expect(page.locator("h1").first()).toHaveText("Famille");
+  await expect(page.locator("h1").first()).toHaveText("Photographe de famille à Lyon");
   await page.goto("/en/galleries/weddings");
   await expect(page.locator("h1").first()).toHaveText("Weddings");
 });
