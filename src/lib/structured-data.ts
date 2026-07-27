@@ -85,6 +85,31 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   return business;
 }
 
+/** WebSite for the domain root — how the site NAME is communicated to Google Search.
+ *
+ *  Google derives the site name shown above a search result from `WebSite` structured
+ *  data (developers.google.com/search/docs/appearance/site-names); without it the name
+ *  is inferred from the title and og:site_name. Both names here are already-public
+ *  brand facts from the content model — `brand` and `shortBrand` — so this states what
+ *  the site already says rather than asserting anything new.
+ *
+ *  Emitted at the DOMAIN ROOT ONLY. Google is explicit that the markup belongs on "the
+ *  domain or subdomain level root URI" and that a subdirectory cannot carry its own site
+ *  name, so `/en` deliberately does not get it — see the caller in the home page.
+ *  `publisher` points at the site-wide business node instead of restating it, keeping
+ *  one business entity in the graph. */
+export function webSiteJsonLd(): JsonLdObject {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": absoluteUrl("/#website"),
+    name: photographer.brand,
+    alternateName: photographer.shortBrand,
+    url: absoluteUrl("/"),
+    publisher: { "@id": absoluteUrl("/#business") },
+  };
+}
+
 /** FAQPage for the questions actually rendered on /tarifs.
  *
  *  Sourced from the same `dict.faq` the accordion renders, so the markup can never
