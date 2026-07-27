@@ -1455,6 +1455,26 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
 /* The curtain becomes non-blocking the instant it starts to lift, so the site is
    interactive during the fade; the component unmounts it on its own timer regardless. */
 .ch-overture.lift { opacity: 0; pointer-events: none; }
+
+/* FAILSAFE — the curtain must lift even when its JavaScript never runs.
+   This layer is server-rendered OPAQUE, full-viewport, above the header: until something
+   removes it, the site has no navigation and no content. Every removal path used to live in
+   client JS (React state + timers), and the only fallback was the <noscript> rule on the
+   homepage — which covers the one case that is NOT the risk. JS *disabled* is fine; JS
+   *enabled but not yet running* is the real world: a chunk that 404s after a deploy, an
+   error during hydration, or simply a slow phone. Measured on production before this rule:
+   a failed chunk left the black curtain up permanently, and a throttled phone held it ~15s.
+   So the guarantee is moved into CSS, where it cannot depend on a script arriving.
+   It starts AFTER the scripted sequence normally ends (hold 1650 + fade 850 = 2500ms), so
+   when hydration is healthy the component has already unmounted and this never runs — the
+   designed intro is unchanged. `forwards` also means a late hydration cannot re-black the
+   screen. visibility flips only on the final frame, so the fade stays smooth. */
+@keyframes ch-curtain-failsafe {
+  0% { opacity: 1; }
+  99% { opacity: 0; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+.ch-overture { animation: ch-curtain-failsafe 0.85s var(--ch-ease) 3.2s forwards; }
 .ch-overture .glow {
   width: 2px;
   height: 2px;
@@ -1635,6 +1655,9 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
   .ch-faq-chevron { transition: none !important; }
   .ch-faq-a-body { opacity: 1 !important; transform: none !important; }
   .ch-overture { transition: opacity 0.2s linear; }
+  /* The scripted sequence ends at ~400ms here, so the CSS backstop closes in behind it
+     rather than making a reduced-motion visitor wait out the full-motion delay. */
+  .ch-overture { animation: ch-curtain-failsafe 0.2s linear 0.8s forwards; }
   .ch-overture .mark span { opacity: 1; transform: none; }
   .ch-overture-studio { opacity: 1 !important; animation: none !important; }
 }
