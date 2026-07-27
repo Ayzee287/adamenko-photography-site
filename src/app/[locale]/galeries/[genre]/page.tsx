@@ -28,9 +28,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, genre } = await params;
   const active = isLocale(locale) ? locale : defaultLocale;
-  const gallery = getDictionary(active).galleries.find((g) => g.slug === genre);
+  const dict = getDictionary(active);
+  const gallery = dict.galleries.find((g) => g.slug === genre);
+  // The <title> says what the page SHOWS ("Photos de mariage"); the <h1> below keeps the
+  // bare genre noun, which reads correctly under the Galeries kicker. Two intents, two
+  // registers — see content/gallery-meta.ts. Falls back to the gallery's own title.
+  const metaTitle = dict.galleryMeta[genre as GenreSlug]?.metaTitle ?? gallery?.title;
   return buildMetadata({
-    title: gallery?.title ?? "Galerie",
+    title: metaTitle ?? "Galerie",
     description: gallery?.intro,
     path: `/galeries/${genre}`,
     locale: active,
@@ -170,7 +175,11 @@ export default async function GenrePage({
               className="ch-go"
               href={link(active, { page: "service", service: serviceForGenre[genre as GenreSlug] })}
             >
-              {active === "en" ? "About this session" : "En savoir plus sur cette séance"}{" "}
+              {/* Names its destination ("La séance famille") instead of the old generic
+                  "En savoir plus sur cette séance" — clearer in a list of links, and an
+                  anchor is one of the few honest signals about the page it points at. */}
+              {dict.services.items.find((it) => it.slug === genre)?.linkLabel ??
+                (active === "en" ? "About this session" : "En savoir plus sur cette séance")}{" "}
               <span className="ch-arrow" aria-hidden>→</span>
             </Link>
             <Link className="ch-go" href={link(active, { page: "galeries" })}>

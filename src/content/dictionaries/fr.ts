@@ -20,6 +20,7 @@ import { photographer } from "@/content/photographer";
 import { mentionsLegales, confidentialite } from "@/content/legal";
 import { ui } from "@/content/ui";
 import { galleries, featured } from "@/content/galleries";
+import { galleryMeta } from "@/content/gallery-meta";
 
 export const fr = {
   site,
@@ -34,6 +35,7 @@ export const fr = {
   testimonials,
   photographer,
   galleries,
+  galleryMeta,
   featured,
   legal: { mentionsLegales, confidentialite },
 } as const;

@@ -7,6 +7,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { setRequestLocale } from "@/lib/request-locale";
 import { isLocale, defaultLocale, type Locale } from "@/lib/i18n";
 import { link, navInventory, type GenreSlug } from "@/lib/routes";
+import { serviceForGenre } from "@/lib/service-genre";
 import { formatPrice } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
@@ -98,9 +99,28 @@ export default async function TarifsPage({
                     <li key={j}>{inc}</li>
                   ))}
                 </ul>
-                <Link className="ch-go ch-offer-cta" href={link(active, { page: "genre", genre: s.slug as GenreSlug })}>
-                  {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
-                </Link>
+                {/* Two ways on from a price: the WORK (its gallery) and the OFFER (its
+                    dossier). The dossier is what a visitor reading "220 €" actually needs
+                    next — how the session runs, where, for how long — and until now this
+                    page linked to it from nowhere at all. The gallery link is unchanged
+                    and stays first: someone here to browse should not have to re-find it. */}
+                <div className="ch-offer-cta">
+                  <Link className="ch-go" href={link(active, { page: "genre", genre: s.slug as GenreSlug })}>
+                    {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
+                  </Link>
+                  {(() => {
+                    const svc = dict.services.items.find((it) => it.slug === s.slug);
+                    if (!svc) return null;
+                    return (
+                      <Link
+                        className="ch-go"
+                        href={link(active, { page: "service", service: serviceForGenre[s.slug as GenreSlug] })}
+                      >
+                        {svc.linkLabel} <span className="ch-arrow" aria-hidden>→</span>
+                      </Link>
+                    );
+                  })()}
+                </div>
               </article>
             </Develop>
           ))}
@@ -173,6 +193,13 @@ export default async function TarifsPage({
             action. */}
         <Develop>
           <div className="ch-tarifs-actions" style={{ marginTop: "clamp(2rem,5vh,3rem)" }}>
+            {/* The offer, then the proof, then the ask. The wedding dossier leads because a
+                package price is the one thing on this page that raises "what does the day
+                actually look like" — and it was previously unreachable from here. */}
+            <Link className="ch-go" href={link(active, { page: "service", service: serviceForGenre.mariages })}>
+              {dict.services.items.find((it) => it.slug === "mariages")?.linkLabel}{" "}
+              <span className="ch-arrow" aria-hidden>→</span>
+            </Link>
             <Link className="ch-go" href={link(active, { page: "genre", genre: "mariages" })}>
               {dict.ui.actions.viewGallery} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
