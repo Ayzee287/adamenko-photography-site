@@ -21,6 +21,7 @@ import { mentionsLegales, confidentialite } from "@/content/legal";
 import { ui } from "@/content/ui";
 import { galleries, featured } from "@/content/galleries";
 import { galleryMeta } from "@/content/gallery-meta";
+import { serviceDossier } from "@/content/service-dossier";
 
 export const fr = {
   site,
@@ -29,6 +30,7 @@ export const fr = {
   home,
   pricing,
   services,
+  serviceDossier,
   locations,
   faq,
   contactChannels,

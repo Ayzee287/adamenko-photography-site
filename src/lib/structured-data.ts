@@ -8,6 +8,7 @@
 import { photographer } from "@/content/photographer";
 import { home } from "@/content/home";
 import { absoluteUrl } from "@/lib/site";
+import { alternatesForPath } from "@/lib/routes";
 import { defaultLocale, type Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/dictionary";
 
@@ -101,6 +102,67 @@ export function faqPageJsonLd(locale: Locale = defaultLocale): JsonLdObject {
       acceptedAnswer: { "@type": "Answer", text: item.a },
     })),
   };
+}
+
+/** Service + Offer for one commercial dossier.
+ *
+ *  The site emits LocalBusiness site-wide, which says who the studio is but never what a
+ *  given page SELLS. A dossier sells one named service, at a stated price, in a stated area
+ *  — and since PR #34 all three are visible on the page itself, which is the condition for
+ *  claiming any of them. `provider` points at the site-wide business node rather than
+ *  restating it, so there is one business entity and four services hanging off it.
+ *
+ *  `exactPrice` picks the honest shape: a fixed 220 € séance is a `price`, a wedding that
+ *  starts at 650 € is a `PriceSpecification` with a minimum — never a bare price that reads
+ *  as the whole cost.
+ *
+ *  Deliberately NOT accompanied by FAQPage: Google removed the FAQ rich result on
+ *  2026-05-07 (developers.google.com changelog), so that markup now has no reader. The
+ *  existing /tarifs FAQPage is left in place — Google states it is harmless — but it is not
+ *  propagated to new pages. */
+export function serviceJsonLd(input: {
+  name: string;
+  description?: string;
+  path: string;
+  locale: Locale;
+  price: number;
+  exactPrice: boolean;
+  areas: ReadonlyArray<{ label: string; schemaType: string }>;
+}): JsonLdObject {
+  const { name, description, path, locale, price, exactPrice, areas } = input;
+  // `path` is the FRENCH canonical path — the same key the rest of the site routes by. The
+  // emitted URL must be the LOCALIZED one, or the English page would announce itself to
+  // Google as the French URL. Uses the one alternates system that already backs canonical,
+  // hreflang and the sitemap, so all four can never disagree.
+  const url = absoluteUrl(alternatesForPath(path, locale).canonical);
+  const offer: JsonLdObject = {
+    "@type": "Offer",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/InStock",
+    url,
+  };
+  if (exactPrice) {
+    offer.price = price;
+  } else {
+    offer.priceSpecification = {
+      "@type": "PriceSpecification",
+      priceCurrency: "EUR",
+      minPrice: price,
+    };
+  }
+
+  const service: JsonLdObject = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    serviceType: name,
+    url,
+    provider: { "@id": absoluteUrl("/#business") },
+    areaServed: areas.map((a) => ({ "@type": areaType(a.schemaType), name: a.label })),
+    offers: offer,
+  };
+  if (description) service.description = description;
+  return service;
 }
 
 /** BreadcrumbList for a nested page.

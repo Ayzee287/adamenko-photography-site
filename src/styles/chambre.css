@@ -1375,6 +1375,58 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
   font-variant-numeric: tabular-nums;
   padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
 }
+/* A third heading tier, between .ch-title (a full-width movement) and .ch-offer-name (a
+   card). Two headings sitting SIDE BY SIDE inside one split are not two movements; at
+   4rem in a half-width column they wrap to two lines each and shout over the content
+   they introduce. This is the same face and rhythm, one step down. */
+.ch-title--sub { font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.05; }
+
+/* The dossier's process — the four moments of a booking, in the order they happen. Same
+   hairline rhythm as .ch-list, so it reads as the same family; the mono ordinal is the
+   marker (in the ember accent) rather than a bullet, and the body aligns under the title. */
+.ch-steps { list-style: none; margin: 0; padding: 0; max-width: 42rem; }
+.ch-steps li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1.1rem;
+  border-top: 1px solid var(--border-hairline);
+  padding: 1rem 0;
+}
+.ch-steps li:last-child { border-bottom: 1px solid var(--border-hairline); }
+.ch-steps .n {
+  font-family: var(--ch-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--ch-ember);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.3rem;
+}
+.ch-steps h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--content-primary);
+}
+.ch-steps p {
+  grid-column: 2;
+  margin-top: 0.35rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--content-secondary);
+}
+
+/* A labelled line inside a .ch-list — the coverage areas and the session options: the name
+   in the primary ink, its one explanatory line quieter beneath. */
+.ch-area-label { display: block; color: var(--content-primary); }
+.ch-area-note {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--content-secondary);
+}
+
 .ch-service-duration {
   display: block;
   margin-top: 0.4rem;
