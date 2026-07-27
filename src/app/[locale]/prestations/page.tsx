@@ -4,7 +4,7 @@
 // still lands somewhere sensible; the per-service dossiers at /prestations/[service] live
 // on as SEO landing pages and are unaffected.
 
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { isLocale, defaultLocale, type Locale } from "@/lib/i18n";
 import { setRequestLocale } from "@/lib/request-locale";
 import { link } from "@/lib/routes";
@@ -17,5 +17,9 @@ export default async function PrestationsIndexRedirect({
   const { locale } = await params;
   const active: Locale = isLocale(locale) ? locale : defaultLocale;
   setRequestLocale(active);
-  redirect(link(active, { page: "tarifs" }));
+  // 308, not 307: this consolidation is permanent, so the redirect must SAY so.
+  // `redirect()` emits a temporary 307, which tells a crawler to keep the old URL in
+  // the index and re-check it forever — it never transfers the signals of any inbound
+  // link to /tarifs. `permanentRedirect()` is the honest status for a merged page.
+  permanentRedirect(link(active, { page: "tarifs" }));
 }

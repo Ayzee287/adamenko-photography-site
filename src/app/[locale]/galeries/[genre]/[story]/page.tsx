@@ -20,6 +20,8 @@ import {
 import { Exhibition, type ExhibitItem } from "@/components/chambre/exhibition";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
 import { Develop } from "@/components/chambre/develop";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
@@ -87,6 +89,21 @@ export default async function StoryPage({
 
   return (
     <ChambreScene>
+      {/* Accueil › Galeries › <genre> › <shoot>. A story sits UNDER its category on
+          disk and in the URL; this says the same thing to a crawler. */}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: dict.ui.nav.home, path: link(active, { page: "home" }) },
+          { name: dict.copy.galleries.title, path: link(active, { page: "galeries" }) },
+          ...(gallery
+            ? [{ name: gallery.title, path: link(active, { page: "genre", genre: genre as GenreSlug }) }]
+            : []),
+          {
+            name: storyTitle(s, active),
+            path: link(active, { page: "genreStory", genre: genre as GenreSlug, story }),
+          },
+        ])}
+      />
       <ChapterOpening
         kicker={gallery?.title ?? dict.copy.galleries.title}
         title={storyTitle(s, active)}

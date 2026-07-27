@@ -8,6 +8,8 @@
 export const ui = {
   skipToContent: "Aller au contenu",
   nav: {
+    /** Breadcrumb label for the home page — structured data only, never rendered. */
+    home: "Accueil",
     primary: "Navigation principale",
     footer: "Pied de page",
     legal: "Liens légaux",

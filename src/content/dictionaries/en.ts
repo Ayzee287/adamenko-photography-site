@@ -149,6 +149,7 @@ export const en: DeepPartial<Dictionary> = {
       manifesto: "Manifesto",
     },
     nav: {
+      home: "Home",
       primary: "Main navigation",
       footer: "Footer",
       legal: "Legal links",

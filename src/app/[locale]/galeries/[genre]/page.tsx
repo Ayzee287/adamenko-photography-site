@@ -14,6 +14,8 @@ import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
 import { Develop } from "@/components/chambre/develop";
 import { Plate } from "@/components/chambre/plate";
 import { storiesIn, storyDateLabel, storyTitle } from "@/lib/stories";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
@@ -76,6 +78,15 @@ export default async function GenrePage({
 
   return (
     <ChambreScene>
+      {/* Accueil › Galeries › <genre> — the hierarchy the URL already states. Every
+          ancestor here is a real 200 page, which is the condition for claiming it. */}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: dict.ui.nav.home, path: link(active, { page: "home" }) },
+          { name: dict.copy.galleries.title, path: link(active, { page: "galeries" }) },
+          { name: gallery.title, path: link(active, { page: "genre", genre: genre as GenreSlug }) },
+        ])}
+      />
       <ChapterOpening
         kicker={dict.copy.galleries.title}
         title={gallery.title}

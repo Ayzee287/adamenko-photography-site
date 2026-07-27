@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils/cn";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
 import { Develop } from "@/components/chambre/develop";
 import { FaqItem } from "@/components/content/faq-item";
+import { JsonLd } from "@/components/seo/json-ld";
+import { faqPageJsonLd } from "@/lib/structured-data";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
@@ -47,6 +49,10 @@ export default async function TarifsPage({
 
   return (
     <ChambreScene className="ch-tarifs">
+      {/* The FAQ rendered at the foot of this page, stated for search engines too.
+          Same source as the accordion, so the markup cannot claim a question the
+          page does not answer. */}
+      <JsonLd data={faqPageJsonLd(active)} />
       {/* A visitor clicking "Tarifs" wants the prices, not a full-screen statement:
           the opening is TIGHT and the page-level intro is dropped (the sessions
           register below carries the one short framing line), so the first price
