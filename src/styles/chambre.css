@@ -61,7 +61,23 @@ body:has([data-chambre]) footer {
   top: 0;
   height: calc(var(--size-header) + 3rem);
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(8, 6, 5, 0.66), rgba(8, 6, 5, 0.22) 52%, transparent);
+  /* The scrim HOLDS its darkness across the bar's own height, then releases. The previous
+     ramp (0.66 → 0.22 at 52%) had already faded where the links actually sit (y≈19–32), so
+     legibility depended on whichever slice of the hero happened to land behind them. The hero
+     is object-cover: at 1920–2560 a brighter slice moves in, and the destinations measured
+     3.0–4.0:1 against it while the wordmark sat at 12.5:1 — the links read as missing on a 2K
+     monitor while the wordmark stayed obvious. Measured against the real hero at every width
+     the design targets, this shape puts the WORST link at 4.68:1 (1440, the "EN" toggle) and
+     4.98–5.05:1 at 1680/1920/2560. Deliberately carries headroom over the 4.5:1 minimum: the
+     defect was a thin margin meeting a brighter crop, so a thin margin is not the fix.
+     Colours, type, spacing and hierarchy are untouched — only this backdrop. */
+  background: linear-gradient(
+    to bottom,
+    rgba(8, 6, 5, 0.88),
+    rgba(8, 6, 5, 0.84) 46%,
+    rgba(8, 6, 5, 0.34) 74%,
+    transparent
+  );
   transition: opacity 0.55s var(--ch-ease-soft);
 }
 .ch-nav-fill {
