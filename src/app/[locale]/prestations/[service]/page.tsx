@@ -77,7 +77,12 @@ export default async function ServicePage({
   const genre = genreForService[service as ServiceSlug];
   const item = dict.services.items.find((it) => it.slug === genre);
   if (!item) notFound();
-  const cover = dict.galleries.find((g) => g.slug === genre)?.cover;
+  // The genre's curated cover, unless the cinematic band would destroy it — see the
+  // `hero` note in content/service-dossier.ts. Falls back to the cover, which is the
+  // operator's own choice and stays authoritative wherever it survives the crop.
+  const galleryCover = dict.galleries.find((g) => g.slug === genre)?.cover;
+  const heroOverride = dict.serviceDossier.hero[genre];
+  const cover = heroOverride ?? galleryCover;
 
   const d = dict.serviceDossier;
   const p = dict.pricing;
@@ -165,7 +170,7 @@ export default async function ServicePage({
           <Develop>
             <Plate
               src={cover.src}
-              alt={`${item.shortTitle} — ${item.tagline}`}
+              alt={heroOverride?.alt ?? `${item.shortTitle} — ${item.tagline}`}
               ratio="cine"
               // The plaque is a caption on a photograph, so it takes the SHORT label.
               // The heading above already carries the full "Photographe de … à Lyon".
