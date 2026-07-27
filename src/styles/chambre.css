@@ -513,6 +513,39 @@ body:has([data-chambre]) .ch-motes { opacity: 1; }
   filter: brightness(0.92) contrast(1.02);
   transition: transform 1.6s var(--ch-ease-soft);
 }
+/* ── The exposure-lift must be continuous from its FIRST frame ──────────────────
+   A photo layer that is painted into its ancestor's layer sits at whatever sub-pixel
+   offset the layout gives it (these frames live in fr-based grids with clamp() gaps, at an
+   arbitrary scroll offset — a whole device pixel is the exception, not the rule). The
+   moment a transform transition starts, Chrome moves the element onto its OWN compositor
+   layer and aligns that layer's raster to whole device pixels. The photograph therefore
+   re-samples at a different sub-pixel phase and visibly shifts BEFORE the scale has moved
+   at all; everything after runs on the GPU, which is why only the first frame snapped.
+
+   Measured on the built site (DPR 1.25): the story-wall plates shifted 0.24 device px and
+   the exhibition tiles 0.59. It is the PROMOTION, not the animation — adding `will-change`
+   at rest, with no hover and no transition running, reproduces the identical shift
+   (0.238 px vs 0.233 px), and removing the static grade above does not change it.
+
+   Holding a layer from first paint removes the promotion event, and with it the snap
+   (measured after: 0.00 px, on enter and on leave). Scoped so no page pays for a layer it
+   cannot use: only frames that can actually be hovered — a bare <figure> plate never
+   animates — only where a fine pointer exists, and not under reduced motion, where the
+   transition is off anyway.
+
+   These surfaces hang a handful of plates each, so their layers are free. The exhibition
+   wall is the exception — it can hang a hundred frames, and a hundred permanent layers cost
+   real frame time on a mid-range machine — so it earns its layers a screenful at a time
+   instead, via `is-near`; see chambre/exhibition.tsx. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a.ch-plate > .ch-plate-img,
+  button.ch-plate > .ch-plate-img,
+  .ch-index-item .ch-plate-img,
+  .ex-tile.is-near :where(img) {
+    will-change: transform;
+  }
+}
+
 /* Exposure-lift on hover, GPU-only: the print leans a hair into the light (transform)
    while its vignette pulls back (opacity below) so it reads as gaining exposure, not
    zooming. No filter is animated — no repaint. */
@@ -675,36 +708,41 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 @media (min-width: 52rem) { .ch-plates { grid-template-columns: 1fr 1fr; } }
 .ch-span-full { grid-column: 1 / -1; }
 
-/* ── The genre index (home M·04) — an editorial, varied-proportion composition ─────
-   NOT five identical cards. A wide FEATURE row (a landscape + a portrait) over a TRIO
-   row (landscape · portrait · landscape). Each row's columns are proportioned to the
-   frames' aspect ratios (landscape 3:2 → 1.5fr, portrait 2:3 → 0.667fr), so every
-   frame in a row lands at the SAME height with no forced crop, landscape reads as
-   landscape, and the feature row (fewer columns) is naturally larger than the trio —
-   giving hierarchy. Below 52rem the frames stack, each true to its own proportion. */
+/* ── The genre index (home M·04) — a COUNTERCHANGE, not a grid ─────────────────────
+   Four séances, two rows, and the wide frame changes sides between them: landscape ·
+   portrait over portrait · landscape. The mass is identical in both rows and sits at
+   opposite ends, so the block balances while the eye is carried across the page and back
+   instead of down two columns. The internal seam falls at 69% in one row and 31% in the
+   other, which is why four photographs read as composed rather than tiled.
+
+   Columns are proportioned to the frames' own aspect ratios (landscape 3:2 → 1.5fr,
+   portrait 2:3 → 0.667fr). That is what lands both frames of a row at exactly one height
+   with no forced crop — any other column ratio cannot, and a 1.8% error here is what once
+   dropped the Mariages plate 10px below its neighbour.
+
+   The rows are the SAME width and the SAME height on purpose. The previous arrangement
+   inset the counter row to 94% to claim a difference in scale: 6% narrower, 6% shorter,
+   and a left edge 70px off the row above it. Every one of those is too small to read as a
+   decision and too large to read as alignment, so the block read as three near-misses —
+   which is exactly the "unbalanced, the proportions don't relate" complaint. Two rows that
+   align exactly, with their weight counterchanged, relate cleanly. Hierarchy here would be
+   a claim the page does not want to make anyway: these are four equal offers.
+
+   The counterchange holds down to 40rem rather than 52rem. Stacking full-width is right on
+   a phone, but on a tablet it was ruinous: at 770px each 2:3 frame became 678×1017 — taller
+   than the viewport — and four category links ran to 3536px, a screen of scrolling per
+   photograph. Paired, the same tablet shows the whole composition in about 700px. Below
+   40rem the frames stack, each true to its own proportion; a portrait is then ~1.5 screens
+   shorter because the column itself is narrow. */
 .ch-genres { display: flex; flex-direction: column; gap: clamp(1.1rem, 2.6vw, 2rem); }
 .ch-genres-row { display: grid; gap: clamp(1rem, 2.2vw, 1.7rem); grid-template-columns: 1fr; }
-@media (min-width: 52rem) {
-  /* FOUR séances, composed as two rows that ANSWER each other rather than as a 2×2 grid.
-     The wide frame leads row one and closes row two, so the eye crosses the page instead
-     of running down two even columns, and the second row is set slightly narrower so the
-     rows differ in scale. A symmetric 2×2 of equal tiles is the one arrangement that would
-     make four photographs read as a product grid. */
+@media (min-width: 40rem) {
+  /* The between-rows gap is set decisively larger than the within-row gap (they were
+     within 15% of each other, which read as one undifferentiated stack). Each row now
+     groups as a unit, and the two units are plainly separate. */
+  .ch-genres { gap: clamp(2.4rem, 4.4vw, 3.75rem); }
   .ch-genres-row--feature { grid-template-columns: 1.5fr 0.667fr; align-items: start; }
-  /* The counter row carries the SAME true aspect proportions as the feature row, only
-     mirrored. It has to: columns proportioned to anything other than the frames' own
-     ratios cannot land two images at one height. The hand-tuned 0.62fr/1.42fr read as
-     2.290:1 against the frames' real 2.249:1, and that 1.8% error is what dropped the
-     Mariages plate 10px below its neighbour at every desktop width.
-     The rows still differ in SCALE — which was the intent all along — but now by insetting
-     the whole row, not by distorting one column against the other. The wide frame still
-     closes the row at the right edge, so the eye keeps crossing the page. */
-  .ch-genres-row--counter {
-    grid-template-columns: 0.667fr 1.5fr;
-    align-items: start;
-    width: 94%;
-    margin-left: auto;
-  }
+  .ch-genres-row--counter { grid-template-columns: 0.667fr 1.5fr; align-items: start; }
 }
 .ch-index-item { display: block; text-decoration: none; color: inherit; min-width: 0; }
 .ch-index-meta { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.95rem; }
@@ -941,8 +979,12 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   padding-top: calc(var(--size-header) + clamp(1.25rem, 3.5vh, 2.25rem));
   padding-bottom: 0;
 }
+/* Tight trims the CLEARANCE, not the rank. At clamp(…, 3.1rem) the page title came out
+   below the section titles under it (49.6px against 64px at 1440), so the <h1> read as a
+   subtitle to the first <h2> — survivable while the title was a long sentence, plainly
+   wrong once it is the page's name. */
 .ch-chapter--tight .ch-chapter-title {
-  font-size: clamp(1.9rem, 4.4vw, 3.1rem);
+  font-size: clamp(2.1rem, 4.8vw, 3.8rem);
   margin-top: 0.9rem;
 }
 .ch-chapter--tight .ch-lead { margin-top: 1.1rem; }
@@ -954,6 +996,12 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
    Scoped to the page root so the tight opening (explicit padding-top) and every other
    page keep their own spacing. */
 .ch-tarifs { --ch-beat: clamp(2.5rem, 6vh, 4.5rem); }
+/* Four register headings repeat down this page; at the full display size they shouted over
+   both the page title and the prices, which are what a visitor came for. Stepped down to
+   sit clearly under the <h1> and clearly over the offer names — hierarchy by size, in one
+   direction, all the way down. Scoped to /tarifs: elsewhere a .ch-title is the one heading
+   in its movement and earns the full display size. */
+.ch-tarifs .ch-title { font-size: clamp(1.75rem, 3.4vw, 2.6rem); }
 .ch-lead {
   max-width: 42rem;
   margin-top: 1.6rem;

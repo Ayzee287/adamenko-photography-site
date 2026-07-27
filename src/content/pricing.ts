@@ -47,7 +47,13 @@ export type WeddingPackage = {
 export const pricing = {
   currency: "EUR",
   eyebrow: "Investissement",
-  title: "Transparent, et adapté à vous.",
+  // The chapter names itself, as every other chapter on the site does — "Galeries",
+  // "Prestations", "Contact", "À propos". The old title ("Transparent, et adapté à vous.")
+  // was a claim, not a name: it promised in the abstract what the two section leads and the
+  // FAQ already state concretely, and it left the page's <h1> reading as a subtitle above a
+  // larger section <h2>. Nothing factual was lost — `intro` below still carries the promise
+  // where it does work, in the search result.
+  title: "Tarifs",
   intro:
     "Des tarifs clairs, pour savoir d'emblée à quoi vous attendre. Le reste se décide ensemble : le lieu, le rythme, ce que vous garderez.",
   fromLabel: "à partir de",
@@ -127,7 +133,11 @@ export const pricing = {
     photosLabel: "Photographies",
     packages: [
       {
-        name: "Pack essentiel / Mini",
+        // ONE name. "Pack essentiel" over "Pack mini": it parallels "Pack classique" (the
+        // two lower tiers share a form, so the three read as one ladder), it names what the
+        // package CONTAINS rather than how small the client's day is, and "mini" is a
+        // retail word in a register that says "Grand jour".
+        name: "Pack essentiel",
         price: 650,
         description:
           "Idéale pour les mariages civils, petites cérémonies ou journées en semaine.",

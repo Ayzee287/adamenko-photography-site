@@ -78,11 +78,12 @@ export default async function ServicePage({
   const item = dict.services.items.find((it) => it.slug === genre);
   if (!item) notFound();
   // The genre's curated cover, unless the cinematic band would destroy it — see the
-  // `hero` note in content/service-dossier.ts. Falls back to the cover, which is the
-  // operator's own choice and stays authoritative wherever it survives the crop.
+  // `hero` note in content/service-dossier.ts. The override can replace the frame (`src`)
+  // or only re-aim the crop on the cover (`position`); the cover is the operator's own
+  // choice and stays authoritative wherever it survives the band.
   const galleryCover = dict.galleries.find((g) => g.slug === genre)?.cover;
   const heroOverride = dict.serviceDossier.hero[genre];
-  const cover = heroOverride ?? galleryCover;
+  const cover = heroOverride?.src ? { src: heroOverride.src } : galleryCover;
 
   const d = dict.serviceDossier;
   const p = dict.pricing;
@@ -171,6 +172,7 @@ export default async function ServicePage({
             <Plate
               src={cover.src}
               alt={heroOverride?.alt ?? `${item.shortTitle} — ${item.tagline}`}
+              focus={heroOverride?.position}
               ratio="cine"
               // The plaque is a caption on a photograph, so it takes the SHORT label.
               // The heading above already carries the full "Photographe de … à Lyon".

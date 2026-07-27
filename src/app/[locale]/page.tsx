@@ -140,13 +140,12 @@ export default async function HomePage({
       </section>
 
       {/* ── M·04 · THE WORK (the genre index → the galleries) ───────────────────
-          An editorial, varied-proportion composition of ALL FIVE séances — NOT five
-          identical cards. A wide feature row (a landscape + a portrait) sits above a
-          trio (landscape · portrait · landscape). Each row's columns are proportioned
-          to the frames' aspect ratios, so a landscape reads as landscape and a portrait
-          as portrait, the frames align at equal height with no forced crop, and the two
-          rows differ in scale for hierarchy. Below 52rem the frames stack, each true to
-          its proportion — a designed vertical index, not a carousel. */}
+          The four séances as a counterchange, not a grid: the wide frame leads the first
+          row and closes the second, so the eye crosses the page and comes back. Each row's
+          columns are proportioned to the frames' true aspect ratios, so a landscape reads
+          as landscape and a portrait as portrait, and both frames of a row land at exactly
+          one height with no forced crop. Below 52rem the frames stack, each true to its
+          proportion — a designed vertical index, not a carousel. See .ch-genres. */}
       <section className="ch-movement ch-wrap" aria-labelledby="ch-work">
         <Develop>
           <p className="ch-mono ch-kicker">
