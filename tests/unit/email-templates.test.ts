@@ -100,6 +100,20 @@ describe("rendering across mail clients", () => {
   it("opens with a preheader so the inbox preview is not the brand line", () => {
     for (const m of both()) expect(m.html).toMatch(/mso-hide:all/);
   });
+
+  it("lets a long unbroken word break instead of widening the card", () => {
+    // A visitor pasting a URL with no hyphens, or a long hashtag, gives the renderer no
+    // break opportunity. Measured before this was set: a 62-character word pushed the
+    // layout viewport from 360px to 607px, so the card no longer fitted a phone.
+    const html = buildOwnerNotification({
+      ...base,
+      message: "Voici: " + "a".repeat(80),
+    }).html;
+    const quote = html.match(/<div style="border-left[^"]*"/)?.[0] ?? "";
+    expect(quote, "message block must allow breaking").toMatch(/overflow-wrap:\s*anywhere/);
+    // word-wrap is the legacy spelling Outlook honours; both are required for coverage
+    expect(quote).toMatch(/word-wrap:\s*break-word/);
+  });
 });
 
 describe("accessibility", () => {

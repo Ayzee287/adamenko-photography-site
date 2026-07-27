@@ -198,7 +198,13 @@ export function buildOwnerNotification(
             <tr>
               <td style="padding:22px 36px 0;">
                 <p style="margin:0 0 10px;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;color:${COLOR.muted};">Message</p>
-                <div style="border-left:2px solid ${COLOR.clay};padding:2px 0 2px 18px;font-size:15px;line-height:1.65;color:${COLOR.ink};">${eMessage}</div>
+                <!-- The message is the one place untrusted free text lands, and a visitor
+                     pasting a long unbroken token (a URL with no hyphens, a hashtag) has no
+                     break opportunity: the table cell grows, and the card stops fitting a
+                     phone. Measured with a 62-character word, the layout viewport widened
+                     from 360 to 607px. Both spellings are set on purpose: word-wrap is the
+                     legacy property Outlook honours, overflow-wrap the modern one. -->
+                <div style="border-left:2px solid ${COLOR.clay};padding:2px 0 2px 18px;font-size:15px;line-height:1.65;color:${COLOR.ink};word-wrap:break-word;overflow-wrap:anywhere;">${eMessage}</div>
               </td>
             </tr>
             <tr>
