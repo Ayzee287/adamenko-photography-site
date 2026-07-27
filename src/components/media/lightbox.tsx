@@ -259,6 +259,16 @@ export function Lightbox(props: {
           </>
         )}
 
+        {/* Moving between frames changes the photograph but not the DOM around it: the
+            <figure> is keyed by index, so a screen reader is given a new image with no
+            announcement that anything happened. This is the one thing that tells a
+            non-sighted visitor the arrow key worked — the frame's description and its
+            position. Polite, so it waits for a pause rather than interrupting. */}
+        <p className="sr-only" aria-live="polite">
+          {current?.alt ? `${current.alt}. ` : ""}
+          {count > 1 ? `${labels.photograph} ${index + 1} ${labels.of} ${count}` : ""}
+        </p>
+
         <div className="lb-meta">
           {current?.caption && <p className="lb-caption">{current.caption}</p>}
           {count > 1 && (

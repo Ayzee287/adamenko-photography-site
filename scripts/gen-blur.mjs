@@ -32,13 +32,25 @@ const OUT_FILE = path.join(ROOT, "src", "lib", "image-blur.ts");
 // when a key is missing, so exclusion degrades gracefully.
 const EXCLUDED = /^(stories|stories-draft)\//;
 
+// …with a narrow exception for individual story frames promoted onto a CURATED surface.
+// The homepage genre tiles are above the fold and the other three already blur up; leaving
+// the Mariages tile as the only one that pops in would be a visible inconsistency. One entry
+// costs a few hundred bytes, which is not the 890-frame problem the exclusion exists to stop.
+// Add a path here only when a story frame is used outside the story pages themselves.
+const ALWAYS_INCLUDE = new Set(["stories/mariages/mariages-3/mariages-3-46.jpg"]);
+
 /** All JPEG files under `dir`, recursively, minus the excluded roots. */
 async function collectJpegs(dir) {
   const out = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
     const rel = path.relative(PUBLIC_DIR, p).split(path.sep).join("/");
-    if (EXCLUDED.test(rel)) continue;
+    if (EXCLUDED.test(rel) && !ALWAYS_INCLUDE.has(rel)) {
+      // still descend into an excluded directory when it contains an allowlisted frame
+      if (!entry.isDirectory()) continue;
+      const prefix = rel + "/";
+      if (![...ALWAYS_INCLUDE].some((a) => a.startsWith(prefix))) continue;
+    }
     if (entry.isDirectory()) out.push(...(await collectJpegs(p)));
     else if (/\.jpe?g$/i.test(entry.name)) out.push(p);
   }
