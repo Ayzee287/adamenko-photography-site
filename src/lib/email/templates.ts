@@ -173,10 +173,14 @@ export function buildOwnerNotification(
   const eOccasion = escapeHtml(occasion);
   const eMessage = escapeHtml(message).replace(/\r?\n/g, "<br>");
 
+  // Both cells top-align. On a phone the declared 130px label column collapses (measured:
+  // 71px — a long email address wins the auto table layout), so labels like "Vous a trouvée
+  // via" wrap to two lines. A `middle`-aligned value then floats between them instead of
+  // sitting beside the label's first line.
   const row = (label: string, value: string) => `
                   <tr>
                     <td style="padding:7px 0;font-size:12px;letter-spacing:0.04em;color:${COLOR.muted};width:130px;vertical-align:top;">${label}</td>
-                    <td style="padding:7px 0;font-size:15px;line-height:1.5;color:${COLOR.ink};">${value}</td>
+                    <td style="padding:7px 0;font-size:15px;line-height:1.5;color:${COLOR.ink};vertical-align:top;">${value}</td>
                   </tr>`;
   const optRow = (label: string, value: string) =>
     value ? row(label, escapeHtml(value)) : "";
@@ -198,7 +202,13 @@ export function buildOwnerNotification(
             <tr>
               <td style="padding:22px 36px 0;">
                 <p style="margin:0 0 10px;font-size:12px;letter-spacing:0.04em;text-transform:uppercase;color:${COLOR.muted};">Message</p>
-                <div style="border-left:2px solid ${COLOR.clay};padding:2px 0 2px 18px;font-size:15px;line-height:1.65;color:${COLOR.ink};">${eMessage}</div>
+                <!-- The message is the one place untrusted free text lands, and a visitor
+                     pasting a long unbroken token (a URL with no hyphens, a hashtag) has no
+                     break opportunity: the table cell grows, and the card stops fitting a
+                     phone. Measured with a 62-character word, the layout viewport widened
+                     from 360 to 607px. Both spellings are set on purpose: word-wrap is the
+                     legacy property Outlook honours, overflow-wrap the modern one. -->
+                <div style="border-left:2px solid ${COLOR.clay};padding:2px 0 2px 18px;font-size:15px;line-height:1.65;color:${COLOR.ink};word-wrap:break-word;overflow-wrap:anywhere;">${eMessage}</div>
               </td>
             </tr>
             <tr>
