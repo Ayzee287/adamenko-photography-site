@@ -37,7 +37,17 @@ const EXCLUDED = /^(stories|stories-draft)\//;
 // the Mariages tile as the only one that pops in would be a visible inconsistency. One entry
 // costs a few hundred bytes, which is not the 890-frame problem the exclusion exists to stop.
 // Add a path here only when a story frame is used outside the story pages themselves.
-const ALWAYS_INCLUDE = new Set(["stories/mariages/mariages-3/mariages-3-46.jpg"]);
+const ALWAYS_INCLUDE = new Set([
+  "stories/mariages/mariages-3/mariages-3-46.jpg",
+  // The Couples and Grossesse tiles moved to real session frames (a wedding photograph was
+  // standing in for the couple séance; the maternity frame was the /galeries cover twice
+  // over). Same reasoning as above — they are homepage tiles, so they must blur up too.
+  "stories/couples/couples-2/couples-2-30.jpg",
+  "stories/grossesse/grossesse-1/grossesse-1-12.jpg",
+  // The Grossesse dossier hero — a landscape frame, because the cinematic band cropped
+  // the bump out of the portrait cover it used to show.
+  "stories/grossesse/grossesse-2/grossesse-2-04.jpg",
+]);
 
 /** All JPEG files under `dir`, recursively, minus the excluded roots. */
 async function collectJpegs(dir) {

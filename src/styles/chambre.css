@@ -432,10 +432,23 @@ body:has([data-chambre]) .ch-motes { opacity: 1; }
   color: var(--content-secondary);
   font-variant-numeric: tabular-nums;
 }
+/* ── The line-height floor ────────────────────────────────────────────────────────
+   Fraunces puts 0.742em of ink above the baseline (l, b, d) and 0.234em below it
+   (p, q, g). A wrapped heading therefore needs at least 0.976em of line-height before
+   the descenders of one line touch the ascenders of the next — ANY value below that
+   guarantees the two lines collide, at every viewport width.
+
+   The hero sat at 0.94. Measured on the real string at 1440px: "Des photos qui" drops
+   its q 24px below the baseline, "vous ressemblent." raises its l and b 76px above —
+   100px of ink into a 96.26px line. A 3.7px overlap, which is what reads as the q
+   crashing into the letters beneath it.
+
+   These values are the floor plus a small optical margin. They are still tight display
+   settings (well under the 1.2 body default); nothing is scaled down to make room. */
 .ch-display {
   font-family: var(--font-serif);
   font-weight: 400;
-  line-height: 0.94;
+  line-height: 1.04;
   letter-spacing: -0.025em;
   font-size: clamp(2.8rem, 9vw, 7.5rem);
   text-wrap: balance;
@@ -443,7 +456,9 @@ body:has([data-chambre]) .ch-motes { opacity: 1; }
 .ch-title {
   font-family: var(--font-serif);
   font-weight: 400;
-  line-height: 1;
+  /* 1 was only 2.4% above the ink floor — enough for "Des mariages récents." on one line,
+     not for a wrapped French heading whose second line opens on a capital or an accent. */
+  line-height: 1.08;
   letter-spacing: -0.02em;
   font-size: clamp(2rem, 5.2vw, 4rem);
   text-wrap: balance;
@@ -676,7 +691,20 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
      rows differ in scale. A symmetric 2×2 of equal tiles is the one arrangement that would
      make four photographs read as a product grid. */
   .ch-genres-row--feature { grid-template-columns: 1.5fr 0.667fr; align-items: start; }
-  .ch-genres-row--counter { grid-template-columns: 0.62fr 1.42fr; align-items: start; }
+  /* The counter row carries the SAME true aspect proportions as the feature row, only
+     mirrored. It has to: columns proportioned to anything other than the frames' own
+     ratios cannot land two images at one height. The hand-tuned 0.62fr/1.42fr read as
+     2.290:1 against the frames' real 2.249:1, and that 1.8% error is what dropped the
+     Mariages plate 10px below its neighbour at every desktop width.
+     The rows still differ in SCALE — which was the intent all along — but now by insetting
+     the whole row, not by distorting one column against the other. The wide frame still
+     closes the row at the right edge, so the eye keeps crossing the page. */
+  .ch-genres-row--counter {
+    grid-template-columns: 0.667fr 1.5fr;
+    align-items: start;
+    width: 94%;
+    margin-left: auto;
+  }
 }
 .ch-index-item { display: block; text-decoration: none; color: inherit; min-width: 0; }
 .ch-index-meta { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.95rem; }
@@ -903,7 +931,9 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   padding-top: calc(var(--size-header) + clamp(3.25rem, 8.5vh, 6rem));
   padding-bottom: clamp(1.5rem, 4vh, 2.75rem);
 }
-.ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: 1.2rem; }
+/* A chapter title is smaller than the hero and carries accented French ("Photographe de
+   mariage à Lyon" wraps on a phone), so it needs a little more room than .ch-display. */
+.ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.12; margin-top: 1.2rem; }
 /* A tight opening (e.g. /tarifs): clears the header but drops the full-screen
    statement, so the page's primary content — the prices — is reached almost at once.
    Smaller title, far less clearance above and below. */
@@ -1379,7 +1409,7 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
    card). Two headings sitting SIDE BY SIDE inside one split are not two movements; at
    4rem in a half-width column they wrap to two lines each and shout over the content
    they introduce. This is the same face and rhythm, one step down. */
-.ch-title--sub { font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.05; }
+.ch-title--sub { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
 
 /* The dossier's process — the four moments of a booking, in the order they happen. Same
    hairline rhythm as .ch-list, so it reads as the same family; the mono ordinal is the

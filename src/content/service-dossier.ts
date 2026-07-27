@@ -43,6 +43,27 @@ export type DossierStep = {
 };
 
 export const serviceDossier = {
+  /**
+   * Hero override for the cinematic opening plate — set ONLY where the genre's curated
+   * gallery cover does not survive the 21:9 band.
+   *
+   * The plate is `ratio="cine"` with `object-fit: cover`, so a PORTRAIT cover loses 71% of
+   * its height. Measured on the built page, that is usually fine — the Couples cover keeps
+   * both faces and the crop even removes a bouquet that made a couple séance read as a
+   * wedding. On Grossesse it was not fine: the band cut the bump out of a maternity
+   * photograph and clipped the father's head. A landscape frame from the same session keeps
+   * the subject and loses only sky and ground, which is what a cinematic crop should lose.
+   *
+   * Deliberately an override, not a replacement: content/galleries.ts is generated from the
+   * curation sheet, so the covers stay the operator's decision everywhere they work.
+   */
+  hero: {
+    grossesse: {
+      src: "/stories/grossesse/grossesse-2/grossesse-2-04.jpg",
+      alt: "Un couple traverse la cour d'un palais lyonnais, main dans la main, avant la naissance.",
+    },
+  } as Partial<Record<GenreSlug, { src: string; alt: string }>>,
+
   /** The work first: a photography site answers "show me" before "what's included". */
   work: {
     eyebrow: "Le travail",

@@ -104,17 +104,24 @@ export const home = {
         title: "Grossesse",
         cta: "Voir la galerie",
         caption: "Les semaines douces avant l'arrivée du bébé.",
-        src: "/galleries/grossesse/grossesse-a00.jpg",
-        alt: "Future maman devant les colonnes d'un palais lyonnais.",
+        // Was grossesse-a00 — the SAME frame the /galeries index uses as the Grossesse
+        // cover, so the two front doors showed one photograph twice. This one is also the
+        // séance the site actually describes: chez vous, en lumière du jour.
+        src: "/stories/grossesse/grossesse-1/grossesse-1-12.jpg",
+        alt: "Un couple attend son enfant, appuyé contre un mur de l'appartement, à la lumière du jour.",
       },
       {
         slug: "couples",
         title: "Couples",
         cta: "Voir la galerie",
         caption: "Deux personnes, sans poses figées.",
-        // A landscape frame for the editorial index (couples read strongest wide).
-        src: "/galleries/couples/couples-a07.jpg",
-        alt: "Un couple sur une terrasse dominant la vallée, au crépuscule.",
+        // Was couples-a07 — a photograph of a WEDDING (the same day as the Mariages plate
+        // beside it: same dress, same navy suit, same dry-stone wall and oleander), and a
+        // landscape frame forced into a portrait cell. It made the Couples séance look like
+        // a wedding and the portfolio look smaller than it is. This is a real couple
+        // session, and it is natively portrait, so the cell crops nothing.
+        src: "/stories/couples/couples-2/couples-2-30.jpg",
+        alt: "Elle rit, les yeux fermés, la tête contre l'épaule de son compagnon.",
       },
       {
         slug: "mariages",
