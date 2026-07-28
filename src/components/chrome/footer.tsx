@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { getDictionary } from "@/lib/dictionary";
 import { getRequestLocale } from "@/lib/request-locale";
-import { link, navInventory } from "@/lib/routes";
+import { link, navInventory, serviceInventory } from "@/lib/routes";
 import { IconLink } from "@/components/actions/icon-link";
 
 export function Footer(props: { showSeances: boolean }) {
@@ -47,6 +47,29 @@ export function Footer(props: { showSeances: boolean }) {
                   {item.label[lang]}
                 </Link>
               ))}
+          </nav>
+
+          {/* Group B2 — the four service dossiers. They are the pages the business sells on,
+              and until now they were reachable only from /tarifs and from their own genre
+              gallery: one or two internal links each, on a site with nothing indexed. This
+              column is the footer keeping the promise at the top of this file — the complete
+              index — and it is the only place on the site where the four offers are listed
+              together on every page. It carries a visible heading because "Mariage · Famille
+              · Grossesse · Couple" beside "Galeries · Tarifs" would read as one confused list
+              of destinations; the pages column needs no heading, being self-evident. */}
+          <nav aria-label={ui.nav.services}>
+            <p className="ch-mono mb-2.5">{ui.nav.services}</p>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2.5 md:flex md:flex-col md:gap-2">
+              {serviceInventory.map((item) => (
+                <Link
+                  key={item.id}
+                  href={link(locale, { page: "service", service: item.id })}
+                  className="ch-foot-link w-fit py-1 text-nav"
+                >
+                  {item.label[lang]}
+                </Link>
+              ))}
+            </div>
           </nav>
 
           {/* Group C — one contact group: Instagram · Facebook · Email.

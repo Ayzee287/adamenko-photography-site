@@ -4,9 +4,9 @@
 import type { LegalDocument } from "@/content/legal";
 import { Develop } from "@/components/chambre/develop";
 
-export function LegalDoc({ doc }: { doc: LegalDocument }) {
+export function LegalDoc({ doc, lang }: { doc: LegalDocument; lang?: string }) {
   return (
-    <section className="ch-movement ch-wrap">
+    <section lang={lang} className="ch-movement ch-wrap">
       <div style={{ maxWidth: "46rem", display: "flex", flexDirection: "column", gap: "2.6rem" }}>
         {doc.sections.map((s, i) => (
           <Develop key={i}>

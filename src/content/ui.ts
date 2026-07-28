@@ -12,6 +12,8 @@ export const ui = {
     home: "Accueil",
     primary: "Navigation principale",
     footer: "Pied de page",
+    /** Heads the footer's service column — rendered, unlike the aria-only labels here. */
+    services: "Prestations",
     legal: "Liens légaux",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",

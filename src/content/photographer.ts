@@ -117,6 +117,11 @@ export const photographer: Photographer = {
     // Telegram intentionally NOT exposed: it is a personal account, not a business
     // channel (client decision). Kept out of the contact page, the footer and sameAs.
     telegram: undefined,
-    phone: undefined,
+    // The business phone the Google Business Profile has published all along. The site
+    // published none, so the two surfaces disagreed on one of the three facts (name,
+    // address, phone) local search matches a business on. Owner-confirmed 2026-07-28 that
+    // the site is the surface that should change; the number is copied from the Profile,
+    // not from anywhere else, so both now state the same thing.
+    phone: "+33 7 66 83 40 07",
   },
 };

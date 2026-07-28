@@ -47,6 +47,9 @@ const ALWAYS_INCLUDE = new Set([
   // The Grossesse dossier hero — a landscape frame, because the cinematic band cropped
   // the bump out of the portrait cover it used to show.
   "stories/grossesse/grossesse-2/grossesse-2-04.jpg",
+  // The Mariages plate on /galeries — the lead print on that wall, and the largest
+  // photograph on the page. See content/gallery-covers.ts for why it is not the cover.
+  "stories/mariages/mariages-4/mariages-4-66.jpg",
 ]);
 
 /** All JPEG files under `dir`, recursively, minus the excluded roots. */

@@ -152,6 +152,7 @@ export const en: DeepPartial<Dictionary> = {
       home: "Home",
       primary: "Main navigation",
       footer: "Footer",
+      services: "Services",
       legal: "Legal links",
       openMenu: "Open menu",
       closeMenu: "Close menu",
@@ -741,7 +742,10 @@ export const en: DeepPartial<Dictionary> = {
     channels: [
       { id: "form", label: "Contact form", value: "Send a message", href: "/contact", external: false },
       { id: "email", label: "Email", value: "adamenkoiu@gmail.com", href: "mailto:adamenkoiu@gmail.com", external: false },
-      { id: "phone", label: "Phone", value: "", href: "", external: false },
+      // Mirrors content/photographer.ts — this list replaces the French one wholesale
+      // (arrays are not deep-merged), so a channel left empty here would stay empty in
+      // English however the identity model changes.
+      { id: "phone", label: "Phone", value: "+33 7 66 83 40 07", href: "tel:+33766834007", external: false },
       { id: "instagram", label: "Instagram", value: "@adamenko_photography", href: "https://www.instagram.com/adamenko_photography/", external: true },
       { id: "facebook", label: "Facebook", value: "Adamenko Photography", href: "https://www.facebook.com/profile.php?id=100011367545612", external: true },
     ],

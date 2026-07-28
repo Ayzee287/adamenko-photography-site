@@ -7,6 +7,7 @@ import { link, type GenreSlug } from "@/lib/routes";
 import { ChambreScene, ChapterOpening } from "@/components/chambre/scene";
 import { Plate } from "@/components/chambre/plate";
 import { Develop } from "@/components/chambre/develop";
+import { galleryCovers } from "@/content/gallery-covers";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
@@ -47,12 +48,18 @@ export default async function GaleriesPage({
           const albums = dict.galleries.filter((gg) => gg.cover?.src);
           const featured = albums.find((gg) => gg.slug === "mariages") ?? albums[0];
           const supporting = albums.filter((gg) => gg !== featured);
+          // Which frame advertises the genre HERE is its own decision — see
+          // content/gallery-covers.ts. Absent an override the curated cover stands.
+          const plateOf = (gg: (typeof albums)[number]) =>
+            galleryCovers[gg.slug as GenreSlug] ?? { src: gg.cover!.src!, focus: undefined };
+          const lead = plateOf(featured);
           return (
             <div className="ch-gallery-wall">
               <Develop>
                 <Plate
                   href={link(active, { page: "genre", genre: featured.slug as GenreSlug })}
-                  src={featured.cover!.src!}
+                  src={lead.src}
+                  focus={lead.focus}
                   alt={`${featured.title} — ${featured.intro}`}
                   ratio="cine"
                   plaque={g.view}
@@ -65,7 +72,8 @@ export default async function GaleriesPage({
                   <Develop key={gallery.slug} delay={(i % 3) * 70}>
                     <Plate
                       href={link(active, { page: "genre", genre: gallery.slug as GenreSlug })}
-                      src={gallery.cover!.src!}
+                      src={plateOf(gallery).src}
+                      focus={plateOf(gallery).focus}
                       alt={`${gallery.title} — ${gallery.intro}`}
                       ratio="tall"
                       plaque={g.view}
