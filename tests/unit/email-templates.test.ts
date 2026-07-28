@@ -79,10 +79,24 @@ describe("untrusted input cannot escape its slot", () => {
 });
 
 describe("rendering across mail clients", () => {
-  it("declares a light colour scheme so dark-mode clients do not invert the palette", () => {
+  it("declares a dark colour scheme so dark-mode clients do not invert the palette", () => {
+    // These messages are DESIGNED dark (CHAMBRE, the live site's art direction). A client
+    // that is not told so will "helpfully" invert them into an unreadable hybrid.
     for (const m of both()) {
-      expect(m.html).toContain('name="color-scheme" content="light"');
-      expect(m.html).toContain('name="supported-color-schemes" content="light"');
+      expect(m.html).toContain('name="color-scheme" content="dark"');
+      expect(m.html).toContain('name="supported-color-schemes" content="dark"');
+    }
+  });
+
+  it("gives Outlook a ghost table and bgcolor attributes to hold the design", () => {
+    for (const m of both()) {
+      // Word-engine Outlook ignores max-width: without this the card spans the window.
+      expect(m.html).toContain("<!--[if mso]><table");
+      expect(m.html).toContain("<![endif]-->");
+      // …and it ignores background-color on anything but a bgcolor attribute, which on a
+      // dark design is the difference between the type being legible and being invisible.
+      expect(m.html).toMatch(/bgcolor="#0a0908"/i);
+      expect(m.html).toMatch(/bgcolor="#0e0c0b"/i);
     }
   });
 
@@ -116,15 +130,65 @@ describe("rendering across mail clients", () => {
   });
 });
 
-describe("accessibility", () => {
-  it("uses the accessible clay for text and reserves the light clay for decoration", () => {
-    // #b07159 is 3.64:1 on the cream card — below AA for normal text. It may draw a rule or
-    // an underline, but must never BE the text.
+describe("the art direction is the live site's", () => {
+  // CHAMBRE, read off body:has([data-chambre]) + :root in src/styles/chambre.css.
+  const CHAMBRE = {
+    page: "#0a0908",
+    card: "#0e0c0b",
+    bone: "#ede6da",
+    ash: "#8b837a",
+    ember: "#c86b3c",
+  };
+
+  it("paints with the site's tokens", () => {
     for (const m of both()) {
-      // Anchored so it cannot match the tail of `text-decoration-color:`, which is a
-      // legitimate decorative use of the light clay.
-      expect(m.html).not.toMatch(/[;"']color:#b07159/);
+      for (const [name, hex] of Object.entries(CHAMBRE)) {
+        expect(m.html.toLowerCase(), `${name} (${hex}) must appear`).toContain(hex);
+      }
     }
+  });
+
+  it("keeps no colour from the retired V1 palette", () => {
+    // These emails used to mirror globals.css — a stylesheet tokens.css marks inert
+    // ("V1's globals.css/motion.css are inert (superseded, unimported)"). A single one of
+    // these hexes surviving is the whole bug this redesign fixed.
+    const V1 = ["#faf6f0", "#f3ece1", "#2a2420", "#6f655c", "#e7ddd0", "#b07159", "#96543d"];
+    for (const m of both()) {
+      for (const hex of V1) {
+        expect(m.html.toLowerCase(), `${hex} is V1 and must not survive`).not.toContain(hex);
+      }
+    }
+  });
+});
+
+describe("accessibility", () => {
+  /** WCAG 2.x relative luminance + contrast ratio, so the claim is measured, not asserted. */
+  const contrast = (a: string, b: string) => {
+    const lum = (hex: string) => {
+      const n = parseInt(hex.slice(1), 16);
+      const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+        const c = v / 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * ch[0]! + 0.7152 * ch[1]! + 0.0722 * ch[2]!;
+    };
+    const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+    return (hi! + 0.05) / (lo! + 0.05);
+  };
+
+  it("reads at AA or better for every colour it sets type in", () => {
+    const card = "#0e0c0b";
+    // Bone body, ash secondary, and the ember — which on obsidian is 5.2:1 and may
+    // therefore carry text, unlike V1's clay (3.64:1 on cream, which is why that design
+    // needed a separate darkened variant for anything readable).
+    expect(contrast("#ede6da", card)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#8b837a", card)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#c86b3c", card)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("never sets type in the disabled token", () => {
+    // --content-disabled is 2.03:1 here. It exists for rules and edges, never for reading.
+    for (const m of both()) expect(m.html.toLowerCase()).not.toMatch(/color:#4a443e/);
   });
 
   it("declares the document language of the copy it actually contains", () => {
@@ -132,6 +196,52 @@ describe("accessibility", () => {
     expect(buildVisitorConfirmation(base, "en").html).toContain('<html lang="en">');
     // the owner notification is always written in French
     expect(buildOwnerNotification(base).html).toContain('<html lang="fr">');
+  });
+});
+
+describe("links and calls to action", () => {
+  it("never ships a localhost or otherwise dead link", () => {
+    // NEXT_PUBLIC_SITE_URL is unset under test, exactly as it is on a machine with no
+    // deployment config. A transactional email must drop the link rather than send one
+    // that resolves to the recipient's own machine.
+    for (const m of both()) {
+      expect(m.html).not.toMatch(/localhost|127\.0\.0\.1/);
+      expect(m.text).not.toMatch(/localhost|127\.0\.0\.1/);
+    }
+  });
+
+  it("keeps the reply CTA short enough to stay a button", () => {
+    // Mono, uppercase and letterspaced at the site's CTA scale: the full name blew the
+    // control apart onto three lines. The first word is what someone is called.
+    const html = buildOwnerNotification({
+      ...base,
+      name: 'Jean-Éric <script>alert(1)</script> "Bob" & fils',
+    }).html;
+    const label = html.match(/>Répondre à ([^&<]*)/)?.[1] ?? "";
+    expect(label.trim()).toBe("Jean-Éric");
+  });
+
+  it("points the reply CTA at the visitor, and the visitor CTA nowhere unsafe", () => {
+    expect(buildOwnerNotification(base).html).toContain(`mailto:${base.email}`);
+  });
+});
+
+describe("the inbox preview earns its line", () => {
+  it("does not simply restate the subject", () => {
+    for (const m of both()) {
+      const preheader = m.html.match(/mso-hide:all;">([^<]*)</)?.[1] ?? "";
+      const strip = (s: string) => s.replace(/[^\p{L}\p{N}]+/gu, " ").trim().toLowerCase();
+      expect(strip(preheader).length).toBeGreaterThan(0);
+      expect(strip(preheader)).not.toBe(strip(m.subject));
+    }
+  });
+
+  it("shows the owner what the inquiry actually says", () => {
+    // Her subject already carries the name and the occasion; the preview line is the only
+    // place the message itself can appear before she opens it.
+    const m = buildOwnerNotification(base);
+    const preheader = m.html.match(/mso-hide:all;">([^<]*)</)?.[1] ?? "";
+    expect(preheader).toContain("Nous nous marions en juin");
   });
 });
 

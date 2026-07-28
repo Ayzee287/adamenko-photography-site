@@ -57,3 +57,6 @@ curation/sheets/
 /public/stories-draft/
 # Local idempotency cache: maps source-photo hashes to already-encoded exports.
 /.story-ingest-state.json
+
+# Local email previews (scripts/email-preview.mjs)
+.email-preview/

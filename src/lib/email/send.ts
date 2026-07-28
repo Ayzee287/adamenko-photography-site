@@ -5,7 +5,8 @@ import { RESEND_ENDPOINT, type EmailConfig } from "@/lib/email/config";
 // the caller decides the HTTP status + logs. It deliberately does no logging itself,
 // and never throws — a network failure is returned as `{ ok: false, reason }`.
 //
-// `from` is ALWAYS the branded `CONTACT_FROM_EMAIL` (config.from); only `to` and
+// `from` is ALWAYS the branded `CONTACT_FROM_EMAIL` (config.from), wrapped by fromHeader()
+// so the studio's name — not a bare address — is what an inbox shows; only `to` and
 // `replyTo` vary per message, so the same transport sends both the owner notification
 // (Reply-To = visitor) and the visitor confirmation (Reply-To = owner inbox).
 
@@ -18,6 +19,18 @@ export type OutgoingEmail = {
   text: string;
   html: string;
 };
+
+/**
+ * The From header, with the studio's name on it.
+ *
+ * `CONTACT_FROM_EMAIL` is a bare address, and a bare address is what every inbox was
+ * showing: "hello@adamenko-photography.com" in the sender column instead of the brand,
+ * on both the inquiry and the client-facing confirmation. An operator who has already
+ * written a display name into the env var keeps theirs.
+ */
+export function fromHeader(address: string): string {
+  return address.includes("<") ? address : `Adamenko Photography <${address}>`;
+}
 
 export type SendResult =
   | { ok: true; id?: string }
@@ -45,7 +58,7 @@ export async function sendEmail(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: config.from,
+        from: fromHeader(config.from),
         to: [message.to],
         reply_to: message.replyTo,
         subject: message.subject,
