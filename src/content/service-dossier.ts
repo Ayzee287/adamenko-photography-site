@@ -44,15 +44,26 @@ export type DossierStep = {
 
 export const serviceDossier = {
   /**
-   * Hero override for the cinematic opening plate — set ONLY where the genre's curated
-   * gallery cover does not survive the 21:9 band.
+   * Hero treatment for the cinematic opening plate — set ONLY where the genre's curated
+   * gallery cover does not survive the 21:9 band as it stands.
    *
-   * The plate is `ratio="cine"` with `object-fit: cover`, so a PORTRAIT cover loses 71% of
-   * its height. Measured on the built page, that is usually fine — the Couples cover keeps
-   * both faces and the crop even removes a bouquet that made a couple séance read as a
-   * wedding. On Grossesse it was not fine: the band cut the bump out of a maternity
-   * photograph and clipped the father's head. A landscape frame from the same session keeps
-   * the subject and loses only sky and ground, which is what a cinematic crop should lose.
+   * The plate is `ratio="cine"` with `object-fit: cover`, so the band keeps 64% of the
+   * height of a 3:2 frame and only 29% of a 2:3 one — and by default it keeps the MIDDLE
+   * of that height, which is rarely where the subject is. There are two different failures
+   * and they take two different fixes:
+   *
+   *   `position` — the frame is right, the crop is aimed wrong. Mariages: the cover is a
+   *   fine landscape, but centring the band sliced the top of the groom's head off. Aiming
+   *   it at 24% clears his head and lands the horizon near the upper third; nothing is
+   *   replaced and nothing is distorted.
+   *
+   *   `src` — the frame itself cannot be a 21:9 photograph. Grossesse: the band cut the
+   *   bump out of a maternity picture. Familles: the cover is a full-length street
+   *   portrait, and its family spans 40% of the frame height where the band can show 29% —
+   *   no offset exists that holds them, and every candidate either beheaded the father or
+   *   cut the parents at the knee. In both cases a LANDSCAPE frame from the operator's own
+   *   selection keeps the subject whole and loses only sky and ground, which is what a
+   *   cinematic crop should lose.
    *
    * Deliberately an override, not a replacement: content/galleries.ts is generated from the
    * curation sheet, so the covers stay the operator's decision everywhere they work.
@@ -62,7 +73,20 @@ export const serviceDossier = {
       src: "/stories/grossesse/grossesse-2/grossesse-2-04.jpg",
       alt: "Un couple traverse la cour d'un palais lyonnais, main dans la main, avant la naissance.",
     },
-  } as Partial<Record<GenreSlug, { src: string; alt: string }>>,
+    familles: {
+      // The autumn field frame from the same curated gallery (a01): the whole family of
+      // four, complete, with the fence line carrying the eye right. Aimed at 32% — at 50%
+      // the band cut the father's head, at 42% it grazed it, at 22% it traded the
+      // children's feet for empty sky.
+      src: "/galleries/familles/familles-a01.jpg",
+      alt: "Une famille réunie dans un champ, à la lumière chaude de l'automne.",
+      position: "50% 32%",
+    },
+    mariages: {
+      // Cover kept — only the aim corrected. See `position` above.
+      position: "50% 24%",
+    },
+  } as Partial<Record<GenreSlug, { src?: string; alt?: string; position?: string }>>,
 
   /** The work first: a photography site answers "show me" before "what's included". */
   work: {

@@ -190,6 +190,37 @@ export function Exhibition(props: {
     return () => io.disconnect();
   }, [rows]);
 
+  // Hover-readiness — the compositor layer a tile needs in order to lift SMOOTHLY.
+  //
+  // A tile painted into its ancestor's layer sits at a fractional device-pixel offset; the
+  // instant its hover transform starts, Chrome moves it to its own layer and snaps that
+  // layer's raster to whole pixels, so the photograph jumps before the zoom has begun
+  // (measured here: 0.59 device px — the worst on the site). Holding the layer from the
+  // start removes the promotion, and with it the jump.
+  //
+  // Which is why this is an observer and not the line of CSS the plates get: a wall can run
+  // to a hundred frames, and promoting all of them costs real frame time. Scrolling a
+  // 105-frame wall at 4x CPU throttle, four alternating runs each way: 26.7ms median frame
+  // and 9 frames over 33ms this way, against 28.6ms and up to 16 the other — every run of
+  // one faster than every run of the other. Only what is on or near the screen can be
+  // hovered, so only that is promoted (~10-25 tiles), and the layer always exists well
+  // before the pointer can reach it.
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.target.classList.toggle("is-near", e.isIntersecting);
+      },
+      { rootMargin: "60% 0px" },
+    );
+    el.querySelectorAll<HTMLElement>(".ex-tile").forEach((t) => io.observe(t));
+    return () => io.disconnect();
+  }, [rows]);
+
   // Once the rows are solved every tile knows its EXACT rendered width, and saying so is the
   // difference between a phone downloading a 1080px master for a 170px frame and fetching what
   // it will actually paint — a justified wall cannot be described by a viewport formula.
