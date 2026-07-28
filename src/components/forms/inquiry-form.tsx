@@ -14,6 +14,7 @@
 // · provenance: origin + locale ride hidden fields (the measurement law)
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { track } from "@vercel/analytics";
 import {
   initialInquiryState,
   validateField,
@@ -98,6 +99,30 @@ export function InquiryForm(props: {
       );
     }
   }, [state]);
+
+  // The one conversion this site has. Vercel Analytics was mounted but only ever counted
+  // page views, so "how many enquiries did the site produce" was a question the business
+  // could answer from its inbox and nowhere else — and it could never be attributed to the
+  // page the visitor came from. `track` is cookieless, needs no consent banner (the same
+  // basis on which the pageview analytics are already declared), and is a no-op off Vercel.
+  //
+  // The payload carries DIMENSIONS, never the enquiry: which page the form was on, and in
+  // which language. No name, no email, no message, no free text — this measures the funnel,
+  // and nothing in it could identify the person who converted. `origin` is the attribution
+  // that was missing: it says whether the enquiry came from /contact, a service dossier or a
+  // gallery. The séance type is deliberately NOT sent — a successful submit clears `values`
+  // by design, and re-reading it from the form to make a metric prettier is not a reason to
+  // reach back into an enquiry's contents.
+  //
+  // Guarded by a ref, not just the effect's dependency: `state` is a fresh object per server
+  // response so the effect already fires once per submission, but a double-invoked effect in
+  // development would otherwise count a conversion twice.
+  const counted = useRef<InquiryState | null>(null);
+  useEffect(() => {
+    if (state.status !== "success" || counted.current === state) return;
+    counted.current = state;
+    track("inquiry_sent", { origin, locale });
+  }, [state, origin, locale]);
 
   const onBlur =
     (field: InquiryField) =>
