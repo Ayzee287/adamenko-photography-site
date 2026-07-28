@@ -128,6 +128,25 @@ export const navInventory: ReadonlyArray<{
   { id: "contact", label: { fr: "Contact", en: "Contact" } },
 ];
 
+/* ── Service inventory (the four commercial dossiers, for the footer index) ──
+   D095 kept "Prestations" out of the HEADER and that stands: the header is a short list of
+   destinations, and /tarifs is the hub. The footer is a different object — it calls itself
+   the site's complete index — and these four pages were missing from it. Measured
+   2026-07-28 on the built site: /prestations/{service} was linked from /tarifs and from its
+   own genre pages and nowhere else, so the four pages the business actually sells on had
+   one or two internal links each while the site had zero indexed URLs. Order matches the
+   header's logic — the work first, by what is most asked for. */
+
+export const serviceInventory: ReadonlyArray<{
+  id: ServiceSlug;
+  label: Record<"fr" | "en", string>;
+}> = [
+  { id: "mariage", label: { fr: "Mariage", en: "Wedding" } },
+  { id: "famille", label: { fr: "Famille", en: "Family" } },
+  { id: "grossesse", label: { fr: "Grossesse", en: "Maternity" } },
+  { id: "couple", label: { fr: "Couple", en: "Couple" } },
+];
+
 /* ── Enumerations for generateStaticParams ── */
 
 export const allServiceParams = Object.keys(serviceSlugs) as ServiceSlug[];

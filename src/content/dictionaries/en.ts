@@ -152,6 +152,7 @@ export const en: DeepPartial<Dictionary> = {
       home: "Home",
       primary: "Main navigation",
       footer: "Footer",
+      services: "Services",
       legal: "Legal links",
       openMenu: "Open menu",
       closeMenu: "Close menu",
