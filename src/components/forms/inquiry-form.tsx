@@ -100,6 +100,34 @@ export function InquiryForm(props: {
     }
   }, [state]);
 
+  // A visitor who read a whole service dossier and clicked its one CTA has already said which
+  // séance they want; the form then asks again, in a REQUIRED field. The dossiers, genre
+  // galleries and story pages now link to `?seance=<slug>`, and this reads it.
+  //
+  // Read AFTER MOUNT, from the DOM, rather than from the server's `searchParams`. Taking it
+  // on the server opts the whole page out of static rendering — measured: /contact moved from
+  // ● SSG to ƒ Dynamic — which buys a preselected option at the price of a serverless
+  // invocation on the site's only conversion page. This form is a client component and
+  // hydrates either way, so it can do the same work for nothing. Setting an uncontrolled
+  // select's value imperatively also keeps the change out of hydration entirely, which
+  // `defaultValue` would not (D015 is the reason that matters here).
+  //
+  // The slug is visitor input, so it is checked against the rendered options; anything else
+  // is ignored and the visitor simply chooses for themselves. Runs once: re-applying it after
+  // someone has changed the select would overwrite their answer with the URL's.
+  const intent = useRef<string | null>(null);
+  useEffect(() => {
+    const asked = new URLSearchParams(window.location.search).get("seance");
+    if (!asked || !sessionTypes.some((s) => s.value === asked)) return;
+    const select = formRef.current?.querySelector<HTMLSelectElement>(
+      'select[name="sessionType"]',
+    );
+    if (!select || select.value) return;
+    select.value = asked;
+    intent.current = asked;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // The one conversion this site has. Vercel Analytics was mounted but only ever counted
   // page views, so "how many enquiries did the site produce" was a question the business
   // could answer from its inbox and nowhere else — and it could never be attributed to the
@@ -121,7 +149,13 @@ export function InquiryForm(props: {
   useEffect(() => {
     if (state.status !== "success" || counted.current === state) return;
     counted.current = state;
-    track("inquiry_sent", { origin, locale });
+    // `origin` alone was the page the form sits on, which is the same string for every
+    // enquiry. The stated intent is what distinguishes them, and it is navigation context
+    // read from the URL, not something the visitor typed.
+    track("inquiry_sent", {
+      origin: intent.current ? `${origin}?seance=${intent.current}` : origin,
+      locale,
+    });
   }, [state, origin, locale]);
 
   const onBlur =

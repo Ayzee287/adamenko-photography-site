@@ -409,7 +409,13 @@ export default async function ServicePage({
             <Link className="ch-go" href={link(active, { page: "tarifs" })}>
               {dict.ui.actions.pricing} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
-            <Link className="ch-go" href={link(active, { page: "contact" })}>
+            {/* The dossier knows which séance this visitor read about; the contact form asks
+                for it in a required field. Carry it, so the highest-intent path on the site
+                does not ask a question it has already been told the answer to. */}
+            <Link
+              className="ch-go"
+              href={link(active, { page: "contact", seance: service as ServiceSlug })}
+            >
               {dict.ui.actions.contactMe} <span className="ch-arrow" aria-hidden>→</span>
             </Link>
           </nav>

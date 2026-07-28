@@ -54,6 +54,10 @@ export type StaticPageId = keyof typeof staticPages;
 
 export type PageRef =
   | { page: StaticPageId }
+  // Contact can be opened with the séance already chosen. The slug is the FORM's submitted
+  // value (the inquiry schema's enum), not a display string, so it stays French in both
+  // locales — /en/contact?seance=mariage is correct, not a leak.
+  | { page: "contact"; seance: ServiceSlug }
   | { page: "service"; service: ServiceSlug }
   | { page: "genre"; genre: GenreSlug }
   | { page: "story"; slug: string }
@@ -76,6 +80,10 @@ function prefix(locale: Locale, path: string): string {
 /** The one legal way to build an internal href (lint-enforced from P5). */
 export function link(locale: Locale, ref: PageRef): string {
   switch (ref.page) {
+    case "contact": {
+      const base = prefix(locale, staticPages.contact[locale === "fr" ? "fr" : "en"]);
+      return "seance" in ref && ref.seance ? `${base}?seance=${ref.seance}` : base;
+    }
     case "service": {
       const base = staticPages.prestations[locale === "fr" ? "fr" : "en"];
       const slug = locale === "fr" ? ref.service : serviceSlugs[ref.service];

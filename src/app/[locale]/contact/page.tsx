@@ -87,6 +87,14 @@ export default async function ContactPage({
     { value: "mariage", label: ol.Mariage },
   ];
 
+  // NOTE on `?seance=<slug>` — the séance a visitor already chose by reading a dossier is
+  // read INSIDE InquiryForm, from the URL, after mount. It is deliberately not read here
+  // through `searchParams`: doing that opts the whole page out of static rendering (measured
+  // — the build moved /contact from ● SSG to ƒ Dynamic), which trades a serverless
+  // invocation on the site's only conversion page for a select that starts one option ahead.
+  // The form is a client component and hydrates regardless, so it can do the same job for
+  // free. See the `intent` effect there.
+
   return (
     <ChambreScene>
       <ChapterOpening kicker={c.eyebrow} title={c.title} intro={c.intro} mark="§" />
