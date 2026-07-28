@@ -7,7 +7,15 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = process.cwd();
-const CANDIDATES = ["", ".ts", ".tsx", ".mjs", ".js", "/index.ts", "/index.tsx"];
+const CANDIDATES = [
+  "",
+  ".ts",
+  ".tsx",
+  ".mjs",
+  ".js",
+  "/index.ts",
+  "/index.tsx",
+];
 
 /** First existing file among `base` + each candidate extension. */
 function firstHit(base) {
@@ -30,7 +38,11 @@ export function resolve(specifier, context, next) {
   // NB: a dotted module name like "./reviews.generated" has a non-empty path.extname, so the
   // test is "does it end in a module extension", not "does it have one".
   const hasModuleExt = /\.(m?[jt]sx?|cjs|json)$/.test(specifier);
-  if (specifier.startsWith(".") && context.parentURL?.startsWith("file:") && !hasModuleExt) {
+  if (
+    specifier.startsWith(".") &&
+    context.parentURL?.startsWith("file:") &&
+    !hasModuleExt
+  ) {
     const parentDir = path.dirname(fileURLToPath(context.parentURL));
     const hit = firstHit(path.resolve(parentDir, specifier));
     if (hit) return { url: hit, shortCircuit: true };

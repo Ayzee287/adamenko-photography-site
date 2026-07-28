@@ -19,9 +19,8 @@ import { pathToFileURL } from "node:url";
 // The templates are TypeScript with "@/…" imports; compile + resolve them on the fly.
 register("./email-preview-loader.mjs", pathToFileURL("./scripts/"));
 
-const { buildOwnerNotification, buildVisitorConfirmation } = await import(
-  "../src/lib/email/templates.ts"
-);
+const { buildOwnerNotification, buildVisitorConfirmation } =
+  await import("../src/lib/email/templates.ts");
 
 const OUT = ".email-preview";
 
@@ -48,7 +47,8 @@ const minimal = {
 /** The stress case: a long unbroken token, accents, and markup that must stay inert. */
 const hostile = {
   name: 'Jean-Éric <script>alert(1)</script> "Bob" & fils',
-  email: "jean-eric.de-la-tour-du-pin-longuement@exemple-tres-long-domaine.example.com",
+  email:
+    "jean-eric.de-la-tour-du-pin-longuement@exemple-tres-long-domaine.example.com",
   occasion: "Grossesse",
   message:
     "Voir https://www.exemple.com/une-adresse-vraiment-tres-longue-sans-aucun-tiret-" +
@@ -60,11 +60,31 @@ const hostile = {
 };
 
 const variants = [
-  ["owner-full", "Owner notification — full inquiry (FR)", buildOwnerNotification(full)],
-  ["owner-minimal", "Owner notification — minimal inquiry (FR)", buildOwnerNotification(minimal)],
-  ["owner-hostile", "Owner notification — hostile input + long token (FR)", buildOwnerNotification(hostile)],
-  ["visitor-fr", "Visitor confirmation (FR)", buildVisitorConfirmation(full, "fr")],
-  ["visitor-en", "Visitor confirmation (EN)", buildVisitorConfirmation(full, "en")],
+  [
+    "owner-full",
+    "Owner notification — full inquiry (FR)",
+    buildOwnerNotification(full),
+  ],
+  [
+    "owner-minimal",
+    "Owner notification — minimal inquiry (FR)",
+    buildOwnerNotification(minimal),
+  ],
+  [
+    "owner-hostile",
+    "Owner notification — hostile input + long token (FR)",
+    buildOwnerNotification(hostile),
+  ],
+  [
+    "visitor-fr",
+    "Visitor confirmation (FR)",
+    buildVisitorConfirmation(full, "fr"),
+  ],
+  [
+    "visitor-en",
+    "Visitor confirmation (EN)",
+    buildVisitorConfirmation(full, "en"),
+  ],
 ];
 
 await mkdir(OUT, { recursive: true });
@@ -77,8 +97,15 @@ for (const [slug, label, mail] of variants) {
     `Subject: ${mail.subject}\n${"=".repeat(60)}\n\n${mail.text}\n`,
     "utf8",
   );
-  rows.push({ slug, label, subject: mail.subject, bytes: Buffer.byteLength(mail.html) });
-  console.log(`${slug.padEnd(16)} ${String(Buffer.byteLength(mail.html)).padStart(6)} B  ${mail.subject}`);
+  rows.push({
+    slug,
+    label,
+    subject: mail.subject,
+    bytes: Buffer.byteLength(mail.html),
+  });
+  console.log(
+    `${slug.padEnd(16)} ${String(Buffer.byteLength(mail.html)).padStart(6)} B  ${mail.subject}`,
+  );
 }
 
 // A contact sheet: every email side by side, at a phone width and a desktop width.
@@ -114,4 +141,6 @@ ${frames}`,
   "utf8",
 );
 
-console.log(`\nWrote ${rows.length} emails to ${OUT}/ — open ${OUT}/index.html`);
+console.log(
+  `\nWrote ${rows.length} emails to ${OUT}/ — open ${OUT}/index.html`,
+);
