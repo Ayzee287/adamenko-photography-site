@@ -22,6 +22,8 @@ import { Voices } from "@/components/chambre/voices";
 import { googleRating, googleProfile } from "@/content/reviews.generated";
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { webSiteJsonLd } from "@/lib/structured-data";
 
 export async function generateMetadata({
   params,
@@ -58,6 +60,9 @@ export default async function HomePage({
 
   return (
     <div data-chambre className="ch-root">
+      {/* Site name for Google Search. Root only — the EN home page is a subdirectory,
+          which Google states cannot carry its own site name. */}
+      {active === defaultLocale && <JsonLd data={webSiteJsonLd()} />}
       <Overture wordmark={dict.site.brand} />
       {/* No JS → no black curtain (the film simply begins developed). */}
       <noscript>

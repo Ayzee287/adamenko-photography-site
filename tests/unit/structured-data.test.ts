@@ -10,10 +10,33 @@
 // enforces the frozen "no aggregateRating" policy).
 
 import { describe, expect, it } from "vitest";
-import { faqPageJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
+import { faqPageJsonLd, breadcrumbJsonLd, webSiteJsonLd } from "@/lib/structured-data";
 import { getDictionary } from "@/lib/dictionary";
 import { activeLocales } from "@/lib/i18n";
 import { faq } from "@/content/faq";
+import { photographer } from "@/content/photographer";
+import { absoluteUrl } from "@/lib/site";
+
+describe("webSiteJsonLd", () => {
+  it("states the site name Google should show, from the content model not a literal", () => {
+    const ld = webSiteJsonLd();
+    expect(ld["@type"]).toBe("WebSite");
+    expect(ld.name).toBe(photographer.brand);
+    expect(ld.alternateName).toBe(photographer.shortBrand);
+  });
+
+  it("points url at the domain root — Google requires the root URI, not a subpath", () => {
+    // Asserted through absoluteUrl so the test pins the SHAPE (root, absolute, trailing
+    // slash) rather than whichever base URL the environment happens to supply.
+    expect(webSiteJsonLd().url).toBe(absoluteUrl("/"));
+    expect(String(webSiteJsonLd().url)).toMatch(/\/$/);
+  });
+
+  it("links the publisher to the one business node instead of restating it", () => {
+    const publisher = webSiteJsonLd().publisher as { "@id": string };
+    expect(publisher["@id"]).toBe(absoluteUrl("/#business"));
+  });
+});
 
 describe("faqPageJsonLd", () => {
   it("marks up every question the page renders, and only those", () => {
