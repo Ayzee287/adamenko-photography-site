@@ -57,6 +57,9 @@ export type Photographer = {
     telegram?: string;
     /** Public business phone, if she wants one listed — left unset, hidden until set. */
     phone?: string;
+    /** Contactable hours as published on the Business Profile, 24h "HH:MM". Structured
+     *  data only — see the note at the value. Omit rather than guess. */
+    hours?: { opens: string; closes: string };
   };
 };
 
@@ -123,5 +126,12 @@ export const photographer: Photographer = {
     // the site is the surface that should change; the number is copied from the Profile,
     // not from anywhere else, so both now state the same thing.
     phone: "+33 7 66 83 40 07",
+    // The hours the Business Profile publishes, read from the Places API on 2026-07-28 and
+    // copied verbatim: 09:00–20:00, every day. Structured data only — these are contactable
+    // hours for an appointment business, not shop opening times, and putting them on the
+    // page would state something the site has never claimed. In the machine-readable graph
+    // they do the same job as `telephone`: make the site and the Profile describe one
+    // business rather than two. If the Profile's hours change, change them here too.
+    hours: { opens: "09:00", closes: "20:00" },
   },
 };

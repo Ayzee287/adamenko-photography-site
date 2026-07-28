@@ -135,7 +135,13 @@ export default async function StoryPage({
               {active === "en" ? "About this session" : "En savoir plus sur cette séance"}{" "}
               <span className="ch-arrow" aria-hidden>→</span>
             </Link>
-            <Link className="ch-go" href={link(active, { page: "contact" })}>
+            <Link
+              className="ch-go"
+              href={link(active, {
+                page: "contact",
+                seance: serviceForGenre[genre as GenreSlug],
+              })}
+            >
               {active === "en" ? "Book a session" : "Réserver une séance"}{" "}
               <span className="ch-arrow" aria-hidden>→</span>
             </Link>

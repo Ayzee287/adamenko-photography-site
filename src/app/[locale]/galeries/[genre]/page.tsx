@@ -186,7 +186,13 @@ export default async function GenrePage({
               {active === "en" ? "All galleries" : "Toutes les galeries"}{" "}
               <span className="ch-arrow" aria-hidden>→</span>
             </Link>
-            <Link className="ch-go" href={link(active, { page: "contact" })}>
+            <Link
+              className="ch-go"
+              href={link(active, {
+                page: "contact",
+                seance: serviceForGenre[genre as GenreSlug],
+              })}
+            >
               {active === "en" ? "Book a session" : "Réserver une séance"}{" "}
               <span className="ch-arrow" aria-hidden>→</span>
             </Link>

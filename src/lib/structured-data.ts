@@ -70,10 +70,26 @@ export function localBusinessJsonLd(locale: Locale = defaultLocale): JsonLdObjec
   };
 
   if (contact.email) business.email = contact.email;
-  // Still absent from content by decision, so this stays silent rather than inventing one.
-  // The Business Profile does publish +33 7 66 83 40 07 — the day that number is added to
-  // `photographer.contact.phone`, NAP goes consistent here with no code change.
   if (contact.phone) business.telephone = contact.phone;
+  // The Business Profile's own hours, restated for machines so the two surfaces describe
+  // one business. One specification covering all seven days, because that is what the
+  // Profile publishes — not seven identical rows.
+  if (contact.hours) {
+    business.openingHoursSpecification = {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: contact.hours.opens,
+      closes: contact.hours.closes,
+    };
+  }
   // hasMap points at the same listing sameAs corroborates: one is the identity claim,
   // the other the map reference Google uses for local pack association.
   if (contact.googleBusiness) business.hasMap = contact.googleBusiness;
