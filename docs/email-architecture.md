@@ -4,19 +4,24 @@ The contact form's delivery pipeline, and the **complete** steps to switch it on
 production domain is purchased. The engineering is finished; everything below the
 "Architecture" section is operator configuration — **no code change is required**.
 
-> **Current state (2026-06-29): LIVE in production.** Resend domain `adamenko-photography.com`
-> verified (EU/Ireland, SPF+DKIM pass), env vars set in Vercel, deployed. A real production
-> submission returns `200` and delivers both the owner notification and the visitor confirmation.
-> (With no mail credentials, `/api/contact` would return **503** and the form shows its graceful
-> email/Instagram fallback — the site stays usable either way.)
+> **Current state: LIVE in production.** Resend domain `adamenko-photography.com` verified
+> (EU/Ireland, `eu-west-1`, SPF+DKIM pass, sending enabled, open/click tracking off), env vars
+> set in Vercel, deployed. A real production submission delivers both the owner notification
+> and the visitor confirmation. (With no mail credentials the action returns its form-scope
+> error and the form shows the graceful email/Instagram fallback — the site stays usable
+> either way.)
+>
+> The messages were re-cut into the site's **CHAMBRE** art direction; they previously carried
+> V1's cream/clay palette from the now-inert `globals.css`. See `src/lib/email/templates.ts`
+> and preview them with `npm run email:preview`.
 
 ---
 
 ## Architecture
 
-A visitor submits the form → the client posts JSON to `/api/contact` → the route validates,
-screens the honeypot, then sends **two** emails through the **Resend REST API** (`fetch`, no SDK,
-nothing at build time):
+A visitor submits the form → the **`submitInquiry` Server Action** validates, screens the
+honeypot and rate-limits per IP, then sends **two** emails through the **Resend REST API**
+(`fetch`, no SDK, nothing at build time):
 
 1. **Owner notification** → the photographer's inbox. `From` = branded sender,
    **Reply-To = the visitor**, so her "Reply" goes straight back to them. This send is the
@@ -27,15 +32,19 @@ nothing at build time):
    visitor's reply reaches her.
 
 ```
-contact-form.tsx ──POST /api/contact──▶ route.ts
-                                          │  1. parse JSON              → 400 malformed
-                                          │  2. honeypot (isBot)        → 200, send nothing
-                                          │  3. validateContact         → 422 + field names
-                                          │  4. getEmailConfig          → 503 if env missing
-                                          │  5. send OWNER notification  → 502 if Resend fails  (gate)
-                                          │  6. send VISITOR confirmation→ best-effort (logged, never fails 200)
-                                          └▶ 200 { ok: true }
+inquiry-form.tsx ──Server Action──▶ submitInquiry()
+                                       │  1. honeypot (company filled) → "success", send nothing
+                                       │  2. inquirySchema.safeParse   → field errors, input kept
+                                       │  3. rate limit (5 / 10 min / IP) → form error
+                                       │  4. getEmailConfig            → form error if env missing
+                                       │  5. send OWNER notification   → form error if Resend fails (gate)
+                                       │  6. send VISITOR confirmation → best-effort (logged, never fails)
+                                       └▶ status: "success"
 ```
+
+There is **no `/api/contact` route** — that was the pre-Server-Action shape, and the HTTP
+status codes it returned no longer exist. Every failure now surfaces as either per-field
+errors (input preserved) or one form-scope error that shows the email/Instagram fallback.
 
 ### Modules
 
@@ -43,32 +52,35 @@ contact-form.tsx ──POST /api/contact──▶ route.ts
 |---|---|
 | [`src/lib/contact.ts`](../src/lib/contact.ts) | Shared validation + honeypot. The **same** module is imported by the client form and the server route, so the select options and the server enum can never drift. |
 | [`src/lib/email/config.ts`](../src/lib/email/config.ts) | Reads + validates the three env vars **at request time** (never at build). Returns `missing` names when incomplete and non-fatal `warnings` for placeholder / `resend.dev` senders. |
-| [`src/lib/email/templates.ts`](../src/lib/email/templates.ts) | `buildOwnerNotification` + `buildVisitorConfirmation(data, locale)`, both rendered through one shared `renderShell` (same editorial layout; `lang`/`brandTagline` localise it). Each returns subject + **plain-text + HTML**. The visitor confirmation is **locale-aware** — native hand-written FR + EN copy (no machine translation), selected by the locale the form was submitted from (default FR); the owner notification is always French. Escapes all HTML and strips control chars from the subject. |
+| [`src/lib/email/templates.ts`](../src/lib/email/templates.ts) | `buildOwnerNotification` + `buildVisitorConfirmation(data, locale)`, both rendered through one shared `renderShell` in the site's **CHAMBRE** art direction (obsidian page, bone type, one ember accent, mono cartel over a serif title — the token values are read off `src/styles/chambre.css`). Each returns subject + **plain-text + HTML**. The visitor confirmation is **locale-aware** — native hand-written FR + EN copy (no machine translation), selected by the locale the form was submitted from (default FR); the owner notification is always French. Escapes all HTML and strips control chars from the subject. |
 | [`src/lib/email/send.ts`](../src/lib/email/send.ts) | `sendEmail(config, { to, replyTo, subject, text, html })` — the one Resend `fetch`; `from` is always the branded sender. Returns a discriminated result (`provider` / `network`); never throws. |
 | [`src/lib/log.ts`](../src/lib/log.ts) | Structured JSON logging (one object per line). **No PII** — only counts, enums, and provider status codes. |
-| [`src/app/api/contact/route.ts`](../src/app/api/contact/route.ts) | Composes the above; orchestrates the two sends with the gate/best-effort semantics. `runtime = "nodejs"`. |
+| [`src/lib/forms/submit-inquiry.ts`](../src/lib/forms/submit-inquiry.ts) | The `"use server"` action. Composes the above; honeypot, validation, per-IP rate limit, then the two sends with the gate/best-effort semantics. |
+| [`scripts/email-preview.mjs`](../scripts/email-preview.mjs) | Renders every distinct message (owner full / minimal / hostile, visitor FR / EN) to `.email-preview/` as HTML + plain text, with a side-by-side desktop/mobile contact sheet. Sends nothing. |
 
-### Status codes (and what the form does)
+### Action states (and what the form does)
 
-| Code | Meaning | Form behaviour |
+| `InquiryState` | Meaning | Form behaviour |
 |---|---|---|
-| `200` | **Owner notification delivered** (or honeypot silently dropped). Visitor confirmation is best-effort and does not affect this. | Success confirmation replaces the form |
-| `400` | Malformed JSON body | Generic transient error + fallback link |
-| `422` | Validation failed | Inline per-field errors; focus the first invalid field |
-| `503` | Email **not configured** (env missing) | Graceful error + email/Instagram fallback |
-| `502` | Resend rejected/unreachable on the **owner** notification | Generic transient error + fallback link |
+| `success` | **Owner notification delivered** (or honeypot silently dropped). Visitor confirmation is best-effort and does not affect this. | Success confirmation replaces the form |
+| `error` + `fieldErrors` | Validation failed | Inline per-field errors; input preserved |
+| `error` + `formError` | Rate-limited, email **not configured**, or Resend rejected the owner notification | Graceful error + email/Instagram fallback; input preserved |
 
-Log events: `delivered` (owner ok), `confirmation_sent` / `confirmation_failed` (visitor, the latter
-a `warn` that never fails the request), `honeypot_drop`, `unconfigured`, `config_warning`,
-`delivery_failed`.
+The action never fakes success: an unconfigured or failing mail path returns `formError`, so
+the visitor is told honestly and given another way to reach the studio.
+
+Log events (`src/lib/log.ts`, scope `inquiry`): `delivered`, `rate_limited`,
+`email_unconfigured`, `email_config_warning`, `owner_send_failed`,
+`confirmation_send_failed`, `confirmation_threw`. The last three are `warn`/`error` lines
+that never fail the submission for the visitor.
 
 ### Security / abuse properties
 
-- **Honeypot** (`company` field, off-screen) → bots get `200` and nothing is sent.
+- **Honeypot** (`company` field, off-screen) → bots get a silent `success` and nothing is sent.
 - **Server-side validation** is the source of truth (the browser's `required`/`type=email` is a first pass only).
 - **HTML escaping** on every interpolated value; **control-char stripping** on the subject.
 - **No secret ever reaches the client** — the API key lives only in server env; the bundle imports none of the email modules.
-- **Reply-To** is intentional per message: owner notification → the **visitor**; visitor confirmation → the **owner inbox**. `From` is always the branded `CONTACT_FROM_EMAIL`.
+- **Reply-To** is intentional per message: owner notification → the **visitor**; visitor confirmation → the **owner inbox**. `From` is always the branded `CONTACT_FROM_EMAIL`, displayed as `Adamenko Photography <…>`.
 - Logs carry **no visitor PII** (name/email/message are never logged).
 
 ---
@@ -80,10 +92,10 @@ Names + illustrative values are in [`.env.example`](../.env.example).
 
 | Variable | Required | Purpose | If unset |
 |---|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Yes (SEO) | Canonical/OG/sitemap/robots/JSON-LD origin, no trailing slash | Falls back to `localhost` |
-| `RESEND_API_KEY` | Yes (email) | Resend auth (`re_…`) | `/api/contact` → 503 |
-| `CONTACT_TO_EMAIL` | Yes (email) | Inbox that receives inquiries (any working address) | 503 |
-| `CONTACT_FROM_EMAIL` | Yes (email) | The `From` — **must** be on a Resend-verified domain | 503 |
+| `NEXT_PUBLIC_SITE_URL` | Yes (SEO) | Canonical/OG/sitemap/robots/JSON-LD origin, no trailing slash. Also the emails' site links — unset, they are **omitted** rather than shipped pointing at localhost. | Falls back to `localhost` |
+| `RESEND_API_KEY` | Yes (email) | Resend auth (`re_…`) | Form-scope error + fallback |
+| `CONTACT_TO_EMAIL` | Yes (email) | Inbox that receives inquiries (any working address) | Form-scope error + fallback |
+| `CONTACT_FROM_EMAIL` | Yes (email) | The `From` address — **must** be on a Resend-verified domain. `sendEmail` wraps it as `Adamenko Photography <address>` so inboxes show the studio, not a bare address. | Form-scope error + fallback |
 
 ---
 

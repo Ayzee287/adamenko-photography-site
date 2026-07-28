@@ -33,6 +33,8 @@ export function Plate(props: {
   priority?: boolean;
   sizes?: string;
   className?: string;
+  /** Where the subject sits, as a CSS object-position — see <Photo>. */
+  focus?: string;
 }) {
   const {
     src,
@@ -44,6 +46,7 @@ export function Plate(props: {
     priority = false,
     sizes = "(min-width: 82rem) 1312px, 100vw",
     className,
+    focus,
   } = props;
 
   const inner = (
@@ -52,7 +55,7 @@ export function Plate(props: {
         {/* The whole plate carries the accessible name via aria-label (link) or the
             plaque/caption; the raster itself stays decorative to avoid double-announce
             when it is a link. Non-link plates keep the real alt. */}
-        <Photo src={src} alt={href ? "" : alt} sizes={sizes} priority={priority} />
+        <Photo src={src} alt={href ? "" : alt} sizes={sizes} priority={priority} position={focus} />
       </div>
       <div className="ch-plate-vig" aria-hidden />
       <div className="ch-plate-grain" aria-hidden />

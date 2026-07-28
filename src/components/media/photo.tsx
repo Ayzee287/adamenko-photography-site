@@ -12,9 +12,22 @@ export function Photo(props: {
   sizes: string;
   priority?: boolean;
   quality?: number;
+  /**
+   * Where the SUBJECT is, as a CSS object-position ("50% 32%"). Only matters when the
+   * consumer's box crops the frame: `cover` keeps the centre by default, which is the
+   * wrong 64% of a photograph whose subject is not centred. Set it from what is actually
+   * in the picture, never to expose more of the image for its own sake.
+   */
+  position?: string;
 }) {
-  const { src, alt, sizes, priority = false, quality = 82 } = props;
+  const { src, alt, sizes, priority = false, quality = 82, position } = props;
   const blur = blurMap[src];
+  // backgroundPosition rides along with objectPosition, or the blur-up placeholder (a
+  // background-image, cover, centred by Next) would be cropped differently from the
+  // photograph it stands in for, and the frame would visibly re-seat on decode.
+  const aim = position
+    ? { style: { objectPosition: position, backgroundPosition: position } }
+    : {};
   return (
     <Image
       src={src}
@@ -24,6 +37,7 @@ export function Photo(props: {
       priority={priority}
       quality={quality}
       className="object-cover"
+      {...aim}
       {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
     />
   );

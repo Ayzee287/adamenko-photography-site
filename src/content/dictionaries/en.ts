@@ -350,8 +350,7 @@ export const en: DeepPartial<Dictionary> = {
   },
 
   pricing: {
-    eyebrow: "Investment",
-    title: "Transparent, and shaped around you.",
+    title: "Pricing",
     intro:
       "Clear rates, so you know what to expect from the start. The rest we decide together: the place, the pace, what you'll keep.",
     fromLabel: "from",
@@ -424,7 +423,7 @@ export const en: DeepPartial<Dictionary> = {
       photosLabel: "Photographs",
       packages: [
         {
-          name: "Essential / Mini",
+          name: "Essential",
           price: 650,
           description:
             "Made for civil weddings, small ceremonies and weekday celebrations.",
@@ -474,6 +473,17 @@ export const en: DeepPartial<Dictionary> = {
   // factual lives in it — prices, coverage, questions and shoots are read from the modules
   // that own them and localise through their own entries.
   serviceDossier: {
+    // Only the alt text is translated — which frame is used and where its crop is aimed
+    // are photographic decisions, identical in both languages, and stay in the FR source.
+    // (Grossesse was reaching English readers with a French alt; it is answered here too.)
+    hero: {
+      grossesse: {
+        alt: "A couple cross the courtyard of a Lyon palace, hand in hand, before the birth.",
+      },
+      familles: {
+        alt: "A family gathered in a field, in the warm light of autumn.",
+      },
+    },
     work: {
       eyebrow: "The work",
       title: "Recent sessions.",
