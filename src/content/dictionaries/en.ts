@@ -350,7 +350,6 @@ export const en: DeepPartial<Dictionary> = {
   },
 
   pricing: {
-    eyebrow: "Investment",
     title: "Pricing",
     intro:
       "Clear rates, so you know what to expect from the start. The rest we decide together: the place, the pace, what you'll keep.",

@@ -46,7 +46,10 @@ export type WeddingPackage = {
 
 export const pricing = {
   currency: "EUR",
-  eyebrow: "Investissement",
+  // NB: the three eyebrows that RENDER are `sessions.eyebrow`, `wedding.eyebrow` and
+  // `addons.eyebrow`. A page-level `eyebrow: "Investissement"` used to sit here and label the
+  // chapter opening; the opening dropped it (it named a chapter whose body no longer exists)
+  // and the string stayed behind, reachable from nothing. Removed rather than left to rot.
   // The chapter names itself, as every other chapter on the site does — "Galeries",
   // "Prestations", "Contact", "À propos". The old title ("Transparent, et adapté à vous.")
   // was a claim, not a name: it promised in the abstract what the two section leads and the
