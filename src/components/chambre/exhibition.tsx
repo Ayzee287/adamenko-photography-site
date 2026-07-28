@@ -248,7 +248,15 @@ export function Exhibition(props: {
         onClick={() => setOpenIndex(i)}
         aria-label={`${labels.enlarge} : ${it.alt}`}
       >
-        <Photo src={it.src} alt="" sizes={sizes} />
+        {/* The frame carries its real alt again. Blanking it kept the a11y tree clean but
+            cost the portfolio the only description Google Images can read — ~1000 published
+            photographs offered to the largest image index in the world as untitled files.
+            Measured rather than reasoned: with a plain alt, Chrome's tree exposed 44 tiles
+            AND 44 separate image nodes repeating the same text, so browse mode would have
+            heard every caption twice. `decorativeInContext` keeps the attribute for crawlers
+            and drops the node for assistive tech; the button's aria-label stays the single
+            announcement. Re-checked in the tree afterwards, not assumed. */}
+        <Photo src={it.src} alt={it.alt} sizes={sizes} decorativeInContext />
       </button>
     );
   };
