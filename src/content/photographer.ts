@@ -53,6 +53,7 @@ export type Photographer = {
     /** Personal Instagram (study/secondary — not surfaced as a business channel). */
     personalInstagram?: string;
     facebook?: string;
+    googleBusiness?: string;
     telegram?: string;
     /** Public business phone, if she wants one listed — left unset, hidden until set. */
     phone?: string;
@@ -108,6 +109,11 @@ export const photographer: Photographer = {
     instagram: "https://www.instagram.com/adamenko_photography/",
     personalInstagram: "https://www.instagram.com/sereduha/",
     facebook: "https://www.facebook.com/profile.php?id=100011367545612",
+    // The Google Business Profile, addressed by its stable CID. This is the one link that
+    // tells Google the website and the Maps listing are the same entity — without it the
+    // two are independent guesses. Public already; verified live via the Places API
+    // 2026-07-28 (OPERATIONAL, 5.0 from 4 reviews).
+    googleBusiness: "https://maps.google.com/?cid=6651221479339216458",
     // Telegram intentionally NOT exposed: it is a personal account, not a business
     // channel (client decision). Kept out of the contact page, the footer and sameAs.
     telegram: undefined,

@@ -19,8 +19,25 @@ export function Photo(props: {
    * in the picture, never to expose more of the image for its own sake.
    */
   position?: string;
+  /**
+   * Keep `alt` in the markup but drop the image from the accessibility tree. For a frame
+   * inside a control that already names itself — a lightbox tile whose button reads
+   * "Agrandir : <alt>" — the image is a second copy of text the user has just heard.
+   * `alt=""` used to solve that, at the cost of telling Google Images nothing about a
+   * thousand photographs. This keeps the crawlable description and removes the duplicate:
+   * crawlers read the attribute, assistive tech skips the node.
+   */
+  decorativeInContext?: boolean;
 }) {
-  const { src, alt, sizes, priority = false, quality = 82, position } = props;
+  const {
+    src,
+    alt,
+    sizes,
+    priority = false,
+    quality = 82,
+    position,
+    decorativeInContext = false,
+  } = props;
   const blur = blurMap[src];
   // backgroundPosition rides along with objectPosition, or the blur-up placeholder (a
   // background-image, cover, centred by Next) would be cropped differently from the
@@ -37,6 +54,7 @@ export function Photo(props: {
       priority={priority}
       quality={quality}
       className="object-cover"
+      {...(decorativeInContext ? { "aria-hidden": true } : {})}
       {...aim}
       {...(blur ? { placeholder: "blur" as const, blurDataURL: blur } : {})}
     />

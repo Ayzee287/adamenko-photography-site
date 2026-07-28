@@ -47,6 +47,10 @@ export async function generateMetadata({
     description: storyDescription(s, active) || gallery?.intro,
     path: `/galeries/${genre}/${story}`,
     locale: active,
+    // The shoot's own cover, not a generated wordmark — a shared link to a photography
+    // story should preview the photograph.
+    image: s.cover,
+    imageAlt: storyTitle(s, active),
   });
 }
 
