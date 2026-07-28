@@ -34,10 +34,17 @@ export function ChapterOpening(props: {
    *  content should be reachable immediately (e.g. /tarifs, where a visitor came for
    *  the prices, not a full-screen statement). */
   tight?: boolean;
+  /** BCP-47 tag when this opening's text is not in the page's language — the legal pages
+   *  are French on /en by law, and an untagged block makes a screen reader read French
+   *  with English pronunciation rules. */
+  lang?: string;
 }) {
-  const { kicker, title, intro, mark = "§", tight = false } = props;
+  const { kicker, title, intro, mark = "§", tight = false, lang } = props;
   return (
-    <div className={cn("ch-movement ch-wrap ch-chapter", tight && "ch-chapter--tight")}>
+    <div
+      lang={lang}
+      className={cn("ch-movement ch-wrap ch-chapter", tight && "ch-chapter--tight")}
+    >
       {kicker && (
         <p className="ch-mono ch-kicker">
           <span className="n">{mark}</span> {kicker}

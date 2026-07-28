@@ -31,11 +31,24 @@ export default async function MentionsLegalesPage({
   const active: Locale = isLocale(locale) ? locale : defaultLocale;
   setRequestLocale(active);
   const doc = mentionsLegales;
+  // The mentions légales are French under French law (LCEN art. 6-III) and are not
+  // translated — the operative text is the French one. On /en that means a French document
+  // inside a document declared `lang="en"`, which is a claim the markup should not make:
+  // it mispronounces the whole page for a screen reader and tells Google the site publishes
+  // broken English. Tagging the block is the honest fix; translating the legal text is a
+  // decision for the operator and a French legal professional, not for this layer.
+  const docLang = active === "fr" ? undefined : "fr";
 
   return (
     <ChambreScene>
-      <ChapterOpening kicker={doc.eyebrow} title={doc.title} intro={doc.intro} mark="§ Légal" />
-      <LegalDoc doc={doc} />
+      <ChapterOpening
+        kicker={doc.eyebrow}
+        title={doc.title}
+        intro={doc.intro}
+        mark="§ Légal"
+        lang={docLang}
+      />
+      <LegalDoc doc={doc} lang={docLang} />
     </ChambreScene>
   );
 }
