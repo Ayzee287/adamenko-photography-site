@@ -6,6 +6,35 @@
 
 ---
 
+## Update — 2026-07-28: conversions are now measured (D153)
+
+The recommendation below still stands: Vercel Web Analytics, no GA4, Plausible only if
+richer reporting is ever wanted. One thing has changed.
+
+Until this date the setup counted **page views only**, so the site's single conversion —
+someone actually sending an enquiry — was invisible, and could never be attributed to the
+page the visitor came from. `components/forms/inquiry-form.tsx` now emits one
+`inquiry_sent` event on a successful submit:
+
+```ts
+track("inquiry_sent", { origin, locale });
+```
+
+- **`origin`** is the attribution that was missing: `/contact`, a service dossier, a gallery.
+- **The payload is dimensions only.** No name, email, message or free text — and
+  deliberately not the séance type, because a successful submit clears `values` by design
+  and reaching back into an enquiry's contents to improve a metric is not a trade worth
+  making.
+- **Still cookieless, still no consent banner**, on the same basis as the pageview data the
+  privacy policy already documents. No new vendor, no new bytes: `track` ships inside the
+  `@vercel/analytics` client that was already loaded, and is a no-op off Vercel.
+- Fires once per submission, guarded by a ref as well as the effect dependency, so a
+  double-invoked effect in development cannot double-count.
+
+Read the events in the Vercel dashboard under **Analytics → Events**.
+
+---
+
 ## TL;DR
 
 **Keep the current setup for launch: Vercel Web Analytics (already wired, cookieless).** If/when you want richer, independent reporting, **add Plausible** as the primary product analytics. **Do not add Google Analytics** — it's the wrong fit for a small premium site under GDPR.
