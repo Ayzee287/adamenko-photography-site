@@ -38,21 +38,21 @@ const EXCLUDED = /^(stories|stories-draft)\//;
 // costs a few hundred bytes, which is not the 890-frame problem the exclusion exists to stop.
 // Add a path here only when a story frame is used outside the story pages themselves.
 const ALWAYS_INCLUDE = new Set([
-  "stories/mariages/mariages-3/mariages-3-46.jpg",
+  "stories/mariages/mariages-3/mariages-3-19.jpg",
   // The Couples and Grossesse tiles moved to real session frames (a wedding photograph was
   // standing in for the couple séance; the maternity frame was the /galeries cover twice
   // over). Same reasoning as above — they are homepage tiles, so they must blur up too.
-  "stories/couples/couples-2/couples-2-30.jpg",
+  "stories/couples/couples-2/couples-2-12.jpg",
   "stories/grossesse/grossesse-1/grossesse-1-05.jpg",
   // The Familles plate on /galeries — see content/gallery-covers.ts. Same rule as the
   // Mariages plate below: it is the lead print on that wall, so it has to blur up.
-  "stories/familles/familles-3/familles-3-55.jpg",
+  "stories/familles/familles-3/familles-3-32.jpg",
   // The Grossesse dossier hero — a landscape frame, because the cinematic band cropped
   // the bump out of the portrait cover it used to show.
-  "stories/grossesse/grossesse-2/grossesse-2-04.jpg",
+  "stories/grossesse/grossesse-2/grossesse-2-03.jpg",
   // The Mariages plate on /galeries — the lead print on that wall, and the largest
   // photograph on the page. See content/gallery-covers.ts for why it is not the cover.
-  "stories/mariages/mariages-4/mariages-4-66.jpg",
+  "stories/mariages/mariages-4/mariages-4-37.jpg",
 ]);
 
 /** All JPEG files under `dir`, recursively, minus the excluded roots. */

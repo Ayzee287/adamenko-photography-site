@@ -70,7 +70,7 @@ export const serviceDossier = {
    */
   hero: {
     grossesse: {
-      src: "/stories/grossesse/grossesse-2/grossesse-2-04.jpg",
+      src: "/stories/grossesse/grossesse-2/grossesse-2-03.jpg",
       alt: "Un couple traverse la cour d'un palais lyonnais, main dans la main, avant la naissance.",
     },
     familles: {

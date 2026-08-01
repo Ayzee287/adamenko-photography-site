@@ -46,11 +46,11 @@ export const galleryCovers: Partial<Record<GenreSlug, { src: string; focus?: str
   // needed. The landscape frame from the same run (familles-3-61) was tried first and
   // rejected: in a 4/5 cell the centre crop pushes the family to the right edge and the
   // plate reads as bicycles rather than as a family.
-  familles: { src: "/stories/familles/familles-3/familles-3-55.jpg" },
+  familles: { src: "/stories/familles/familles-3/familles-3-32.jpg" },
   // The cover of the "Deux jours de fête" reportage. A floor-length gown with its cape carried
   // across the whole frame, a groom on one knee in black tie, a château terrace — it says
   // WEDDING before it is read, and it is composed horizontally, so the cinematic band is the
   // format it wants rather than the one it survives. Aimed at 42%: at 50% the bride's head sat
   // on the crop line, and the grass it trades away carries nothing.
-  mariages: { src: "/stories/mariages/mariages-4/mariages-4-66.jpg", focus: "50% 42%" },
+  mariages: { src: "/stories/mariages/mariages-4/mariages-4-37.jpg", focus: "50% 42%" },
 };

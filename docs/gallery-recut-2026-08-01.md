@@ -103,3 +103,73 @@ editorial change.
    the same frame twice, once black-and-white and once in colour (the `-2` suffix pairs).
    As an opening it reads as a mistake rather than a choice. Worth re-ordering so the pair
    sits mid-story, or dropping one.
+
+---
+
+# Editorial pass — 2026-08-01 (second sitting)
+
+The review in the Editorial Pass artifact, applied. **987 → 482 frames** across sixteen
+galleries. Every removal has a reason recorded in the story's own `story.txt`; nothing was
+cut to reach a number.
+
+## The four faults, and what closed them
+
+**Duplicated instants.** All 64 mono/colour twins are gone — decided one by one from
+side-by-side sheets rather than by rule, because the `-2` suffix is *not* consistently the
+mono version. Colour won almost everywhere: the palettes are what make these galleries
+cohere. Two exceptions kept the black-and-white (`couples-2` on the steps, where the
+graphic reading is stronger; `familles-1`'s dark feet, where the `-2` *was* the colour).
+
+**Openings.** Six galleries opened on a duplicate pair or an unreadable frame. All six now
+open on a photograph that states the story: `familles-5` on the dog looking down the lens,
+`familles-1` on the big sister beside the newborn, `couples-2` on the white gate,
+`couples-4` on the avenue of benches, `familles-4` on the lake in mist, `grossesse-3` on
+the overhead in the grass. `mariages-3`'s unreadable detail was simply removed, promoting
+the ceremony to first position.
+
+**Endings.** Nine galleries now close on a chosen frame rather than on a repeat:
+`couples-1` on the footbridge silhouette, `couples-3` on the postcard held against the bay,
+`couples-4` on the lit archway, `grossesse-2` on the vaulted corridor, `grossesse-4` on the
+white dress outdoors, `familles-3` on the walk away down the street, `familles-4` on the
+horse at the fence, `familles-5` on the room in late light, `mariages-3` on the sunburst.
+`couples-4`'s three frames of empty buildings are gone.
+
+**Long single-idea sequences.** `mariages-2`'s 45-frame guest block is down to six
+photographs that carry the day (the mariachi, the canapés, the group portrait, the parmesan
+wheel). `mariages-3`'s 22 lavender frames are eight. `mariages-4`'s nine cape-on-the-wall
+frames are four. `couples-2`'s nine pool frames are two.
+
+## Re-aimed after renumbering
+
+The positional-filename hazard documented above bit again, exactly as predicted. Six
+hard-coded paths pointed at frames that had moved or been cut:
+
+| Surface | Was | Now |
+|---|---|---|
+| Homepage · Couples tile | `couples-2-30` | `couples-2-12` |
+| Homepage · Mariages tile | `mariages-3-46` (**cut**) | `mariages-3-19` + new alt |
+| Homepage · Grossesse tile | `grossesse-1-05` | unchanged |
+| `/galeries` · Mariages plate | `mariages-4-66` | `mariages-4-37` |
+| `/galeries` · Familles plate | `familles-3-55` | `familles-3-32` |
+| `/prestations/grossesse` hero | `grossesse-2-04` | `grossesse-2-03` |
+
+The Mariages tile is the one that needed a real decision rather than a re-aim: its frame
+left with the lavender sequence. `mariages-3-19` — the couple walking away across the lawn,
+valley below — is horizontal by nature, so the wide cell crops nothing, and it reads as a
+wedding in one glance. Its alt text changed with it.
+
+**This release renumbers almost every story frame.** It must not go out without an image
+cache purge; see the caveat above.
+
+## Still open
+
+* **`grossesse-1`** (11 frames) — untouched by this pass. It is the remainder of the consent
+  cut, not an edit, and the decision is Irina's: re-cut from the originals, or withdraw.
+* **`grossesse-3`** (21 frames) — cut hard and improved, but its weaknesses are in the
+  shooting, not the edit: flat midday light, cluttered modern backgrounds, a palette cooler
+  than the rest of the portfolio. Still the weakest gallery.
+* **`couples-3` is a wedding** filed under Couples, and the `/galeries` Mariages plate is
+  drawn from a different day. Category boundary still unresolved.
+* **`mariages-1`'s description** promises «une journée en noir et blanc»; about half the
+  gallery is colour.
+* **Alt text** remains positional (`«Titre» — 7 / 22`) everywhere.

@@ -124,7 +124,7 @@ export const home = {
         // landscape frame forced into a portrait cell. It made the Couples séance look like
         // a wedding and the portfolio look smaller than it is. This is a real couple
         // session, and it is natively portrait, so the cell crops nothing.
-        src: "/stories/couples/couples-2/couples-2-30.jpg",
+        src: "/stories/couples/couples-2/couples-2-12.jpg",
         alt: "Elle rit, les yeux fermés, la tête contre l'épaule de son compagnon.",
       },
       {
@@ -132,8 +132,12 @@ export const home = {
         title: "Mariages",
         cta: "Voir la galerie",
         caption: "Votre journée, des préparatifs à la fête.",
-        src: "/stories/mariages/mariages-3/mariages-3-46.jpg",
-        alt: "Le marié soulève sa femme, bras ouverts, devant un ciel de fin de journée.",
+        // 2026-08-01: the frame this pointed at left the edit with the rest of the
+        // lavender sequence. This one earns the tile on its own terms — horizontal by
+        // nature, so the wide cell crops nothing, and it reads as a wedding in one
+        // glance: the dress, the bouquet, the valley.
+        src: "/stories/mariages/mariages-3/mariages-3-19.jpg",
+        alt: "Les mariés s'éloignent main dans la main sur la pelouse, la vallée en contrebas.",
       },
     ],
     cta: { label: "Voir toutes les galeries", href: "/galeries" },
