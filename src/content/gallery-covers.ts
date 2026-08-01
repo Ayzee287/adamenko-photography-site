@@ -34,6 +34,19 @@ import type { GenreSlug } from "@/types/gallery";
  * that pops in instead of blurring up.
  */
 export const galleryCovers: Partial<Record<GenreSlug, { src: string; focus?: string }>> = {
+  // Familles. The default plate was `familles-a00` — the Lyon family at the Jacobins
+  // fountain — and from 2026-08-01 the "En famille, dans Lyon" album cover is a frame of
+  // the SAME family at the SAME fountain, so the index plate and the first card behind it
+  // read as one photograph shown twice. This is the other end of that morning: the three
+  // of them at a Vélo'v stand, the mother reaching for the child, the bicycle across the
+  // foreground. It names the genre faster than the fountain does (three people, one
+  // gesture, no monument competing for the frame), and it puts the bicycle sequence on
+  // the wall — the photographer asked for it after finding it nowhere on the front of
+  // the site. Portrait-native, so the `tall` supporting plate crops nothing; no `focus`
+  // needed. The landscape frame from the same run (familles-3-61) was tried first and
+  // rejected: in a 4/5 cell the centre crop pushes the family to the right edge and the
+  // plate reads as bicycles rather than as a family.
+  familles: { src: "/stories/familles/familles-3/familles-3-55.jpg" },
   // The cover of the "Deux jours de fête" reportage. A floor-length gown with its cape carried
   // across the whole frame, a groom on one knee in black tie, a château terrace — it says
   // WEDDING before it is read, and it is composed horizontally, so the cinematic band is the

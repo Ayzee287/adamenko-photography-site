@@ -271,21 +271,26 @@ export const en: DeepPartial<Dictionary> = {
           src: "/galleries/familles/familles-a01.jpg",
           alt: "A family gathered in a field, in the warm light of autumn.",
         },
+        // `scenes` is an array, so this list REPLACES the French one wholesale rather than
+        // merging into it — which is why these two had quietly drifted back to the very
+        // frames the French page moved away from (grossesse-a00 was the /galeries cover
+        // shown twice; couples-a07 is a wedding photograph standing in for a couple
+        // séance). Re-synced 2026-08-01: same photographs as fr, English alt text.
         {
           slug: "grossesse",
           title: "Maternity",
           cta: "View the gallery",
           caption: "The gentle weeks before the baby arrives.",
-          src: "/galleries/grossesse/grossesse-a00.jpg",
-          alt: "A mother-to-be before the columns of a Lyon palace.",
+          src: "/stories/grossesse/grossesse-1/grossesse-1-05.jpg",
+          alt: "The parents-to-be forehead to forehead, hands joined on the belly, in the window light.",
         },
         {
           slug: "couples",
           title: "Couples",
           cta: "View the gallery",
           caption: "Two people, no stiff poses.",
-          src: "/galleries/couples/couples-a07.jpg",
-          alt: "A couple on a terrace overlooking the valley, at dusk.",
+          src: "/stories/couples/couples-2/couples-2-30.jpg",
+          alt: "She laughs, eyes closed, her head against her partner's shoulder.",
         },
         {
           slug: "mariages",

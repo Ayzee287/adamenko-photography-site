@@ -107,8 +107,12 @@ export const home = {
         // Was grossesse-a00 — the SAME frame the /galeries index uses as the Grossesse
         // cover, so the two front doors showed one photograph twice. This one is also the
         // séance the site actually describes: chez vous, en lumière du jour.
-        src: "/stories/grossesse/grossesse-1/grossesse-1-12.jpg",
-        alt: "Un couple attend son enfant, appuyé contre un mur de l'appartement, à la lumière du jour.",
+        //
+        // 2026-08-01: the frame this pointed at (grossesse-1-12) left the edit when the
+        // séance was re-cut, so the tile is aimed at a frame that survived it rather than
+        // at a number. Still the same séance, still portrait, still daylight at home.
+        src: "/stories/grossesse/grossesse-1/grossesse-1-05.jpg",
+        alt: "Les futurs parents front contre front, les mains réunies sur le ventre, à la lumière de la fenêtre.",
       },
       {
         slug: "couples",

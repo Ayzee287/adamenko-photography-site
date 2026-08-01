@@ -18,9 +18,22 @@ const nextConfig: NextConfig = {
     qualities: [75, 82, 85],
     /* Browser/edge TTL for optimized images (31 days). The default inherits the
        source's `max-age=0, must-revalidate` (measured on production 2026-07-07),
-       so every return visit revalidated all ~40 gallery images. The photographs
-       are immutable in practice — a new export gets a new `<genre>-NN.jpg` name
-       (and a new blur entry), so a stale-after-swap window never arises. */
+       so every return visit revalidated all ~40 gallery images.
+
+       CAVEAT, learned the hard way on 2026-08-01 — this used to claim the
+       photographs are "immutable in practice, so a stale-after-swap window never
+       arises". That is FALSE for story exports. `stories-build.mjs` names them by
+       POSITION (`<slug>-NN.jpg`), so dropping a frame from the middle of a story
+       renumbers every frame after it and a name keeps pointing at a DIFFERENT
+       photograph. Re-cutting grossesse-1 moved 28 frames out; `grossesse-1-03.jpg`
+       now holds a photograph that was three places further down. Locally the
+       optimizer served the pre-cut variant out of .next/cache/images until it was
+       deleted by hand.
+       That matters beyond staleness: frames get dropped for consent and decency
+       reasons, and a cache keyed on a recycled URL keeps serving the withdrawn
+       photograph. Until exports carry a content hash in the filename, a release
+       that removes or reorders frames mid-story must be treated as needing a
+       purge of the image cache — see docs/gallery-recut-2026-08-01.md. */
     minimumCacheTTL: 2678400,
   },
 
