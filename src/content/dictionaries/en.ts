@@ -281,7 +281,7 @@ export const en: DeepPartial<Dictionary> = {
           title: "Maternity",
           cta: "View the gallery",
           caption: "The gentle weeks before the baby arrives.",
-          src: "/stories/grossesse/grossesse-1/grossesse-1-05.jpg",
+          src: "/stories/grossesse/grossesse-1/grossesse-1-10.jpg",
           alt: "The parents-to-be forehead to forehead, hands joined on the belly, in the window light.",
         },
         {

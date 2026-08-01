@@ -173,3 +173,47 @@ cache purge; see the caveat above.
 * **`mariages-1`'s description** promises «une journée en noir et blanc»; about half the
   gallery is colour.
 * **Alt text** remains positional (`«Titre» — 7 / 22`) everywhere.
+
+---
+
+# Review corrections — 2026-08-02
+
+Five notes from the manual review of the edited portfolio.
+
+**`grossesse-1` — restored to 16 frames (was 11).** The consent cut had been applied too
+strictly: frames were removed wherever the lace bra was *visible*, when the rule that matters
+is whether it is *see-through*. Six frames went back in, each checked at full size first —
+the couple in the green room, his face over hers, the sofa under the LOVE prints, the
+hallway mirror, the floor with the black cat, the two chairs by the window. They are the
+frames that make it a séance at home rather than a fragment, and in every one the garment
+reads as an ordinary bra: small in frame, no transparency legible.
+
+One frame went the other way. The belly detail at position 04 (`096A7278`) still showed the
+underwear through the fabric on review, so it is out. That also sets the line for this
+séance: **any frame where the lace sits at skin level is out, however abstract the crop** —
+the earlier "lace edge only, no breast" reasoning was too fine a distinction to publish on.
+
+Order is chronological again, so the story runs: the apartment → the sofa → the hallway →
+the floor → the chairs → the bed → foreheads together → the white-dress close.
+
+**Four covers replaced.**
+
+| Gallery | Was | Now | Why |
+|---|---|---|---|
+| `mariages-2` | `096A1315` | `096A1356` | The old cover was a **portrait** frame in a 3:2 plate, so the crop cut it hard. The new one is landscape-native — his hand at her cheek, dark suit filling the left — so nothing crops, and the title sits on the dark third. |
+| `couples-3` | `096A9213` | `096A8829` | The beach huts were graphic but read as a colour block, not as a couple. The wide beach — turquoise water, headland, the two of them — is what the gallery is called, and it suits the lead plate's format. |
+| `couples-2` | `096A7223` | `326A6883` | Also **portrait** in a 3:2 plate. The couple walking up the lawn to the white manor names the gallery in one frame and is landscape-native. |
+| `grossesse-3` | `096A4503` | `096A4295` | The overhead-in-grass frame put the title over bright lawn — unreadable. The family on the terrace sofa with the dog has a dark lower-left, and it is the warmest frame in a gallery whose weakness is flat light. |
+
+**Cover rule worth keeping:** the plaque and caption are absolutely positioned *inside* the
+plate, bottom-left, in bone with a soft shadow. A cover therefore needs three things — the
+right orientation for its plate (landscape for a 3:2 strip plate), a quiet lower-left third,
+and it must name the gallery at thumbnail size.
+
+**The renumbering trap, again — and a sharper lesson.** Restoring six frames to
+`grossesse-1` shifted everything after them. `grossesse-1-05.jpg` still *existed*, so a
+file-exists check passed — but it now held a different photograph, and the homepage
+Grossesse tile was silently pointing at the wrong one. Re-aimed to `grossesse-1-10.jpg`.
+
+**Checking that a referenced path exists is not enough. Resolve the intended SOURCE
+filename to its current position and compare.**
