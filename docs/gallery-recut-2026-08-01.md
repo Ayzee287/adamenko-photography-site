@@ -217,3 +217,47 @@ Grossesse tile was silently pointing at the wrong one. Re-aimed to `grossesse-1-
 
 **Checking that a referenced path exists is not enough. Resolve the intended SOURCE
 filename to its current position and compare.**
+
+---
+
+# `grossesse-1` — new source frames + frame 06 review, 2026-08-03
+
+Eight photographs were added to `Documents\1\Grosesse\1`. All eight were copied into the
+story library so the record is complete; each one that did not make the edit is
+`#`-commented with the reason.
+
+**Two earned a place.**
+
+* `096A7032` — the hallway mirror reflecting the couple, his shoulder out of focus in the
+  foreground. A genuinely different picture from anything else in the séance, formally the
+  most interesting frame in it, and nothing is exposed. It **replaces `096A7055`**, which
+  was the same hallway shot plainly and had the lace legible.
+* `096A7454` — standing in the doorway light, hand on the belly, the orange lamp anchoring
+  the foreground. The same set-up as `096A7446` but far better executed, so it takes that
+  slot and **closes the gallery**.
+
+**Six were set aside.** `096A6902` and `096A7063` show the lace legibly on the chest, so
+they fail the standard this séance now runs on. `096A7420`, `096A7435` and `096A7435-2` are
+chair-by-the-window variants of a frame already held by `096A7426` (and `-2` is the mono
+twin of `096A7435`). `096A7458` is near-identical to `096A7454`.
+
+**Frame 06 (`096A7178-2`) removed — agreed.** At a tight crop the floral lace reads clearly
+and the breast is discernible through it; the frame is backlit against a bright window,
+which makes the fabric *more* transparent, not less. Restoring it on 08-02 was my error.
+
+**Two closing duplicates also went:** `096A7446` (superseded by `096A7454`) and `096A7466`
+(a second version of the same doorway, and the series now closes better one frame earlier).
+
+**14 → 12 frames.** The white-dress block drops from six near-identical frames to four, and
+the first half gains a beat it did not have. Order stays chronological, so no reordering was
+needed:
+
+> the green room · his face over hers · the b/w recline *(cover)* · the window · **the
+> mirror** · the bed · foreheads together · the chair with the cat ×2 · standing in profile ·
+> the chair by the window · **standing in the light**
+
+**Consequences.** The homepage Grossesse tile followed its source frame (`096A7306-2`) from
+`grossesse-1-08` to `grossesse-1-07` — updated in `home.ts`, `en.ts` and `gen-blur.mjs`. The
+cover (`096A6951-2`) survived and is now frame 03. Blur map regenerated. Numbering
+contiguous 01–12; exports match the edit exactly; every hard-coded reference re-resolved by
+**source filename**, not by path existence.
