@@ -105,7 +105,7 @@ export const stories: Story[] = [
     description: { fr: "La côte, le vent, et un café de village pour finir.", en: "The coast, the wind, and a village bar to finish." },
     date: "2026-05-09",
     location: "",
-    cover: "/stories/couples/couples-3/couples-3-15.5ca0ddf3.jpg",
+    cover: "/stories/couples/couples-3/couples-3-07.050791b9.jpg",
     images: [
       { src: "/stories/couples/couples-3/couples-3-01.b71b9448.jpg", width: 2200, height: 1467, orientation: "landscape", alt: "Au bord de la mer — 1 / 35", altEn: "By the Sea — 1 / 35" },
       { src: "/stories/couples/couples-3/couples-3-02.35c76a8d.jpg", width: 1467, height: 2200, orientation: "portrait", alt: "Au bord de la mer — 2 / 35", altEn: "By the Sea — 2 / 35" },
