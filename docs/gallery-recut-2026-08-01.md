@@ -261,3 +261,69 @@ needed:
 cover (`096A6951-2`) survived and is now frame 03. Blur map regenerated. Numbering
 contiguous 01–12; exports match the edit exactly; every hard-coded reference re-resolved by
 **source filename**, not by path existence.
+
+---
+
+# `grossesse-1` — full re-review, 2026-08-04
+
+All 47 source frames re-examined from scratch against one rule: *no clearly readable
+transparent lace, no visible breast.* **12 → 23 frames.**
+
+## The finding that changed the edit
+
+The garment is a cream floral-lace bra with **lined cups**. At high magnification it reads
+**opaque in ambient light** and **sheer only when back-lit against a bright window**. Every
+previous pass had treated "the bra is visible" as the trigger, which is why the gallery kept
+shrinking. It is not the garment that fails — it is the light in particular frames.
+
+So the rule is now applied frame by frame, from high-resolution crops of the chest, not from
+contact sheets. Twelve frames genuinely fail: `096A6993`, `096A6993-2`, `096A7135-2`,
+`096A7152`, `096A7157`, `096A7199`, `096A7219`, `096A7223-2`, `096A7235-2`, `096A7245`,
+`096A7253`, `096A7256`, `096A7262`, `096A7344` — all of them either back-lit at the window or
+cropped tight enough to read through the lace.
+
+## The eleven frames restored, and what each is for
+
+| Frame | Position | Why it earns its place |
+|---|---|---|
+| `096A6892` | 02 | The wide opener shows the room; this brings you close enough to *meet* them. Without it the gallery jumps from an establishing shot straight to intimacy. |
+| `096A6902` | 03 | The first moment of rest — they settle onto the sofa. Introduces the warmth (orange lamp, green wall) the first movement runs on. |
+| `096A6911` | 04 | She laughs, head back on his chest. The only outright joyful frame in the séance; without it the whole story is tender and never light. |
+| `096A7035` | 09 | The only frame where she looks straight down the lens. Every séance needs one moment where the subject acknowledges you. |
+| `096A7055` | 10 | The wide of the hallway that gives the mirror frame its context — the pair, then the reflection. A transition, not a repeat. |
+| `096A7063` | 11 | The two of them face to face with his hand on the bump, full length, a different room. The "just us three" beat. |
+| `096A7201-2` | 12 | Bridges the apartment into the bright room where the last act happens. The safe frame of a pose whose colour version fails the rule. |
+| `096A7265` | 14 | Knitted booties on the belly — the **only** object detail that survives. A maternity story with nothing of the baby-to-come in it is missing its subject. |
+| `096A7295` | 15 | His hands and watch on the belly. The second detail, and the one that puts *him* in the frame with the child. |
+| `096A7383` | 17 | He kisses the bump. The emotional peak of the middle movement. |
+| `096A7446` | 22 | She looks *down* at the bump; frame 23 looks *up* into the light. Two beats of one gesture, so the ending resolves instead of stopping. |
+
+## The arc, in four movements
+
+> **01–06 · the green room** — standing wide, closer, settling on the sofa, her laughter, his
+> face over hers, then alone (b/w, the cover).
+> **07–12 · through the apartment** — the window, the mirror, her eyes to camera, the
+> hallway, the kitchen, the bright room.
+> **13–17 · the bed, and the baby** — b/w on the bed, the booties, his hands, foreheads
+> together, the kiss on the bump.
+> **18–23 · alone, the white dress** — the chair with the cat, standing profile, the chair by
+> the window, looking down, then up into the light.
+
+Chronology preserved throughout; no reordering was needed.
+
+## Not restored — and this is worth revisiting
+
+`096A6991` (the sofa under the LOVE prints) and `096A7087` (on the floor with the black cat)
+**both pass the transparency rule** — verified at high resolution, the cups are opaque. They
+are out only because Irina rejected them personally on 03/08, under the stricter framing I
+was applying at the time. Both are good photographs and both would strengthen the first half.
+Worth putting back in front of her.
+
+`096A7178-2` and `096A7278` stay out on their own merits as well as hers.
+
+## Consequences
+
+Homepage Grossesse tile followed its source frame (`096A7306-2`) from `grossesse-1-07` to
+`grossesse-1-16`. Cover (`096A6951-2`) is now frame 06. Blur map regenerated. Numbering
+contiguous 01–23; exports match the edit; all 47 source files accounted for in `story.txt`,
+each rejection carrying its reason.
