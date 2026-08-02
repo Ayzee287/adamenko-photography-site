@@ -1112,11 +1112,17 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
   color: var(--content-secondary);
   font-variant-numeric: tabular-nums;
 }
+/* The label rides with its value: --content-disabled is the DISABLED-control token, and
+   "Durée" is neither disabled nor decoration — it names a fact a visitor is buying on.
+   Measured settled (opacity 1, animations finished) it came out at 2.03:1 against the mat
+   where AA wants 4.5:1, at every viewport. --content-secondary is 5.23:1 and is already
+   the colour of the duration VALUE beside it. The label stays quieter than that value the
+   way it always did — through size, uppercase and tracking, not through being unreadable. */
 .ch-offer-duration-label {
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.64rem;
-  color: var(--content-disabled);
+  color: var(--content-secondary);
   margin-right: 0.6rem;
 }
 .ch-offer-summary { color: var(--content-secondary); font-size: 0.98rem; line-height: 1.55; }
