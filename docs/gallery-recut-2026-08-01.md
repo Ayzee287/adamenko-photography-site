@@ -327,3 +327,26 @@ Homepage Grossesse tile followed its source frame (`096A7306-2`) from `grossesse
 `grossesse-1-16`. Cover (`096A6951-2`) is now frame 06. Blur map regenerated. Numbering
 contiguous 01–23; exports match the edit; all 47 source files accounted for in `story.txt`,
 each rejection carrying its reason.
+
+---
+
+# `grossesse-1` — final adjustments, 2026-08-04 (evening)
+
+**23 → 21 frames.** `096A7265` (knitted booties on the belly) and `096A7295` (his hands and
+watch on the belly) removed on review.
+
+**A pattern worth recording:** every tight close-up of the belly has now been refused —
+`096A7278`, `096A7262`, `096A7265`, `096A7295`. That is a consistent editorial preference,
+not four separate calls. **Do not propose belly close-ups for this séance again.** The
+consequence is deliberate: the gallery has no object/detail beat, and it does not need one.
+
+**`096A6991` and `096A7087` are settled — out for good.** Both pass the transparency rule
+(verified at high resolution, the cups are opaque), and both are refused. Their lines in
+`story.txt` now say *«décision confirmée le 04/08. Ne pas reproposer.»* so this does not come
+back around.
+
+The arc still holds without the two details: the green room (01–06) · through the apartment
+(07–12) · the bed and the couple (13–15) · alone in the white dress (16–21).
+
+Homepage Grossesse tile followed its source frame from `grossesse-1-16` to `grossesse-1-14`.
+Cover unchanged at frame 06.

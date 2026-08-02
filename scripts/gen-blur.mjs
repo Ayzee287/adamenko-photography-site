@@ -43,7 +43,7 @@ const ALWAYS_INCLUDE = new Set([
   // standing in for the couple séance; the maternity frame was the /galeries cover twice
   // over). Same reasoning as above — they are homepage tiles, so they must blur up too.
   "stories/couples/couples-2/couples-2-12.jpg",
-  "stories/grossesse/grossesse-1/grossesse-1-16.jpg",
+  "stories/grossesse/grossesse-1/grossesse-1-14.jpg",
   // The Familles plate on /galeries — see content/gallery-covers.ts. Same rule as the
   // Mariages plate below: it is the lead print on that wall, so it has to blur up.
   "stories/familles/familles-3/familles-3-32.jpg",
