@@ -52,6 +52,13 @@ export function Photo(props: {
       fill
       sizes={sizes}
       priority={priority}
+      // next/image's `priority` emits the preload and drops loading="lazy", but as of
+      // Next 16 it does NOT imply fetchPriority — that is a separate prop, and without it
+      // the preload is still issued at Low. Measured on /galeries/mariages: the opening
+      // print passed "not lazy" and "discoverable in the initial document" and still failed
+      // the fetchpriority check. In this codebase `priority` means "this is the LCP print",
+      // so the two travel together rather than being remembered separately at each call.
+      fetchPriority={priority ? "high" : undefined}
       quality={quality}
       className="object-cover"
       {...(decorativeInContext ? { "aria-hidden": true } : {})}
