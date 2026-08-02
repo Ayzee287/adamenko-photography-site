@@ -52,6 +52,8 @@ export default async function AboutPage({
                 alt={ph.portrait.alt}
                 ratio="tall"
                 sizes="(min-width: 52rem) 40vw, 100vw"
+                // The portrait opens the page and is its LCP element — measured lazy.
+                priority
               />
             </Develop>
           ) : null}

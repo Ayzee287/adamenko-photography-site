@@ -65,6 +65,10 @@ export default async function GaleriesPage({
                   plaque={g.view}
                   caption={featured.title}
                   sizes="(min-width: 82rem) 1312px, 100vw"
+                  // The feature print is this page's LCP element. Without this it is
+                  // fetched lazily at Low priority — measured, it was the last thing the
+                  // page asked for despite being the first thing it shows.
+                  priority
                 />
               </Develop>
               <div className="ch-gallery-support">

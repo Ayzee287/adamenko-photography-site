@@ -1,7 +1,10 @@
 // The gallery content schema. Galleries are typed data, not a CMS (D009):
 // adding a photo is one entry here + one export to /public/galleries/<genre>/.
 
-/** The five genres (Q1 → split by genre, D007). Order here is nav/display order. */
+/**
+ * The four genres (Q1 → split by genre, D007). Order here is nav/display order.
+ * Portrait was retired as a business category; its URLs are redirected in next.config.ts.
+ */
 export type GenreSlug =
   | "familles"
   | "grossesse"

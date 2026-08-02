@@ -144,6 +144,11 @@ export default async function GenrePage({
                         ? "(min-width: 40rem) 46vw, 92vw"
                         : "(min-width: 64rem) 31vw, (min-width: 40rem) 46vw, 92vw"
                   }
+                  // The lead plate is the full-width opening print and this page's LCP
+                  // element; the strip below it stays lazy. Measured on /galeries/mariages,
+                  // the lead was fetched lazily at Low priority and was not discoverable in
+                  // the initial document.
+                  priority={isLead}
                 />
               </Develop>
             );
