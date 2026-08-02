@@ -1263,7 +1263,17 @@ body:has([data-chambre]) :is(input, textarea, select):focus-visible {
   position: relative;
   width: 100%;
   height: 100%;
-  touch-action: pan-y; /* let the viewer own horizontal drags; vertical handled in JS */
+  /* The viewer owns BOTH axes: horizontal changes photograph, downward dismisses. This was
+     `pan-y`, which says the opposite of what it was written to mean — pan-y hands VERTICAL
+     panning to the browser and keeps only horizontal for the page. Traced on a real touch
+     stream: one pointermove arrived, then pointercancel as the browser claimed the gesture
+     for scrolling; pointerup never fired, so endDrag never saw the distance and swipe-down
+     could not dismiss on any touch device.
+
+     `none` is safe here precisely because there is nothing to scroll: the lightbox is a
+     full-screen modal, the stage is absolutely positioned, and the body is overflow:hidden
+     while it is open. */
+  touch-action: none;
 }
 /* the stage: a fixed frame the photograph is contained within (never crops, never jumps) */
 .lb-stage {
