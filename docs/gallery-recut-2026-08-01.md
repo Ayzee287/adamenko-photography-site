@@ -367,3 +367,44 @@ The arc still holds without the two details: the green room (01–06) · through
 
 Homepage Grossesse tile followed its source frame from `grossesse-1-16` to `grossesse-1-14`.
 Cover unchanged at frame 06.
+
+---
+
+# `mariages-1` re-review — 2026-08-02 · no frames restored
+
+Asked to look again because the gallery reads short next to its siblings (15 frames against
+38 · 38 · 43). It is short, and the edit is not the reason.
+
+**The shoot is 23 frames.** `Documents/1/Mariages/1` — the untouched original — and the story
+library hold the *same 23 files, byte-identical* (verified by `comm` on the listings and by
+md5). There is no larger folder to go back to. mariages-2/3/4 came from 105 · 85 · 77.
+
+**All eight unpublished frames were compared against the published frame each one duplicates**,
+side by side, rather than trusted from the sheet's one-line reason:
+
+| Out | Is | Published counterpart |
+|---|---|---|
+| `096A1687` | tower, a crew member crouching bottom-left | `096A1714` — same tower, clean |
+| `096A2541` | lawn, same pose | `096A2538` |
+| `096A2551` | groom portrait, same pose | `096A2553-2` |
+| `096A2817-2` | mono twin of the same exposure | `096A2817` |
+| `096A2912` | same embrace | `096A2917` |
+| `096A3009-2` | mono twin, same balustrade pose | `096A3008` |
+| `096A3018` | third version, same balustrade pose | `096A3008` |
+| `096A3139` | same motion-blur exit through the arch | `096A3142-2` |
+
+Seven are alternates or mono/colour twins of moments already on the wall; the eighth has a
+crew member in it. Restoring any of them shows the same photograph twice — which is padding,
+not breathing. **Nothing restored.** The 15 frames cover every distinct moment the day
+produced: the tower, the lawn, the two portraits, the champagne table, the embrace, the kiss,
+the balustrade, the cigarette, the roses, and the blurred exit.
+
+If this gallery is to breathe more, it needs frames that were never delivered — a question for
+the photographer's own archive, not an editing decision.
+
+**One inconsistency worth a decision (not changed here).** The story is described as
+*«Une journée en noir et blanc» / "A day in black and white"*, but the published edit is
+roughly half colour — and for three of the pairs above (`2817`, `2912`, `3009-2`) it is the
+COLOUR frame that is published and the black-and-white twin that is cut. Either the
+description or the edit is out of step. Both readings are defensible; which one is right is
+the photographer's call, so both are left as they are.
