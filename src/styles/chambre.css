@@ -33,6 +33,18 @@ body:has([data-chambre]) {
   --border-hairline: rgba(237, 230, 218, 0.11);
   --border-focus: #ede6da;
   --state-selection: rgba(200, 107, 60, 0.22);
+  /* clay-700 (--color-error, tokens.css) is declared in the block whose own comment says
+     those colours are "never on dark" — and CHAMBRE put the whole site on dark. Measured
+     settled on the contact form, every validation message and the form-scope failure
+     rendered at 3.00:1 against the base and 2.94:1 against the mat, where AA wants 4.5:1.
+     An error is the one line a visitor MUST be able to read: it is the only thing standing
+     between them and an enquiry that never gets sent.
+
+     Same clay hue, lifted to sit on the dark surface — 5.12:1 on the base, 5.02:1 on the
+     mat — and still a muted brick, distinct from the ember accent it must not be mistaken
+     for. Re-pointed here beside the other CHAMBRE overrides rather than changed globally,
+     because clay-700 remains correct on the light surface it was chosen for. */
+  --color-error: #ba6c5e;
   background-color: #0a0908;
 }
 
