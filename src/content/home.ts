@@ -111,7 +111,7 @@ export const home = {
         // 2026-08-01: the frame this pointed at (grossesse-1-12) left the edit when the
         // séance was re-cut, so the tile is aimed at a frame that survived it rather than
         // at a number. Still the same séance, still portrait, still daylight at home.
-        src: "/stories/grossesse/grossesse-1/grossesse-1-14.jpg",
+        src: "/stories/grossesse/grossesse-1/grossesse-1-14.f1a5acf5.jpg",
         alt: "Les futurs parents front contre front, les mains réunies sur le ventre, à la lumière de la fenêtre.",
       },
       {
@@ -124,7 +124,7 @@ export const home = {
         // landscape frame forced into a portrait cell. It made the Couples séance look like
         // a wedding and the portfolio look smaller than it is. This is a real couple
         // session, and it is natively portrait, so the cell crops nothing.
-        src: "/stories/couples/couples-2/couples-2-12.jpg",
+        src: "/stories/couples/couples-2/couples-2-12.ea75fa70.jpg",
         alt: "Elle rit, les yeux fermés, la tête contre l'épaule de son compagnon.",
       },
       {
@@ -136,7 +136,7 @@ export const home = {
         // lavender sequence. This one earns the tile on its own terms — horizontal by
         // nature, so the wide cell crops nothing, and it reads as a wedding in one
         // glance: the dress, the bouquet, the valley.
-        src: "/stories/mariages/mariages-3/mariages-3-19.jpg",
+        src: "/stories/mariages/mariages-3/mariages-3-19.bed0ddcd.jpg",
         alt: "Les mariés s'éloignent main dans la main sur la pelouse, la vallée en contrebas.",
       },
     ],

@@ -281,7 +281,7 @@ export const en: DeepPartial<Dictionary> = {
           title: "Maternity",
           cta: "View the gallery",
           caption: "The gentle weeks before the baby arrives.",
-          src: "/stories/grossesse/grossesse-1/grossesse-1-14.jpg",
+          src: "/stories/grossesse/grossesse-1/grossesse-1-14.f1a5acf5.jpg",
           alt: "The parents-to-be forehead to forehead, hands joined on the belly, in the window light.",
         },
         {
@@ -289,7 +289,7 @@ export const en: DeepPartial<Dictionary> = {
           title: "Couples",
           cta: "View the gallery",
           caption: "Two people, no stiff poses.",
-          src: "/stories/couples/couples-2/couples-2-12.jpg",
+          src: "/stories/couples/couples-2/couples-2-12.ea75fa70.jpg",
           alt: "She laughs, eyes closed, her head against her partner's shoulder.",
         },
         {
@@ -297,7 +297,7 @@ export const en: DeepPartial<Dictionary> = {
           title: "Weddings",
           cta: "View the gallery",
           caption: "Your day, from the preparations to the celebration.",
-          src: "/stories/mariages/mariages-3/mariages-3-19.jpg",
+          src: "/stories/mariages/mariages-3/mariages-3-19.bed0ddcd.jpg",
           alt: "The newlyweds walk away hand in hand across the lawn, the valley below.",
         },
       ],

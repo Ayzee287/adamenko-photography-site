@@ -74,6 +74,23 @@ idempotency, so it is a one-line change in `publishPhotos()` — but it renames 
 under `public/stories/`, so it wants its own commit rather than riding along with an
 editorial change.
 
+> **DONE — 2026-08-02.** Shipped, in its own commit, after the predicted failure actually
+> happened: the withdrawn maternity frame (old `grossesse-1-15.jpg`, the belly detail with
+> the two watches) was still being shown by the deployed preview, at its recycled URL, from
+> the image-optimisation cache. The repository was correct throughout — the frame was gone
+> from `story.txt`, from the model, from disk and from the local build; only the cache was
+> still publishing it.
+>
+> Exports are now `<slug>-NN.<hash8>.jpg`. The old URL 404s and its optimiser URL 400s, so
+> no cache anywhere can serve a withdrawn photograph. Verified: `/stories/.../grossesse-1-15.jpg`
+> → 404, `/_next/image?url=…grossesse-1-15.jpg` → 400, the wall renders 21 hashed frames, and
+> a perceptual scan (dHash) of all 537 JPEGs under `public/` finds no match for either
+> withdrawn frame under any filename.
+>
+> The cost named above — a hard-coded frame reference now breaking loudly — is covered by
+> `npm run validate:content`, which stopped being a stub in the same change and now fails CI
+> on a reference that no story publishes.
+
 ---
 
 ## Consistency changes made alongside

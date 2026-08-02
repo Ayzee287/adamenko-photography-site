@@ -204,6 +204,28 @@ async function readStory(story) {
 // ── optimise ─────────────────────────────────────────────────────────────────────
 // Idempotency: the published file is keyed to the SOURCE hash, so an unchanged photo
 // is never re-encoded and an edited one always is.
+//
+// Exports are named `<slug>-NN.<hash8>.jpg`, where NN is the position in the hang and
+// hash8 is the first 8 hex of the source's content hash.
+//
+// The hash is not decoration, and NN alone was actively unsafe. Names used to be
+// position-only, so removing a frame from the middle of a story renumbered every frame
+// after it and a URL kept pointing at a DIFFERENT photograph. Combined with
+// `minimumCacheTTL` (31 days, next.config.ts), that meant a withdrawn photograph went on
+// being served from the image-optimisation cache and from visitors' browsers at its old,
+// recycled URL — verified on 2026-08-01 and again on 2026-08-02, when the maternity frame
+// dropped for consent reasons was still being shown by the deployed preview.
+//
+// Frames get dropped here for consent and decency. A URL must therefore denote ONE
+// photograph for all time: with the hash in the name, changing the picture changes the
+// URL, the old URL simply stops existing, and no cache anywhere can keep publishing a
+// photograph that was withdrawn. NN is kept so the folder still reads in hang order.
+//
+// The cost is that a hard-coded frame reference (home.ts, gallery-covers.ts,
+// service-dossier.ts, dictionaries/en.ts, gen-blur's ALWAYS_INCLUDE) now breaks LOUDLY
+// when its frame changes, instead of silently resolving to a different photograph.
+// `npm run validate:content` is what turns that into a failed build rather than a
+// surprise in production.
 const loadState = () => {
   try { return JSON.parse(readFileSync(STATE, "utf8")); } catch { return {}; }
 };
@@ -218,7 +240,7 @@ async function publishPhotos(story, state, nextState) {
 
   for (let i = 0; i < story.photos.length; i++) {
     const p = story.photos[i];
-    const name = `${story.slug}-${String(i + 1).padStart(2, "0")}.jpg`;
+    const name = `${story.slug}-${String(i + 1).padStart(2, "0")}.${p.hash.slice(0, 8)}.jpg`;
     const abs = path.join(outDir, name);
     // The state key carries the root, so promoting a story from draft to portfolio
     // re-encodes into the public root instead of trusting the draft's cached entry.

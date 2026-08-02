@@ -13,6 +13,7 @@
 
 import { readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import sharp from "sharp";
 
 const ROOT = process.cwd();
@@ -38,22 +39,38 @@ const EXCLUDED = /^(stories|stories-draft)\//;
 // costs a few hundred bytes, which is not the 890-frame problem the exclusion exists to stop.
 // Add a path here only when a story frame is used outside the story pages themselves.
 const ALWAYS_INCLUDE = new Set([
-  "stories/mariages/mariages-3/mariages-3-19.jpg",
+  "stories/mariages/mariages-3/mariages-3-19.bed0ddcd.jpg",
   // The Couples and Grossesse tiles moved to real session frames (a wedding photograph was
   // standing in for the couple séance; the maternity frame was the /galeries cover twice
   // over). Same reasoning as above — they are homepage tiles, so they must blur up too.
-  "stories/couples/couples-2/couples-2-12.jpg",
-  "stories/grossesse/grossesse-1/grossesse-1-14.jpg",
+  "stories/couples/couples-2/couples-2-12.ea75fa70.jpg",
+  "stories/grossesse/grossesse-1/grossesse-1-14.f1a5acf5.jpg",
   // The Familles plate on /galeries — see content/gallery-covers.ts. Same rule as the
   // Mariages plate below: it is the lead print on that wall, so it has to blur up.
-  "stories/familles/familles-3/familles-3-32.jpg",
+  "stories/familles/familles-3/familles-3-32.512c4df9.jpg",
   // The Grossesse dossier hero — a landscape frame, because the cinematic band cropped
   // the bump out of the portrait cover it used to show.
-  "stories/grossesse/grossesse-2/grossesse-2-03.jpg",
+  "stories/grossesse/grossesse-2/grossesse-2-03.3fc28625.jpg",
   // The Mariages plate on /galeries — the lead print on that wall, and the largest
   // photograph on the page. See content/gallery-covers.ts for why it is not the cover.
-  "stories/mariages/mariages-4/mariages-4-37.jpg",
+  "stories/mariages/mariages-4/mariages-4-37.56163dbb.jpg",
 ]);
+
+// Every published story's COVER, derived rather than hand-listed.
+//
+// A cover is not a story frame in the sense the exclusion above is about: it is the plate
+// a visitor meets on /galeries/<genre> and on the service dossiers, and on a genre page
+// the newest story's cover is the full-width lead — the largest photograph on the page and
+// its LCP element. Those were the only images on the site arriving with no placeholder,
+// so they popped in while the plates beside them blurred up.
+//
+// Derived, because hand-listing is what let them drift out in the first place: covers are
+// re-chosen during an edit, and a list maintained by hand records the cover that was
+// current when someone last remembered to update it. 16 covers ≈ 9 KB — the exclusion
+// exists to stop 890 frames / 538 KB, not this.
+for (const s of (await import(pathToFileURL(path.join(ROOT, "src/content/stories.generated.ts")).href)).stories) {
+  ALWAYS_INCLUDE.add(s.cover.replace(/^\//, ""));
+}
 
 /** All JPEG files under `dir`, recursively, minus the excluded roots. */
 async function collectJpegs(dir) {
