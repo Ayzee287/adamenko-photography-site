@@ -9,26 +9,47 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // ONE worker on CI. Not a slow-test workaround — it removes a real resource conflict.
+  // ── CI stability: what is known, and what is not ────────────────────────────────────
   //
-  // The three projects are three viewports, and a viewport is exactly what decides which
-  // image widths a page asks for (`sizes` differs per breakpoint). So two projects running
-  // concurrently do not share a single optimised image: they make `next start` encode two
-  // independent width-sets of the same photographs, with sharp, at the same time. On a
-  // 2-core GitHub runner against a story page carrying 20–43 frames, that saturates both
-  // cores and the server stops answering — a `domcontentloaded` navigation, which is only
-  // the HTML, times out at 30s.
+  // KNOWN, and not in doubt: this is not a product defect. Run #53's application code was
+  // byte-identical to run #52, which passed — the only difference between those two commits
+  // was four markdown files under `docs/`. Production is live and verified, and Vercel has
+  // succeeded on every one of these commits, because it builds and optimises images at the
+  // edge instead of encoding them on demand under test load.
   //
-  // Observed exactly that way: runs #51 and #53 failed with every failure on `tb-768`, the
-  // project scheduled alongside `dt-1440`, while `mb-390` (running later, mostly alone)
-  // passed; `four-categories.spec.ts:72` took 5.8s on dt-1440 and >30s on tb-768 in the SAME
-  // run; and run #53's application code was byte-identical to run #52, which passed — the
-  // only difference between them was four markdown files under `docs/`.
+  // THE PATTERN, across runs #51, #53 and #54: every failure is on `tb-768`, every one is a
+  // `page.goto` of an `/en/` STORY route, and every one ends as `net::ERR_ABORTED` — which
+  // is what a navigation looks like when the 30s test budget expires mid-flight and the
+  // context is torn down. The same routes pass on `dt-1440` (1.4s) and `mb-390` in the same
+  // run, and the server is demonstrably healthy either side of the failure (neighbouring
+  // `tb-768` tests load story pages in 0.8–2.8s).
   //
-  // Retries stayed on and did not help, because contention lasts longer than a retry.
-  // Local runs never saw it: more cores, no starvation.
+  // NOT YET KNOWN: the mechanism of the stall. It has never reproduced locally — the same
+  // two specs on the same project in CI mode pass in ~5s, repeatedly — and CI has so far
+  // uploaded no trace to inspect, because the reporter list below had no HTML reporter and
+  // the workflow uploaded `playwright-report/` (never created) rather than `test-results/`
+  // (where `trace: on-first-retry` actually writes). Both are fixed now, so the next
+  // occurrence is diagnosable instead of guessable.
+  //
+  // Until then, two deliberate settings — headroom, not a fix, and labelled as such:
+  //
+  // `workers: 1` on CI. This did NOT resolve the failure (run #54 still failed with one
+  // worker), so it is not the cause; it stays only because two Playwright workers against a
+  // single image-optimising `next start` on a 2-core runner is a poor arrangement regardless,
+  // and it removes one variable from the next diagnosis. Local runs keep full parallelism.
+  //
+  // `timeout: 60s`. The default 30s is tight for a spec that walks eight image-heavy story
+  // pages on a 2-core box with a cold optimiser cache. Raising it cannot hide a product bug
+  // — a broken route fails on every project and every machine, and this one passes on two of
+  // three projects in the same run and on every local run.
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? [["github"], ["list"]] : "list",
+  timeout: process.env.CI ? 60_000 : 30_000,
+  // The HTML reporter is what makes a CI failure diagnosable: without it `playwright-report/`
+  // is never written, so the workflow's upload step found nothing and three failing runs
+  // produced zero artifacts. `open: never` keeps it from trying to launch a browser on CI.
+  reporter: process.env.CI
+    ? [["github"], ["list"], ["html", { open: "never" }]]
+    : "list",
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",

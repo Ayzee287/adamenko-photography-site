@@ -54,10 +54,18 @@ jobs:
         run: npx lhci autorun
         continue-on-error: true
 
-      - name: Upload Playwright report on failure
+      # `test-results/` is where `trace: on-first-retry` writes the traces, and it is the
+      # only thing that makes a CI-only failure diagnosable after the fact. It was missing,
+      # so three consecutive failing runs uploaded nothing at all — `playwright-report/`
+      # alone was never even created, because no HTML reporter was configured.
+      # `if-no-files-found: ignore` so a partial failure never masks the real one.
+      - name: Upload Playwright report and traces on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 7
+          if-no-files-found: ignore
