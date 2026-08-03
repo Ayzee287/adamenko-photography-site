@@ -1,17 +1,19 @@
 # Owner To-Do — Before Launch
 
 **For:** the photographer / business owner
-**Date:** 2026-06-20 · **Updated:** 2026-07-28
+**Date:** 2026-06-20 · **Updated:** 2026-08-03 · **Status: closed (history)**
 
-> ## 🟥 2026-07-28 — this file is HISTORY. The live owner queue is elsewhere.
+> ## 🟥 HISTORY — this file is a PRE-LAUNCH list and is closed.
 >
-> The site launched on 2026-06-29 and everything below is a pre-launch list. The work that
-> actually matters now is **growth**, and none of it is on this page.
+> The site launched 2026-06-29 and the release closed **2026-08-03** with **no blockers**:
+> see [`release-2026-08-03.md`](./release-2026-08-03.md). Every 🔴 blocker below was cleared
+> long ago. Nothing on this page is outstanding.
 >
-> **The current owner queue, in final ready-to-paste text, lives in the studio vault:**
+> **What is actually open is growth, and almost none of it is code.** The live owner queue,
+> in ready-to-paste text, lives in the studio vault:
 >
 > - `01_Clients/Adamenko_Photography/05_Operations/2026-07-28 - Growth operations pack (reviews, profile, citations).md`
-> - `01_Clients/Adamenko_Photography/05_Operations/2026-07-28 - Owner action pack v2 (Google Business Profile, ready to paste).md`
+> - `01_Clients/Adamenko_Photography/00_MOC/roadmap.md`
 >
 > **The single highest-value action available:** ask past clients for Google reviews. The
 > profile has **4**; the median of the top 20 wedding photographers in Lyon is **≈148**, and

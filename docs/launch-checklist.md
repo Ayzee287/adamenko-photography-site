@@ -7,7 +7,7 @@ to *live in production*. Supersedes the embedded checklist in
 live in [owner-todo.md](./owner-todo.md); deployment mechanics in the vault
 `maintenance-and-deployment` note.
 
-**Status (2026-06-28):** **Repository is production-ready.** Every engineering and repository-side
+**Status (2026-06-28, historical):** **Repository is production-ready.** Every engineering and repository-side
 item below is ✅ done and verified. The remaining open items are **external operations only**
 (accounts, the Vercel import, environment variables, and post-deploy verification) — none of them
 are code.
@@ -17,6 +17,17 @@ are code.
 deployed. Contact form delivers in production (real `200` send) and now sends **two** emails — the
 owner notification **and** a visitor auto-reply confirmation. See
 [`email-architecture.md`](./email-architecture.md).
+
+> ## ✅ CLOSED — 2026-08-03
+>
+> This checklist is **complete and is now history**. The launch gate it describes was passed
+> on 2026-06-29; two further work cycles have shipped since, and the release closed on
+> 2026-08-03 with **no blockers**.
+>
+> Current status, and the only page that should be read as authoritative:
+> [`release-2026-08-03.md`](./release-2026-08-03.md).
+>
+> `main` @ `728236c` · production live and current at `www.adamenko-photography.com`.
 
 ---
 
