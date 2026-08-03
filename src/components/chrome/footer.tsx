@@ -19,7 +19,11 @@ export function Footer(props: { showSeances: boolean }) {
 
   return (
     <footer className="bg-paper-deep">
-      <div className="mx-auto max-w-site px-5 py-8 md:px-8">
+      {/* Asymmetric block padding on purpose: the footer needs its opening beat away from
+          the page above it, but the legal row already carries its own `pt-5` above a
+          hairline, so a matching 32px underneath left the last line of text floating in
+          empty space at the very bottom of every page. Top beat unchanged. */}
+      <div className="mx-auto max-w-site px-5 pt-8 pb-4 md:px-8">
         <div className="flex flex-col gap-6 md:flex-row md:justify-between md:gap-8">
           {/* Group A — identity */}
           <div className="max-w-measure md:max-w-none md:basis-1/2">
@@ -57,8 +61,15 @@ export function Footer(props: { showSeances: boolean }) {
               together on every page. It carries a visible heading because "Mariage · Famille
               · Grossesse · Couple" beside "Galeries · Tarifs" would read as one confused list
               of destinations; the pages column needs no heading, being self-evident. */}
+          {/* The heading sits on the same optical line as the first link of the pages column
+              beside it, and the four service links then run on that column's rhythm. The
+              pages links carry `py-1`, so their text starts 4px below the column top while
+              this heading started at the top and pushed its own links 2.5 lower — two
+              columns of the same four items, neither aligned to the other. `pt-1` puts the
+              heading on the neighbouring links' baseline; `mb-1.5` closes the surplus under
+              it so the four categories keep the pages column's step. */}
           <nav aria-label={ui.nav.services}>
-            <p className="ch-mono mb-2.5">{ui.nav.services}</p>
+            <p className="ch-mono mb-1.5 pt-1">{ui.nav.services}</p>
             <div className="grid grid-cols-2 gap-x-8 gap-y-2.5 md:flex md:flex-col md:gap-2">
               {serviceInventory.map((item) => (
                 <Link
