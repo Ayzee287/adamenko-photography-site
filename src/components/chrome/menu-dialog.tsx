@@ -23,6 +23,7 @@ export interface MenuDialogLabels {
   contactCta: string;
   instagram: string;
   facebook: string;
+  email: string;
   brand: string;
 }
 
@@ -32,7 +33,7 @@ export function MenuDialog(props: {
   locale: Locale;
   showSeances: boolean;
   labels: MenuDialogLabels;
-  socials: { instagram?: string; facebook?: string };
+  socials: { instagram?: string; facebook?: string; email?: string };
 }) {
   const { open, onClose, locale, showSeances, labels, socials } = props;
   const ref = useRef<HTMLDialogElement>(null);
@@ -125,6 +126,19 @@ export function MenuDialog(props: {
                   icon="facebook"
                   href={socials.facebook}
                   label={labels.facebook}
+                />
+              )}
+              {/* The third way to reach her, in the row that already means exactly that.
+                  The menu's pill goes to the contact FORM; this is the direct address, one
+                  tap, for a visitor who would rather write than fill anything in. Same
+                  44px icon target and the same aria-label as its two neighbours here and
+                  in the footer, so it needs no visible label to say what it is. Menu-only
+                  by construction — the trigger that opens this dialog is `lg:hidden`. */}
+              {socials.email && (
+                <IconLink
+                  icon="email"
+                  href={`mailto:${socials.email}`}
+                  label={labels.email}
                 />
               )}
             </div>

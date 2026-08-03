@@ -80,8 +80,9 @@ export default async function RootLayout({
             contactCta: dict.copy.home.contactCta,
             instagram: dict.ui.nav.instagram,
             facebook: dict.ui.nav.facebook,
+            email: dict.ui.nav.email,
           }}
-          socials={dict.site.social}
+          socials={{ ...dict.site.social, email: dict.photographer.contact.email }}
         />
         <main id="main" tabIndex={-1} className="flex-1">
           {children}

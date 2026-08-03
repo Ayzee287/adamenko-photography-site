@@ -35,8 +35,13 @@ const chrome = {
   contactCta: "Travaillons ensemble",
   instagram: "Instagram",
   facebook: "Facebook",
+  email: "Envoyer un e-mail",
 };
-const socials = { instagram: "https://instagram.com/x", facebook: "https://facebook.com/x" };
+const socials = {
+  instagram: "https://instagram.com/x",
+  facebook: "https://facebook.com/x",
+  email: "irina@example.com",
+};
 
 /* ── refFromPathname — the reverse lookup behind the language switch ── */
 

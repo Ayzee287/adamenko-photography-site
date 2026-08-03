@@ -30,7 +30,7 @@ export function Header(props: {
   tone?: "paper" | "overlay";
   showSeances: boolean;
   chrome: HeaderChrome;
-  socials: { instagram?: string; facebook?: string };
+  socials: { instagram?: string; facebook?: string; email?: string };
 }) {
   const { locale, showSeances, chrome, socials } = props;
   const [menuOpen, setMenuOpen] = useState(false);
