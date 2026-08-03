@@ -731,6 +731,13 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 
 /* ── Layout: movements + silence ────────────────────────────────────────────── */
 .ch-movement { padding-inline: var(--ch-edge); padding-block: var(--ch-beat); position: relative; z-index: 1; }
+/* The block that closes a story (all the <genre> · about this séance · book). Two full
+   beats met here — the exhibition's bottom and this section's top — putting 162px of empty
+   wall between the last photograph and the way out at 1440x900, and 92px on a phone. The
+   exhibition's own closing beat is enough separation on its own; this only needs to not
+   touch it. Measured after: 99px desktop, 63px phone. The end of the wall now arrives
+   without the last stretch of scrolling. */
+.ch-movement--close { padding-top: clamp(0.75rem, 2vh, 1.5rem); }
 .ch-wrap { max-width: 82rem; margin-inline: auto; }
 .ch-measure { max-width: 40rem; }
 .ch-kicker { display: inline-flex; gap: 0.9rem; align-items: baseline; }
@@ -828,8 +835,13 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
    letterbox — SHORTER than the 234px plates beneath it, which inverts the hierarchy the
    lead exists to create. A 3:2 lead reads as the largest thing on the wall at every width;
    the cinematic crop returns once there is room for it to mean something. */
+/* The galleries INDEX has the same lead-plate arrangement and was never covered by this
+   rule, so the reasoning above held there and the bug did not: measured at 437px wide, its
+   feature plate rendered 187px tall while the three plates under it were 546px — the lead
+   was a THIRD the height of its own supports. Same wall, same clock, same fix. */
 @media (max-width: 47.99rem) {
-  .ch-story-wall > * .ch-ar-cine { aspect-ratio: 3 / 2; }
+  .ch-story-wall > * .ch-ar-cine,
+  .ch-gallery-wall > * .ch-ar-cine { aspect-ratio: 3 / 2; }
 }
 
 .ch-story-index {
@@ -1000,13 +1012,25 @@ button.ch-plate:focus-visible .ch-dot { box-shadow: 0 0 10px 2px rgba(200, 107, 
 }
 
 /* interior chapters — the opening title page clears the floating header */
+/* Clearance above the eyebrow was clamp(3.25rem, 8.5vh, 6rem) — 85px below the header at
+   1440x900 before the kicker even starts, which left the small mono eyebrow floating in an
+   empty band and made the opening read as "eyebrow · large gap · heading". Measured against
+   /tarifs, which felt right at h1Top 118 while these sat at 194.
+
+   Trimmed to about half that clearance. NOT to the tight opening's value: /tarifs is a
+   different case (no eyebrow at all, smaller title, content that must be reached at once),
+   and these pages keep their full-size title and their chapter eyebrow. Type scale and
+   hierarchy are untouched — only the empty space above the eyebrow is. */
 .ch-chapter {
-  padding-top: calc(var(--size-header) + clamp(3.25rem, 8.5vh, 6rem));
+  padding-top: calc(var(--size-header) + clamp(2rem, 4.75vh, 3.25rem));
   padding-bottom: clamp(1.5rem, 4vh, 2.75rem);
 }
 /* A chapter title is smaller than the hero and carries accented French ("Photographe de
    mariage à Lyon" wraps on a phone), so it needs a little more room than .ch-display. */
-.ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.12; margin-top: 1.2rem; }
+/* margin-top was 1.2rem; the eyebrow's own line-box plus the title's leading already put
+   optical air between them, so the measured 21px read closer to 37px. 0.85rem holds the
+   pair together as one opening without touching the type. */
+.ch-chapter-title { font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.12; margin-top: 0.85rem; }
 /* A tight opening (e.g. /tarifs): clears the header but drops the full-screen
    statement, so the page's primary content — the prices — is reached almost at once.
    Smaller title, far less clearance above and below. */

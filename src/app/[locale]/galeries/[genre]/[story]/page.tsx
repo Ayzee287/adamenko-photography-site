@@ -119,7 +119,7 @@ export default async function StoryPage({
         <Exhibition items={items} serie={storyTitle(s, active)} labels={labels} />
       </section>
 
-      <section className="ch-movement ch-wrap">
+      <section className="ch-movement ch-movement--close ch-wrap">
         <Develop>
           <nav aria-label={active === "en" ? "More" : "Suite"} className="ch-crosslinks">
             <Link className="ch-go" href={link(active, { page: "genre", genre: genre as GenreSlug })}>
